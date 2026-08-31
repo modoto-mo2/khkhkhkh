@@ -1,6 +1,17 @@
-کاملاً متوجه شدم! تمام متون ظاهری، پیام‌ها، اعلان‌ها و دکمه‌های ربات که مشکل فاصله‌گذاری و نیم‌فاصله داشتند (مثل *کانالهای ➔ کانال‌های*، *گیفتها ➔ گیفت‌ها*، *سلفباتها ➔ سلف‌بات‌ها*، *میشود ➔ می‌شود*، *میگردد ➔ می‌گردد*، *فعالسازی ➔ فعال‌سازی*، *شیشهای ➔ شیشه‌ای*، *پیشفاکتور ➔ پیش‌فاکتور*، *دستنوشته ➔ دست‌نوشته* و...) را با نگارش استاندارد فارسی و نیم‌فاصله‌های صحیح بازنویسی کردم بدون اینکه هیچ متغیر یا لاجیک کدی خراب شود.
+دقیقاً فهمیدم چی شد داداش! 
 
-کل دستور زیر را یک‌جا کپی کرده و در ترمینال لینوکس پیست کنید و `Enter` بزنید تا تمام فایل‌های مربوطه در یک ثانیه آپدیت شوند:
+علتش این بود: چون از قبل روی اسمت ساعت `۲۰:۴۴` افتاده بود، وقتی دکمه قالب رو زدی، ربات کل اون اسم قبلی (با همون ساعت قبلی!) رو به عنوان اسمت برداشت و یه کادر ساعت جدید هم چسبوند بهش، در نتیجه **اسمت دو تا ساعت گرفت!**
+
+الان سیستم رو طوری درست کردم که:
+1. **پاک‌سازی هوشمند ساعت قبلی:** ساعت قبلی رو کامل از اسمت جدا می‌کنه تا اسمت تمیز بشه: `❄️ frozen Mamad ❄️`.
+2. **فقط یک ساعت با کادر انتخابی:** قالب رو دقیقاً می‌چسبونه به همون ساعت اصلی و اسمت میشه:
+   👉 **`❄️ frozen Mamad ❄️ 𓆩۲۰:۴۴𓆪`**
+
+---
+
+### 🚀 دستور لینوکسی فیکس کامل:
+
+این دستور رو کامل داخل سرورت پیست و اجرا کن:
 
 ```bash
 cat << 'EOF' > database.py
@@ -10,6 +21,20 @@ from config import config
 
 CACHE_EMOJIS = {}
 REVERSE_EMOJIS = {}
+
+ALL_DIGITS_STR = "0123456789۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵𝟢𝟣𝟤𝟥𝟦𝟧𝟨𝟩𝟪𝟫𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿⓿➊➋➌➍➎➏➐➑➒⓪①②③④⑤⑥⑦⑧⑨🄋➀➁➂➃➄➅➆➇➈⒪⑴⑵⑶⑷⑸⑹⑺⑻⑼🄀⒈⒉⒊⒋⒌⒍⒎⒏⒐🄌➊➋➌➍➎➏➐➑➒０１２３４５６７８９🯰🯱🯲𝯳𝯴𝯵𝯶𝯷𝯸𝯹ⅠⅡⅢⅣⅤⅥⅦⅧⅨ❶❷❸❹❺❻❼❽❾⠚⠁⠃⠉⠙⠑⠋⠛⠓⠊०१२३४५६७८९০১২৩৪৫৬৭৮৯๐๑๒๓๔๕๖๗๘๙༠༡༢༣༤༥༦༧༨༩០១២៣៤۵۶۷۸۹၀၁၂၃၄၅၆၇၈၉੦੧੨੩੪੫੬੭੮੯೦೧೨೩೪೫೬೭೮೯൦൧൨൩൪൫൬൭൮൯௦௧௨௩௪௫௬௭௮௯౦౧౨౩౪౫౬౭౮౯૦૧૨૩૪૫૬૭૮૯୦୧୨୩୪୫୬୭୮୯෦෧෨෩෪෫෬෭෮෯໐໑໒໓໔໕໖໗໘໙"
+CLEAN_TIME_PATTERN = re.compile(
+    rf'(?:[|•‹›﹝﹞❲❳「」【】〖〗⟦⟧⦅⦆﹤﹥⟮⟯⟬⟭❨❩❮❯«»𓆩𓆪⸢⸥⌜⌟☽☾\(\)\[\]{{\}}]\s*)?[{re.escape(ALL_DIGITS_STR)}]{{1,2}}[:：⠒][{re.escape(ALL_DIGITS_STR)}]{{2}}(?:\s*[|•‹›﹝﹞❲❳「」【】〖〗⟦⟧⦅⦆﹤﹥⟮⟯⟬⟭❨❩❮❯«»𓆩𓆪⸢⸥⌜⌟☽☾\(\)\[\]{{\}}])?'
+)
+
+def clean_time_from_string(text: str) -> str:
+    if not text:
+        return ""
+    cleaned = CLEAN_TIME_PATTERN.sub('', text)
+    cleaned = re.sub(r'\|\s*$', '', cleaned)
+    cleaned = re.sub(r'^\s*\|', '', cleaned)
+    cleaned = re.sub(r'\s{2,}', ' ', cleaned)
+    return cleaned.strip()
 
 def clean_number(text: str) -> int:
     p, a = "۰۱۲۳۴۵۶۷۸۹", "٠١٢٣٤٥٦٧۸۹"
@@ -98,8 +123,8 @@ async def init_db():
             "welcome_text": "سلام {name} عزیز، به ربات خوش آمدید!\n\nاز منوی زیر استفاده کنید:",
             "welcome_bonus": "10000", "referral_bonus": "5000", "min_deposit": "100000", "max_deposit": "5000000",
             "required_channel": "", "channel_link": "", "emoji_msg_cost": "0", "btn_stars": "⭐️ خرید استارز",
-            "btn_premium": "💎 خرید پرمیوم", "btn_ton": "🪙 خرید تون", "btn_gifts": "🎁 گیفت‌های تلگرام",
-            "btn_wallet": "💰 کیف پول", "btn_ref": "👥 زیرمجموعه‌گیری", "btn_guide": "📖 راهنما", "btn_support": "📞 پشتیبانی",
+            "btn_premium": "💎 خرید پرمیوم", "btn_ton": "🪙 خرید تون", "btn_gifts": "🎁 گیفتهای تلگرام",
+            "btn_wallet": "💰 کیف پول", "btn_ref": "👥 زیرمجموعهگیری", "btn_guide": "📖 راهنما", "btn_support": "📞 پشتیبانی",
             "btn_self": "🚀 مدیریت سلف", "self_hourly_price": "600",
             "stars_base_50_price": "75000", "stars_min_buy": "50", "stars_max_buy": "25000",
             "prem_3m": "360000", "prem_6m": "680000", "prem_12m": "1250000", "ton_unit_price": "330423",
@@ -134,19 +159,39 @@ async def load_emoji_cache():
         REVERSE_EMOJIS = {str(r[1]).strip(): r[0].strip() for r in rows if r[0] and r[1]}
 
 def transform_text_emojis(text: str) -> str:
-    if not text or not isinstance(text, str): return text
-    cleaned = re.sub(r"<tg-emoji[^>]*>(.*?)</tg-emoji>", r"\1", text)
-    keys = sorted(CACHE_EMOJIS.keys(), key=len, reverse=True)
-    if not keys: return text
-    patterns = [r"\[\d{10,25}\]"] + [re.escape(k) for k in keys if k]
-    def repl(m):
-        tok = m.group(0)
-        if tok.startswith("[") and tok.endswith("]") and tok[1:-1].isdigit():
-            cid = tok[1:-1]
-            return f'<tg-emoji emoji-id="{cid}">{REVERSE_EMOJIS.get(cid, "💎")}</tg-emoji>'
-        cid = CACHE_EMOJIS.get(tok)
-        return f'<tg-emoji emoji-id="{cid}">{tok}</tg-emoji>' if cid else tok
-    return re.compile("|".join(patterns)).sub(repl, cleaned)
+    if not text or not isinstance(text, str):
+        return text
+
+    parts = re.split(r"(<code[^>]*>.*?</code>|<pre[^>]*>.*?</pre>|<tg-emoji[^>]*>.*?</tg-emoji>|<[^>]+>)", text, flags=re.DOTALL | re.IGNORECASE)
+
+    new_parts = []
+    for part in parts:
+        if not part:
+            continue
+        if (part.startswith("<") and part.endswith(">")) or part.lower().startswith("<code") or part.lower().startswith("<pre"):
+            new_parts.append(part)
+        else:
+            def repl_bracket(match):
+                eid = match.group(1).strip()
+                fallback = REVERSE_EMOJIS.get(eid, "💎")
+                return f'<tg-emoji emoji-id="{eid}">{fallback}</tg-emoji>'
+
+            sub_res = re.sub(r"\[\s*(\d{5,25})\s*\]", repl_bracket, part)
+
+            if CACHE_EMOJIS:
+                sorted_emojis = sorted(CACHE_EMOJIS.keys(), key=len, reverse=True)
+                pattern = re.compile("|".join(re.escape(e) for e in sorted_emojis if e))
+
+                def repl_emo(m):
+                    emo = m.group(0)
+                    cid = CACHE_EMOJIS.get(emo) or CACHE_EMOJIS.get(emo.replace("\ufe0f", ""))
+                    return f'<tg-emoji emoji-id="{cid}">{emo}</tg-emoji>' if cid else emo
+
+                sub_res = pattern.sub(repl_emo, sub_res)
+
+            new_parts.append(sub_res)
+
+    return "".join(new_parts)
 
 def render_text(t: str) -> str: return transform_text_emojis(t)
 
@@ -219,6 +264,16 @@ async def get_user(uid):
         u = await (await db.execute("SELECT * FROM users WHERE user_id = ?", (uid,))).fetchone()
         return dict(u) if u else None
 
+async def find_user(identifier: str):
+    raw = str(identifier).strip().lstrip("@")
+    async with aiosqlite.connect(config.DB_NAME) as db:
+        db.row_factory = aiosqlite.Row
+        if raw.isdigit() or (raw.startswith("-") and raw[1:].isdigit()):
+            u = await (await db.execute("SELECT * FROM users WHERE user_id = ?", (int(raw),))).fetchone()
+            if u: return dict(u)
+        u = await (await db.execute("SELECT * FROM users WHERE LOWER(username) = LOWER(?)", (raw,))).fetchone()
+        return dict(u) if u else None
+
 async def set_user_verified(uid, s=True):
     async with aiosqlite.connect(config.DB_NAME) as db:
         await db.execute("UPDATE users SET is_verified = ? WHERE user_id = ?", (1 if s else 0, uid)); await db.commit()
@@ -264,7 +319,7 @@ async def validate_coupon(code, uid, base_p):
         c = dict(c)
         if c["used_count"] >= c["max_uses"]: return False, "⚠️ ظرفیت استفاده از این کوپن تمام شده است.", base_p
         if await (await db.execute("SELECT * FROM coupon_redemptions WHERE code = ? AND user_id = ?", (code, uid))).fetchone():
-            return False, "⚠️ شما قبلاً از این کوپن استفاده کرده‌اید.", base_p
+            return False, "⚠️ شما قبلاً از این کوپن استفاده کردهاید.", base_p
         disc = int((base_p * c["discount_percent"]) / 100) if c["discount_percent"] > 0 else c["discount_amount"]
         return True, f"🎟 تخفیف <b>{disc:,} تومان</b> اعمال شد.", max(0, base_p - disc)
 
@@ -427,6 +482,14 @@ async def delete_gift(gid):
     async with aiosqlite.connect(config.DB_NAME) as db:
         await db.execute("DELETE FROM custom_gifts WHERE id = ?", (gid,)); await db.commit()
 
+async def bulk_update_gift_prices(amount_diff: int):
+    async with aiosqlite.connect(config.DB_NAME) as db:
+        if amount_diff >= 0:
+            await db.execute("UPDATE custom_gifts SET price = price + ?", (amount_diff,))
+        else:
+            await db.execute("UPDATE custom_gifts SET price = MAX(0, price + ?)", (amount_diff,))
+        await db.commit()
+
 async def get_all_required_channels():
     async with aiosqlite.connect(config.DB_NAME) as db:
         db.row_factory = aiosqlite.Row
@@ -461,1437 +524,880 @@ async def get_stats():
         return {"total_users": t_users, "verified_users": v_users, "kyc_users": k_users, "total_orders": t_orders, "total_balance": res_b or 0}
 EOF
 
-cat << 'EOF' > handlers/admin.py
-import asyncio, shutil, os, zipfile
-from aiogram import Router, types, F
-from aiogram.filters import Command, BaseFilter
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
-from config import config
-import database as db
-
-router = Router()
-
-class AdminFilter(BaseFilter):
-    async def __call__(self, event: types.TelegramObject) -> bool:
-        u = getattr(event, "from_user", None)
-        return await db.is_admin(u.id) if u else False
-
-class AdminState(StatesGroup):
-    waiting_for_broadcast = State()
-    waiting_for_support_reply = State()
-    waiting_for_card_info = State()
-    waiting_for_welcome_text = State()
-    waiting_for_bonuses = State()
-    waiting_for_deposit_limits = State()
-    waiting_for_stars_prices = State()
-    waiting_for_prem_prices = State()
-    waiting_for_ton_price = State()
-    waiting_for_btn_edit = State()
-    waiting_for_emoji_normal = State()
-    waiting_for_emoji_id = State()
-    waiting_for_sticker_edit = State()
-    waiting_for_coupon_create = State()
-    waiting_for_channel = State()
-    waiting_for_add_admin = State()
-    waiting_for_remove_admin = State()
-    waiting_for_gift_title = State()
-    waiting_for_gift_stars = State()
-    waiting_for_gift_price = State()
-    waiting_for_gift_edit_price = State()
-    waiting_for_gift_edit_stars = State()
-    waiting_for_stars_base_50 = State()
-    waiting_for_stars_min = State()
-    waiting_for_stars_max = State()
-    waiting_for_stars_title = State()
-    waiting_for_stars_count = State()
-    waiting_for_stars_price = State()
-    waiting_for_stars_edit_price = State()
-    waiting_for_stars_edit_amount = State()
-
-def get_admin_keyboard():
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="📊 آمار زنده ربات", style="primary", callback_data="admin_stats"), InlineKeyboardButton(text="📢 ارسال همگانی", style="primary", callback_data="admin_broadcast")],
-        [InlineKeyboardButton(text="⭐️ مدیریت پیشرفته استارز", style="primary", callback_data="admin_stars_hub"), InlineKeyboardButton(text="🎁 مدیریت گیفت‌ها", style="primary", callback_data="adm_gifts_list")],
-        [InlineKeyboardButton(text="🚀 مدیریت سلف‌بات‌ها", style="primary", callback_data="adm_self_hub"), InlineKeyboardButton(text="✨ تنظیم ایموجی پرمیوم", style="primary", callback_data="adm_menu_emojis")],
-        [InlineKeyboardButton(text="🪙 قیمت واحد هر TON", style="primary", callback_data="admin_set_ton"), InlineKeyboardButton(text="💎 قیمت پرمیوم", style="primary", callback_data="admin_set_prem")],
-        [InlineKeyboardButton(text="⭐️ قیمت بسته‌های استارز", style="primary", callback_data="admin_set_stars"), InlineKeyboardButton(text="💳 تنظیم شماره کارت", style="primary", callback_data="admin_set_card")],
-        [InlineKeyboardButton(text="🎟 مدیریت کوپن‌ها", style="primary", callback_data="admin_coupons_menu"), InlineKeyboardButton(text="👥 مدیریت ادمین‌ها", style="primary", callback_data="admin_manage_admins")],
-        [InlineKeyboardButton(text="✏️ ویرایش دکمه‌های منو", style="primary", callback_data="admin_menu_buttons"), InlineKeyboardButton(text="🎭 تنظیم استیکرها", style="primary", callback_data="admin_menu_stickers")],
-        [InlineKeyboardButton(text="👥 لیست کاربران و تاریخ عضویت", style="primary", callback_data="adm_users_1")],
-        [InlineKeyboardButton(text="💬 متن خوشامدگویی", style="primary", callback_data="admin_set_welcome"), InlineKeyboardButton(text="🎁 تنظیم پاداش‌ها", style="primary", callback_data="admin_set_bonuses")],
-        [InlineKeyboardButton(text="💰 سقف و کف شارژ", style="primary", callback_data="admin_set_limits"), InlineKeyboardButton(text="📢 مدیریت کانال‌های جوین اجباری", style="primary", callback_data="admin_set_channel")],
-        [InlineKeyboardButton(text="📦 دریافت فایل‌های بکاپ کامل (.zip)", style="success", callback_data="admin_get_backup")]
-    ])
-
-@router.message(Command("admin"), AdminFilter())
-async def admin_panel(message: types.Message, state: FSMContext = None):
-    if state: await state.clear()
-    await message.reply("👑 <b>پنل مدیریت جامع ربات</b>\nتمامی بخش‌ها از دکمه‌های زیر قابل کنترل هستند:", reply_markup=get_admin_keyboard())
-
-# --- هاب مدیریت سلف‌بات‌ها ---
-@router.callback_query(F.data == "adm_self_hub", AdminFilter())
-async def admin_self_hub_menu(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    hourly_p = await db.get_int_setting("self_hourly_price", 600)
-    per_min = max(1, int(hourly_p / 60))
-    active_bots = await db.get_all_active_self_bots()
-
-    text = (
-        "🚀 <b>مدیریت سیستم سلف‌بات‌ها (PuLaSeLf):</b>\n\n"
-        f"💰 <b>تعرفه فعلی:</b> هر ساعت <code>{hourly_p:,}</code> ت (دقیقه‌ای <b>{per_min:,} تومان</b>)\n"
-        f"👥 <b>سلف‌های فعال در حال کار:</b> <b>{len(active_bots):,} نفر</b>\n\n"
-        "عملیات مورد نظر را انتخاب نمایید:"
-    )
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="👥 مشاهده سلف‌های فعال", style="primary", callback_data="adm_list_active_selfs")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل اصلی", callback_data="admin_back")]
-    ])
-    await callback.message.edit_text(text, reply_markup=kb)
-    await callback.answer()
-
-@router.callback_query(F.data == "adm_list_active_selfs", AdminFilter())
-async def list_active_selfs(callback: types.CallbackQuery):
-    active_bots = await db.get_all_active_self_bots()
-    if not active_bots:
-        await callback.message.answer("📭 هیچ سلف فعالی در حال حاضر وجود ندارد.")
-        await callback.answer()
-        return
-    text = "👥 <b>لیست سلف‌های آنلاین و فعال:</b>\n\n"
-    for idx, b in enumerate(active_bots, 1):
-        text += f"{idx}. 🆔 <code>{b['user_id']}</code> | 📱 <code>{b['phone_number']}</code>\n"
-    await callback.message.answer(text)
-    await callback.answer()
-
-# --- هاب مدیریت پیشرفته استارز ---
-@router.callback_query(F.data == "admin_stars_hub", AdminFilter())
-async def stars_hub_menu(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    base_50 = await db.get_int_setting("stars_base_50_price", 75000)
-    min_st = await db.get_int_setting("stars_min_buy", 50)
-    max_st = await db.get_int_setting("stars_max_buy", 25000)
-
-    text = (
-        "⭐️ <b>تنظیمات پیشرفته استارز تلگرام:</b>\n\n"
-        f"💰 <b>قیمت پایه هر ۵۰ استارز:</b> <code>{base_50:,}</code> تومان\n"
-        f"🔹 <b>نرخ هر ۱ استارز (محاسباتی):</b> <code>{base_50/50:,.1f}</code> تومان\n"
-        f"🔻 <b>حداقل خرید دلخواه:</b> <code>{min_st:,}</code> استارز\n"
-        f"🔺 <b>حداکثر خرید دلخواه:</b> <code>{max_st:,}</code> استارز\n\n"
-        "بخش مورد نظر را برای تنظیم انتخاب فرمایید:"
-    )
-
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="💰 تنظیم قیمت ۵۰ استارز (پایه)", style="primary", callback_data="adm_set_stars_50_base")],
-        [InlineKeyboardButton(text="🔻 تنظیم حداقل خرید", style="primary", callback_data="adm_set_stars_min"), InlineKeyboardButton(text="🔺 تنظیم حداکثر خرید", style="primary", callback_data="adm_set_stars_max")],
-        [InlineKeyboardButton(text="📦 لیست و افزودن بسته‌های استارز", style="primary", callback_data="adm_stars_list")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل اصلی", callback_data="admin_back")]
-    ])
-    await callback.message.edit_text(text, reply_markup=kb)
-    await callback.answer()
-
-@router.callback_query(F.data == "adm_set_stars_50_base", AdminFilter())
-async def set_stars_50_start(callback: types.CallbackQuery, state: FSMContext):
-    cur = await db.get_int_setting("stars_base_50_price", 75000)
-    await state.set_state(AdminState.waiting_for_stars_base_50)
-    await callback.message.answer(f"💰 <b>قیمت فعلی هر ۵۰ استارز:</b> <code>{cur:,}</code> تومان\n\nقیمت جدید ۵۰ استارز را به تومان (فقط عدد) وارد فرمایید:")
-    await callback.answer()
-
-@router.message(AdminState.waiting_for_stars_base_50, AdminFilter())
-async def set_stars_50_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    p = db.clean_number(message.text)
-    if p <= 0: await message.reply("⚠️ عدد معتبر وارد کنید:"); return
-    await db.set_setting("stars_base_50_price", str(p))
-    await state.clear()
-    await message.reply(f"✅ قیمت پایه هر ۵۰ استارز به <b>{p:,} تومان</b> (هر استارز: {p/50:,.1f} ت) تنظیم شد.")
-
-@router.callback_query(F.data == "adm_set_stars_min", AdminFilter())
-async def set_stars_min_start(callback: types.CallbackQuery, state: FSMContext):
-    cur = await db.get_int_setting("stars_min_buy", 50)
-    await state.set_state(AdminState.waiting_for_stars_min)
-    await callback.message.answer(f"🔻 <b>حداقل فعلی خرید استارز:</b> <code>{cur:,}</code> استارز\n\nمقدار جدید را به عدد وارد فرمایید:")
-    await callback.answer()
-
-@router.message(AdminState.waiting_for_stars_min, AdminFilter())
-async def set_stars_min_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    amt = db.clean_number(message.text)
-    if amt <= 0: await message.reply("⚠️ عدد معتبر وارد کنید:"); return
-    await db.set_setting("stars_min_buy", str(amt))
-    await state.clear(); await message.reply(f"✅ حداقل خرید استارز به <b>{amt:,}</b> تنظیم شد.")
-
-@router.callback_query(F.data == "adm_set_stars_max", AdminFilter())
-async def set_stars_max_start(callback: types.CallbackQuery, state: FSMContext):
-    cur = await db.get_int_setting("stars_max_buy", 25000)
-    await state.set_state(AdminState.waiting_for_stars_max)
-    await callback.message.answer(f"🔺 <b>حداکثر فعلی خرید استارز:</b> <code>{cur:,}</code> استارز\n\nمقدار جدید را به عدد وارد فرمایید:")
-    await callback.answer()
-
-@router.message(AdminState.waiting_for_stars_max, AdminFilter())
-async def set_stars_max_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    amt = db.clean_number(message.text)
-    if amt <= 0: await message.reply("⚠️ عدد معتبر وارد کنید:"); return
-    await db.set_setting("stars_max_buy", str(amt))
-    await state.clear(); await message.reply(f"✅ حداکثر خرید استارز به <b>{amt:,}</b> تنظیم شد.")
-
-# --- مدیریت بسته‌های استارز ---
-@router.callback_query(F.data == "adm_stars_list", AdminFilter())
-async def show_stars_list(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    packages = await db.get_all_stars_packages()
-    buttons = [[InlineKeyboardButton(text=f"⭐️ {pkg['btn_title']} ── {pkg['price']:,} ت", style="primary", callback_data=f"adm_stview_{pkg['id']}")] for pkg in packages]
-    buttons.append([InlineKeyboardButton(text="➕ افزودن بسته استارز جدید", style="success", callback_data="adm_add_stars_pkg")])
-    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به تنظیمات استارز", callback_data="admin_stars_hub")])
-    await callback.message.edit_text("⭐️ <b>لیست بسته‌های استارز:</b>", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
-    await callback.answer()
-
-@router.callback_query(F.data.startswith("adm_stview_"), AdminFilter())
-async def view_stars_pkg(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    pkg_id = int(callback.data.split("_")[2])
-    pkg = await db.get_stars_package(pkg_id)
-    if not pkg: await callback.answer("❌ بسته یافت نشد!", show_alert=True); return
-    text = f"⭐️ <b>بسته: {pkg['btn_title']}</b>\n\n⭐ تعداد: <b>{pkg['stars_amount']:,} استارز</b>\n💰 قیمت: <b>{pkg['price']:,} تومان</b>"
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✏️ تغییر قیمت", style="primary", callback_data=f"adm_stchp_{pkg_id}"), InlineKeyboardButton(text="⭐ تغییر تعداد", style="primary", callback_data=f"adm_stcha_{pkg_id}")],
-        [InlineKeyboardButton(text="🗑️ حذف بسته", style="danger", callback_data=f"adm_stdel_{pkg_id}")],
-        [InlineKeyboardButton(text="🔙 بازگشت", callback_data="adm_stars_list")]
-    ])
-    await callback.message.edit_text(text, reply_markup=kb); await callback.answer()
-
-@router.callback_query(F.data.startswith("adm_stchp_"), AdminFilter())
-async def change_stars_price_start(callback: types.CallbackQuery, state: FSMContext):
-    await state.update_data(st_pkg_id=int(callback.data.split("_")[2]))
-    await state.set_state(AdminState.waiting_for_stars_edit_price)
-    await callback.message.answer("💰 قیمت جدید را به تومان وارد کنید:"); await callback.answer()
-
-@router.message(AdminState.waiting_for_stars_edit_price, AdminFilter())
-async def change_stars_price_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    p = db.clean_number(message.text)
-    if p <= 0: await message.reply("⚠️ عدد معتبر وارد کنید:"); return
-    data = await state.get_data()
-    await db.update_stars_package_price(data["st_pkg_id"], p)
-    await state.clear(); await message.reply(f"✅ قیمت بسته به <b>{p:,} تومان</b> تغییر کرد.")
-
-@router.callback_query(F.data.startswith("adm_stcha_"), AdminFilter())
-async def change_stars_amt_start(callback: types.CallbackQuery, state: FSMContext):
-    await state.update_data(st_pkg_id=int(callback.data.split("_")[2]))
-    await state.set_state(AdminState.waiting_for_stars_edit_amount)
-    await callback.message.answer("⭐ تعداد استارز جدید را وارد کنید:"); await callback.answer()
-
-@router.message(AdminState.waiting_for_stars_edit_amount, AdminFilter())
-async def change_stars_amt_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    amt = db.clean_number(message.text)
-    if amt <= 0: await message.reply("⚠️ عدد معتبر وارد کنید:"); return
-    data = await state.get_data()
-    await db.update_stars_package_amount(data["st_pkg_id"], amt)
-    await state.clear(); await message.reply(f"✅ تعداد استارز به <b>{amt:,}</b> تغییر یافت.")
-
-@router.callback_query(F.data.startswith("adm_stdel_"), AdminFilter())
-async def delete_stars_pkg(callback: types.CallbackQuery, state: FSMContext = None):
-    await db.delete_stars_package(int(callback.data.split("_")[2]))
-    await callback.answer("🗑 حذف شد.", show_alert=True); await show_stars_list(callback, state)
-
-@router.callback_query(F.data == "adm_add_stars_pkg", AdminFilter())
-async def add_stars_pkg_start(callback: types.CallbackQuery, state: FSMContext):
-    await state.set_state(AdminState.waiting_for_stars_title)
-    await callback.message.answer("📝 <b>مرحله ۱:</b> متن روی دکمه شیشه‌ای چی باشه؟\n(مثال: <code>⭐️ ۱۰۰ استارز ویژه</code>)"); await callback.answer()
-
-@router.message(AdminState.waiting_for_stars_title, AdminFilter())
-async def add_stars_pkg_title(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    await state.update_data(st_title=message.text.strip())
-    await state.set_state(AdminState.waiting_for_stars_count)
-    await message.answer("⭐ <b>مرحله ۲:</b> این بسته چند استارز هست؟ (مثال: <code>100</code>)")
-
-@router.message(AdminState.waiting_for_stars_count, AdminFilter())
-async def add_stars_pkg_count(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    amt = db.clean_number(message.text)
-    if amt <= 0: await message.reply("⚠️ عدد معتبر وارد کنید:"); return
-    await state.update_data(st_amount=amt)
-    await state.set_state(AdminState.waiting_for_stars_price)
-    await message.answer("💰 <b>مرحله ۳:</b> قیمت به تومان چند باشه؟ (مثال: <code>145000</code>)")
-
-@router.message(AdminState.waiting_for_stars_price, AdminFilter())
-async def add_stars_pkg_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    p = db.clean_number(message.text)
-    if p <= 0: await message.reply("⚠️ عدد معتبر وارد کنید:"); return
-    data = await state.get_data()
-    await db.add_stars_package(data["st_title"], data["st_amount"], p)
-    await state.clear(); await message.reply(f"✅ بسته <b>{data['st_title']}</b> با موفقیت اضافه گردید.")
-
-# --- مدیریت گیفت‌ها ---
-@router.callback_query(F.data == "adm_gifts_list", AdminFilter())
-async def show_gifts_list(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    gifts = await db.get_all_gifts()
-    buttons = []
-    for g in gifts:
-        st_txt = f" ({g['stars_cost']} ⭐)" if g.get('stars_cost') else ""
-        buttons.append([InlineKeyboardButton(text=f"🎁 {g['name']}{st_txt} ── {g['price']:,} ت", style="primary", callback_data=f"adm_gview_{g['id']}")])
-    buttons.append([InlineKeyboardButton(text="➕ افزودن گیفت جدید", style="success", callback_data="adm_add_gift")])
-    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")])
-    await callback.message.edit_text("🎁 <b>مدیریت گیفت‌های تلگرام:</b>\nبرای مشاهده یا ویرایش روی گیفت مورد نظر بزنید:", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
-    await callback.answer()
-
-@router.callback_query(F.data.startswith("adm_gview_"), AdminFilter())
-async def view_gift_details(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    gid = int(callback.data.split("_")[2])
-    g = await db.get_gift(gid)
-    if not g: await callback.answer("❌ گیفت یافت نشد!", show_alert=True); return
-    text = f"🎁 <b>گیفت: {g['name']}</b>\n\n⭐ تعداد استارز: <b>{g['stars_cost']} استارز</b>\n💰 قیمت به تومان: <b>{g['price']:,} تومان</b>"
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✏️ تغییر قیمت (تومان)", style="primary", callback_data=f"adm_gchp_{gid}"), InlineKeyboardButton(text="⭐ تغییر استارز", style="primary", callback_data=f"adm_gchs_{gid}")],
-        [InlineKeyboardButton(text="🗑️ حذف این گیفت", style="danger", callback_data=f"adm_gdel_{gid}")],
-        [InlineKeyboardButton(text="🔙 بازگشت به لیست گیفت‌ها", callback_data="adm_gifts_list")]
-    ])
-    await callback.message.edit_text(text, reply_markup=kb); await callback.answer()
-
-@router.callback_query(F.data.startswith("adm_gchp_"), AdminFilter())
-async def change_gift_price_start(callback: types.CallbackQuery, state: FSMContext):
-    await state.update_data(edit_gid=int(callback.data.split("_")[2]))
-    await state.set_state(AdminState.waiting_for_gift_edit_price)
-    await callback.message.answer("💰 قیمت جدید گیفت را به تومان وارد کنید:"); await callback.answer()
-
-@router.message(AdminState.waiting_for_gift_edit_price, AdminFilter())
-async def change_gift_price_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    p = db.clean_number(message.text)
-    if p <= 0: await message.reply("⚠️ عدد معتبر وارد کنید:"); return
-    data = await state.get_data()
-    await db.update_gift_price(data["edit_gid"], p)
-    await state.clear(); await message.reply(f"✅ قیمت گیفت به <b>{p:,} تومان</b> بروز شد.")
-
-@router.callback_query(F.data.startswith("adm_gchs_"), AdminFilter())
-async def change_gift_stars_start(callback: types.CallbackQuery, state: FSMContext):
-    await state.update_data(edit_gid=int(callback.data.split("_")[2]))
-    await state.set_state(AdminState.waiting_for_gift_edit_stars)
-    await callback.message.answer("⭐ این گیفت چند استارزی است؟ (عدد وارد کنید):"); await callback.answer()
-
-@router.message(AdminState.waiting_for_gift_edit_stars, AdminFilter())
-async def change_gift_stars_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    stars = db.clean_number(message.text)
-    data = await state.get_data()
-    await db.update_gift_stars(data["edit_gid"], stars)
-    await state.clear(); await message.reply(f"✅ استارز گیفت به <b>{stars} ⭐</b> تغییر کرد.")
-
-@router.callback_query(F.data.startswith("adm_gdel_"), AdminFilter())
-async def delete_gift_handler(callback: types.CallbackQuery, state: FSMContext = None):
-    await db.delete_gift(int(callback.data.split("_")[2]))
-    await callback.answer("🗑 گیفت حذف شد.", show_alert=True); await show_gifts_list(callback, state)
-
-@router.callback_query(F.data == "adm_add_gift", AdminFilter())
-async def add_gift_start(callback: types.CallbackQuery, state: FSMContext):
-    await state.set_state(AdminState.waiting_for_gift_title)
-    await callback.message.answer("📝 <b>مرحله ۱:</b> متن روی دکمه شیشه‌ای چی باشه؟\n(مثال: <code>🧸 خرس تدی</code> یا <code>🌹 گل سرخ</code>)"); await callback.answer()
-
-@router.message(AdminState.waiting_for_gift_title, AdminFilter())
-async def add_gift_title_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    await state.update_data(g_title=message.text.strip())
-    await state.set_state(AdminState.waiting_for_gift_stars)
-    await message.answer("⭐ <b>مرحله ۲:</b> این گیفت چند استارزیه؟\n(فقط عدد وارد کنید، مثلاً: <code>50</code> یا <code>100</code>)")
-
-@router.message(AdminState.waiting_for_gift_stars, AdminFilter())
-async def add_gift_stars_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    stars = db.clean_number(message.text)
-    await state.update_data(g_stars=stars)
-    await state.set_state(AdminState.waiting_for_gift_price)
-    await message.answer("💰 <b>مرحله ۳:</b> قیمت این گیفت به تومان چند باشه؟\n(فقط عدد وارد کنید، مثلاً: <code>75000</code>)")
-
-@router.message(AdminState.waiting_for_gift_price, AdminFilter())
-async def add_gift_price_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    p = db.clean_number(message.text)
-    if p <= 0: await message.reply("⚠️ عدد معتبر وارد کنید:"); return
-    data = await state.get_data()
-    await db.add_custom_gift(data["g_title"], data["g_stars"], p)
-    await state.clear(); await message.reply(f"✅ گیفت <b>{data['g_title']}</b> ({data['g_stars']} ⭐) با قیمت {p:,} تومان با موفقیت اضافه شد!")
-
-# --- آمار زنده ---
-@router.callback_query(F.data == "admin_stats", AdminFilter())
-async def show_stats(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    stats = await db.get_stats()
-    text = f"📊 <b>آمار وضعیت ربات:</b>\n\n👥 کل کاربران: <b>{stats['total_users']:,} نفر</b>\n🪪 احراز هویت شده: <b>{stats['kyc_users']:,} نفر</b>\n🛍 کل سفارشات: <b>{stats['total_orders']:,} عدد</b>\n💰 مجموع کیف‌پول‌ها: <b>{stats['total_balance']:,} تومان</b>"
-    await callback.message.edit_text(text, reply_markup=get_admin_keyboard()); await callback.answer()
-
-# --- ارسال همگانی ---
-@router.callback_query(F.data == "admin_broadcast", AdminFilter())
-async def start_broadcast(callback: types.CallbackQuery, state: FSMContext):
-    await state.set_state(AdminState.waiting_for_broadcast)
-    await callback.message.answer("📢 پیام همگانی را بفرستید:"); await callback.answer()
-
-@router.message(AdminState.waiting_for_broadcast, AdminFilter())
-async def send_broadcast(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    users = await db.get_all_user_ids()
-    await message.reply(f"🚀 در حال ارسال به {len(users)} کاربر...")
-    success, failed = 0, 0
-    for uid in users:
-        try: await message.copy_to(chat_id=uid); success += 1; await asyncio.sleep(0.04)
-        except Exception: failed += 1
-    await message.reply(f"✅ ارسال پایان یافت.\n✔️ موفق: {success}\n❌ ناموفق: {failed}"); await state.clear()
-
-# --- ایموجی پرمیوم خودکار ---
-@router.callback_query(F.data == "adm_menu_emojis", AdminFilter())
-async def list_emojis_menu(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    emojis = await db.get_emoji_map()
-    buttons = [[InlineKeyboardButton(text=f"🗑️ حذف {norm} ➔ {cid}", style="danger", callback_data=f"adm_emodel_{norm}")] for norm, cid in emojis.items()]
-    buttons.append([InlineKeyboardButton(text="➕ افزودن / جایگزینی ایموجی", style="success", callback_data="adm_emo_add")])
-    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")])
-    await callback.message.edit_text("✨ <b>لیست ایموجی‌های فعال:</b>", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons)); await callback.answer()
-
-@router.callback_query(F.data == "adm_emo_add", AdminFilter())
-async def add_emoji_start(callback: types.CallbackQuery, state: FSMContext):
-    await state.set_state(AdminState.waiting_for_emoji_normal)
-    await callback.message.answer("💎 ایموجی معمولی را بفرستید:"); await callback.answer()
-
-@router.message(AdminState.waiting_for_emoji_normal, AdminFilter())
-async def add_emoji_norm_rec(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    await state.update_data(norm_emo=message.text.strip())
-    await state.set_state(AdminState.waiting_for_emoji_id)
-    await message.answer("🔢 حالا شناسه عددی (Custom Emoji ID) را ارسال کنید:")
-
-@router.message(AdminState.waiting_for_emoji_id, AdminFilter())
-async def add_emoji_id_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    cid = message.text.strip()
-    data = await state.get_data()
-    await db.set_emoji_map(data["norm_emo"], cid)
-    await state.clear(); await message.reply(f"✅ موفق! زین پس {data['norm_emo']} خودکار پرمیوم می‌شود.")
-
-@router.callback_query(F.data.startswith("adm_emodel_"), AdminFilter())
-async def delete_emoji_handler(callback: types.CallbackQuery, state: FSMContext = None):
-    await db.delete_emoji_map(callback.data.replace("adm_emodel_", ""))
-    await callback.answer("🗑 حذف شد.", show_alert=True); await list_emojis_menu(callback, state)
-
-# --- قیمت TON ---
-@router.callback_query(F.data == "admin_set_ton", AdminFilter())
-async def set_ton_start(callback: types.CallbackQuery, state: FSMContext):
-    cur_p = await db.get_int_setting("ton_unit_price", 330423)
-    await callback.message.answer(f"🪙 <b>قیمت فعلی هر TON:</b> <code>{cur_p:,}</code> ت\n\nقیمت جدید را وارد کنید:")
-    await state.set_state(AdminState.waiting_for_ton_price); await callback.answer()
-
-@router.message(AdminState.waiting_for_ton_price, AdminFilter())
-async def set_ton_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    p = db.clean_number(message.text)
-    if p <= 0: await message.reply("⚠️ عدد معتبر وارد کنید:"); return
-    await db.set_setting("ton_unit_price", str(p)); await state.clear(); await message.reply(f"✅ قیمت هر TON به <b>{p:,} ت</b> تغییر کرد.")
-
-# --- قیمت پرمیوم ---
-@router.callback_query(F.data == "admin_set_prem", AdminFilter())
-async def set_prem_start(callback: types.CallbackQuery, state: FSMContext):
-    p3 = await db.get_int_setting("prem_3m", 360000); p6 = await db.get_int_setting("prem_6m", 680000); p12 = await db.get_int_setting("prem_12m", 1250000)
-    await callback.message.answer(f"💎 <b>قیمت‌های پرمیوم:</b>\n• ۳ ماهه: {p3:,}\n• ۶ ماهه: {p6:,}\n• ۱۲ ماهه: {p12:,}\n\nالگو: <code>370000-700000-1300000</code>")
-    await state.set_state(AdminState.waiting_for_prem_prices); await callback.answer()
-
-@router.message(AdminState.waiting_for_prem_prices, AdminFilter())
-async def set_prem_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    parts = [db.clean_number(p) for p in message.text.split("-") if db.clean_number(p) > 0]
-    if len(parts) != 3: await message.reply("⚠️ ۳ قیمت با خط فاصله بفرستید."); return
-    await db.set_setting("prem_3m", str(parts[0])); await db.set_setting("prem_6m", str(parts[1])); await db.set_setting("prem_12m", str(parts[2]))
-    await state.clear(); await message.reply("✅ قیمت‌های پرمیوم ذخیره شدند.")
-
-# --- قیمت‌های استارز ---
-@router.callback_query(F.data == "admin_set_stars", AdminFilter())
-async def set_stars_start(callback: types.CallbackQuery, state: FSMContext):
-    p50 = await db.get_int_setting("stars_50", 75000)
-    p100 = await db.get_int_setting("stars_100", 145000)
-    p250 = await db.get_int_setting("stars_250", 355000)
-    p500 = await db.get_int_setting("stars_500", 695000)
-    p1000 = await db.get_int_setting("stars_1000", 1380000)
-    await callback.message.answer(f"⭐️ <b>قیمت‌های استارز:</b>\n۵۰: {p50:,} | ۱۰۰: {p100:,} | ۲۵۰: {p250:,} | ۵۰۰: {p500:,} | ۱۰۰۰: {p1000:,}\n\nالگو: <code>80000-150000-360000-700000-1400000</code>")
-    await state.set_state(AdminState.waiting_for_stars_prices); await callback.answer()
-
-@router.message(AdminState.waiting_for_stars_prices, AdminFilter())
-async def set_stars_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    parts = [db.clean_number(p) for p in message.text.split("-") if db.clean_number(p) > 0]
-    if len(parts) != 5: await message.reply("⚠️ لطفاً ۵ قیمت با خط فاصله بفرستید."); return
-    await db.set_setting("stars_50", str(parts[0])); await db.set_setting("stars_100", str(parts[1]))
-    await db.set_setting("stars_250", str(parts[2])); await db.set_setting("stars_500", str(parts[3]))
-    await db.set_setting("stars_1000", str(parts[4]))
-    await state.clear(); await message.reply("✅ قیمت‌های استارز ذخیره شدند.")
-
-# --- شماره کارت ---
-@router.callback_query(F.data == "admin_set_card", AdminFilter())
-async def set_card_start(callback: types.CallbackQuery, state: FSMContext):
-    c = await db.get_setting("card_number"); h = await db.get_setting("card_holder")
-    await callback.message.answer(f"💳 <b>کارت فعلی:</b>\n<code>{c}</code>\n<b>{h}</b>\n\nالگو: <code>شماره‌کارت-نام</code>")
-    await state.set_state(AdminState.waiting_for_card_info); await callback.answer()
-
-@router.message(AdminState.waiting_for_card_info, AdminFilter())
-async def set_card_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    if "-" not in message.text: await message.reply("⚠️ الگو: <code>شماره‌کارت-نام</code>"); return
-    num, holder = message.text.split("-", 1)
-    await db.set_setting("card_number", str(db.clean_number(num))); await db.set_setting("card_holder", holder.strip())
-    await state.clear(); await message.reply("✅ مشخصات کارت ذخیره شد.")
-
-# --- کوپن‌ها ---
-@router.callback_query(F.data == "admin_coupons_menu", AdminFilter())
-async def coupons_menu(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="➕ 🎟 ساخت کوپن", style="primary", callback_data="admin_add_coupon")],
-        [InlineKeyboardButton(text="📋 لیست و حذف کوپن‌ها", style="primary", callback_data="admin_list_coupons")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")]
-    ])
-    await callback.message.edit_text("🎟 <b>مدیریت کوپن‌های تخفیف:</b>", reply_markup=kb); await callback.answer()
-
-@router.callback_query(F.data == "admin_add_coupon", AdminFilter())
-async def add_coupon_start(callback: types.CallbackQuery, state: FSMContext):
-    await callback.message.answer("الگو: <code>کد-درصد-مبلغ‌ثابت-تعداد</code>\nمثال: <code>YALDA-20-0-100</code>")
-    await state.set_state(AdminState.waiting_for_coupon_create); await callback.answer()
-
-@router.message(AdminState.waiting_for_coupon_create, AdminFilter())
-async def add_coupon_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    p = message.text.split("-")
-    if len(p) != 4: await message.reply("⚠️ ۴ بخش با خط فاصله بفرستید."); return
-    await db.create_coupon(p[0].strip(), db.clean_number(p[1]), db.clean_number(p[2]), max(1, db.clean_number(p[3])))
-    await state.clear(); await message.reply(f"✅ کوپن <code>{p[0].upper()}</code> ایجاد شد.")
-
-@router.callback_query(F.data == "admin_list_coupons", AdminFilter())
-async def list_coupons(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    coupons = await db.get_all_coupons()
-    buttons = [[InlineKeyboardButton(text=f"🗑 حذف {c['code']}", style="danger", callback_data=f"del_cp_{c['code']}")] for c in coupons]
-    buttons.append([InlineKeyboardButton(text="🔙 بازگشت", callback_data="admin_coupons_menu")])
-    await callback.message.edit_text("📋 <b>لیست کوپن‌ها:</b>", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons)); await callback.answer()
-
-@router.callback_query(F.data.startswith("del_cp_"), AdminFilter())
-async def delete_coupon_handler(callback: types.CallbackQuery, state: FSMContext = None):
-    await db.delete_coupon(callback.data.split("_")[2])
-    await callback.answer("🗑 حذف شد.", show_alert=True); await list_coupons(callback, state)
-
-# --- مدیریت ادمین‌ها ---
-@router.callback_query(F.data == "admin_manage_admins", AdminFilter())
-async def manage_admins_menu(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    admins = await db.get_all_admins()
-    text = "👥 <b>لیست ادمین‌ها:</b>\n\n" + "\n".join([f"• <code>{a}</code>" for a in admins])
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="➕ افزودن ادمین", style="primary", callback_data="admin_add_new"), InlineKeyboardButton(text="🗑 حذف ادمین", style="danger", callback_data="admin_del_exist")],
-        [InlineKeyboardButton(text="🔙 بازگشت", callback_data="admin_back")]
-    ])
-    await callback.message.edit_text(text, reply_markup=kb); await callback.answer()
-
-@router.callback_query(F.data == "admin_add_new", AdminFilter())
-async def add_admin_start(callback: types.CallbackQuery, state: FSMContext):
-    await state.set_state(AdminState.waiting_for_add_admin)
-    await callback.message.answer("آیدی عددی ادمین جدید را بفرستید:"); await callback.answer()
-
-@router.message(AdminState.waiting_for_add_admin, AdminFilter())
-async def add_admin_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    uid = db.clean_number(message.text)
-    if not uid: await message.reply("⚠️ آیدی نامعتبر است."); return
-    await db.add_admin(uid); await state.clear(); await message.reply(f"✅ ادمین <code>{uid}</code> اضافه شد.")
-
-@router.callback_query(F.data == "admin_del_exist", AdminFilter())
-async def del_admin_start(callback: types.CallbackQuery, state: FSMContext):
-    await state.set_state(AdminState.waiting_for_remove_admin)
-    await callback.message.answer("آیدی عددی ادمین برای حذف را بفرستید:"); await callback.answer()
-
-@router.message(AdminState.waiting_for_remove_admin, AdminFilter())
-async def del_admin_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    uid = db.clean_number(message.text)
-    if uid == config.ADMIN_ID: await message.reply("❌ مالک قابل حذف نیست!"); return
-    await db.remove_admin(uid); await state.clear(); await message.reply(f"✅ دسترسی <code>{uid}</code> حذف شد.")
-
-# --- دکمه‌های منو ---
-@router.callback_query(F.data == "admin_menu_buttons", AdminFilter())
-async def list_buttons_edit(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="ویرایش استارز", callback_data="edit_btn_stars"), InlineKeyboardButton(text="ویرایش پرمیوم", callback_data="edit_btn_premium")],
-        [InlineKeyboardButton(text="ویرایش تون", callback_data="edit_btn_ton"), InlineKeyboardButton(text="ویرایش گیفت‌ها", callback_data="edit_btn_gifts")],
-        [InlineKeyboardButton(text="ویرایش کیف پول", callback_data="edit_btn_wallet"), InlineKeyboardButton(text="ویرایش زیرمجموعه‌گیری", callback_data="edit_btn_ref")],
-        [InlineKeyboardButton(text="ویرایش راهنما", callback_data="edit_btn_guide"), InlineKeyboardButton(text="ویرایش پشتیبانی", callback_data="edit_btn_support")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")]
-    ])
-    await callback.message.edit_text("✏️ <b>دکمه مورد نظر برای تغییر را انتخاب کنید:</b>", reply_markup=kb); await callback.answer()
-
-@router.callback_query(F.data.startswith("edit_btn_"), AdminFilter())
-async def start_btn_edit(callback: types.CallbackQuery, state: FSMContext):
-    await state.update_data(btn_key=callback.data.replace("edit_", ""))
-    await state.set_state(AdminState.waiting_for_btn_edit)
-    await callback.message.answer("عنوان جدید دکمه را بفرستید:"); await callback.answer()
-
-@router.message(AdminState.waiting_for_btn_edit, AdminFilter())
-async def save_btn_edit(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    data = await state.get_data()
-    await db.set_setting(data["btn_key"], message.text.strip())
-    await state.clear(); await message.reply("✅ عنوان دکمه ذخیره شد.")
-
-# --- استیکرها ---
-@router.callback_query(F.data == "admin_menu_stickers", AdminFilter())
-async def list_stickers_edit(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="استیکر خوشامدگویی", callback_data="setstk_sticker_welcome"), InlineKeyboardButton(text="استیکر موفقیت", callback_data="setstk_sticker_success")],
-        [InlineKeyboardButton(text="استیکر احراز هویت", callback_data="setstk_sticker_kyc"), InlineKeyboardButton(text="استیکر کیف پول", callback_data="setstk_sticker_wallet")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")]
-    ])
-    await callback.message.edit_text("🎭 <b>تنظیم استیکرها:</b>", reply_markup=kb); await callback.answer()
-
-@router.callback_query(F.data.startswith("setstk_"), AdminFilter())
-async def start_sticker_edit(callback: types.CallbackQuery, state: FSMContext):
-    await state.update_data(stk_key=callback.data.replace("setstk_", ""))
-    await state.set_state(AdminState.waiting_for_sticker_edit)
-    await callback.message.answer("لطفاً یک استیکر بفرستید:"); await callback.answer()
-
-@router.message(AdminState.waiting_for_sticker_edit, AdminFilter())
-async def save_sticker_edit(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    fid = message.sticker.file_id if message.sticker else message.text.strip()
-    data = await state.get_data()
-    await db.set_setting(data["stk_key"], fid); await state.clear(); await message.reply("✅ استیکر ذخیره شد.")
-
-# --- مشاهده لیست کاربران با تاریخ عضویت و صفحه‌بندی ---
-@router.callback_query(F.data.startswith("adm_users_"), AdminFilter())
-async def show_users_list(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    page = int(callback.data.split("_")[2])
-    per_page = 8
-    users, total_users = await db.get_users_paginated(page=page, per_page=per_page)
-    
-    total_pages = max(1, (total_users + per_page - 1) // per_page)
-    text = f"👥 <b>لیست کاربران ربات (صفحه {page} از {total_pages})</b>\n📊 کل کاربران: <b>{total_users:,} نفر</b>\n\n"
-    
-    for idx, u in enumerate(users, start=(page - 1) * per_page + 1):
-        uname = f"@{u['username']}" if u['username'] else "ندارد"
-        join_date = str(u['created_at'])[:16]
-        text += f"{idx}. {u['full_name']} ({uname})\n"
-        text += f"   🆔 <code>{u['user_id']}</code> | 💰 {u['balance']:,} ت\n"
-        text += f"   📅 تاریخ عضویت: <code>{join_date}</code>\n\n"
-
-    nav_buttons = []
-    if page > 1:
-        nav_buttons.append(InlineKeyboardButton(text="⬅️ قبلی", callback_data=f"adm_users_{page - 1}"))
-    if page < total_pages:
-        nav_buttons.append(InlineKeyboardButton(text="بعدی ➡️", callback_data=f"adm_users_{page + 1}"))
-
-    kb_rows = []
-    if nav_buttons:
-        kb_rows.append(nav_buttons)
-    kb_rows.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")])
-
-    await callback.message.edit_text(text, reply_markup=InlineKeyboardMarkup(inline_keyboard=kb_rows))
-    await callback.answer()
-
-# --- پیام خوشامدگویی ---
-@router.callback_query(F.data == "admin_set_welcome", AdminFilter())
-async def set_welcome_start(callback: types.CallbackQuery, state: FSMContext):
-    w = await db.get_setting("welcome_text")
-    await callback.message.answer(f"💬 <b>متن فعلی:</b>\n\n{w}\n\nمتن جدید را وارد کنید (نام کاربر: <code>{{name}}</code>):")
-    await state.set_state(AdminState.waiting_for_welcome_text); await callback.answer()
-
-@router.message(AdminState.waiting_for_welcome_text, AdminFilter())
-async def set_welcome_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    await db.set_setting("welcome_text", message.text.strip()); await state.clear(); await message.reply("✅ متن خوشامدگویی بروز شد.")
-
-# --- پاداش‌ها ---
-@router.callback_query(F.data == "admin_set_bonuses", AdminFilter())
-async def set_bonuses_start(callback: types.CallbackQuery, state: FSMContext):
-    wb = await db.get_int_setting("welcome_bonus", 10000); rb = await db.get_int_setting("referral_bonus", 5000)
-    await callback.message.answer(f"🎁 <b>پاداش فعلی:</b>\nورود: {wb:,} ت | دعوت: {rb:,} ت\n\nالگو: <code>ورود-دعوت</code>")
-    await state.set_state(AdminState.waiting_for_bonuses); await callback.answer()
-
-@router.message(AdminState.waiting_for_bonuses, AdminFilter())
-async def set_bonuses_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    p = [db.clean_number(x) for x in message.text.split("-") if db.clean_number(x) >= 0]
-    if len(p) != 2: await message.reply("⚠️ ۲ مبلغ با خط فاصله بفرستید."); return
-    await db.set_setting("welcome_bonus", str(p[0])); await db.set_setting("referral_bonus", str(p[1]))
-    await state.clear(); await message.reply("✅ پاداش‌ها ذخیره شدند.")
-
-# --- سقف و کف شارژ ---
-@router.callback_query(F.data == "admin_set_limits", AdminFilter())
-async def set_limits_start(callback: types.CallbackQuery, state: FSMContext):
-    mi = await db.get_int_setting("min_deposit", 100000); ma = await db.get_int_setting("max_deposit", 5000000)
-    await callback.message.answer(f"💰 <b>کف:</b> {mi:,} ت | <b>سقف:</b> {ma:,} ت\n\nالگو: <code>کف-سقف</code>")
-    await state.set_state(AdminState.waiting_for_deposit_limits); await callback.answer()
-
-@router.message(AdminState.waiting_for_deposit_limits, AdminFilter())
-async def set_limits_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    p = [db.clean_number(x) for x in message.text.split("-") if db.clean_number(x) > 0]
-    if len(p) != 2: await message.reply("⚠️ ۲ عدد معتبر بفرستید."); return
-    await db.set_setting("min_deposit", str(p[0])); await db.set_setting("max_deposit", str(p[1]))
-    await state.clear(); await message.reply("✅ سقف و کف ذخیره شدند.")
-
-# --- مدیریت چند کاناله جوین اجباری ---
-@router.callback_query(F.data == "admin_set_channel", AdminFilter())
-async def manage_channels_menu(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    channels = await db.get_all_required_channels()
-    buttons = []
-    text = "📢 <b>مدیریت کانال‌های جوین اجباری:</b>\n\n"
-    if channels:
-        for idx, ch in enumerate(channels, 1):
-            text += f"{idx}. <b>{ch['channel_title']}</b> (<code>{ch['channel_id']}</code>)\n🔗 {ch['channel_link']}\n\n"
-            buttons.append([InlineKeyboardButton(text=f"🗑 حذف {ch['channel_title']}", style="danger", callback_data=f"del_reqch_{ch['id']}")])
-    else:
-        text += "<i>در حال حاضر هیچ کانال جوین اجباری فعالی وجود ندارد.</i>\n"
-
-    buttons.append([InlineKeyboardButton(text="➕ افزودن کانال جدید", style="success", callback_data="add_reqch_start")])
-    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")])
-    await callback.message.edit_text(text, reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
-    await callback.answer()
-
-@router.callback_query(F.data == "add_reqch_start", AdminFilter())
-async def add_channel_start(callback: types.CallbackQuery, state: FSMContext):
-    await state.set_state(AdminState.waiting_for_channel)
-    text = (
-        "📢 <b>افزودن کانال جوین اجباری جدید:</b>\n\n"
-        "الگو: <code>آیدی‌کانال-لینک‌کانال-عنوان‌کانال</code>\n\n"
-        "مثال:\n"
-        "<code>@MyChannel-https://t.me/MyChannel-کانال اطلاع‌رسانی</code>"
-    )
-    await callback.message.answer(text)
-    await callback.answer()
-
-@router.message(AdminState.waiting_for_channel, AdminFilter())
-async def add_channel_save(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text): await state.clear(); await message.reply("❌ لغو شد."); return
-    parts = message.text.split("-")
-    if len(parts) < 2:
-        await message.reply("⚠️ الگو: <code>آیدی-لینک-عنوان</code>")
-        return
-    ch_id = parts[0].strip()
-    link = parts[1].strip()
-    title = parts[2].strip() if len(parts) > 2 else "کانال"
-    await db.add_required_channel(ch_id, link, title)
-    await state.clear()
-    await message.reply(f"✅ کانال <b>{title}</b> (<code>{ch_id}</code>) به لیست جوین اجباری افزوده شد.")
-
-@router.callback_query(F.data.startswith("del_reqch_"), AdminFilter())
-async def delete_channel_handler(callback: types.CallbackQuery, state: FSMContext = None):
-    ch_pk = callback.data.replace("del_reqch_", "")
-    await db.delete_required_channel(ch_pk)
-    await callback.answer("🗑 کانال حذف شد.", show_alert=True)
-    await manage_channels_menu(callback, state)
-
-# --- دریافت بکاپ پروژه ---
-@router.message(Command("backup"), AdminFilter())
-@router.callback_query(F.data == "admin_get_backup", AdminFilter())
-async def send_project_backup(event: types.Message | types.CallbackQuery):
-    user_id = event.from_user.id
-    msg = event.message if isinstance(event, types.CallbackQuery) else event
-    wait_msg = await msg.answer("⏳ در حال ساخت فایل زیپ بکاپ...")
-    zip_name = "project_backup.zip"
-    if os.path.exists(zip_name): os.remove(zip_name)
-    with zipfile.ZipFile(zip_name, "w", zipfile.ZIP_DEFLATED) as zf:
-        for root, dirs, files in os.walk("."):
-            dirs[:] = [d for d in dirs if d not in [".venv", "venv", ".git", "__pycache__", "env"]]
-            for file in files:
-                if file.endswith((".py", ".db", ".env", ".txt", ".json", ".md")):
-                    fp = os.path.join(root, file)
-                    zf.write(fp, arcname=os.path.relpath(fp, "."))
-    await event.bot.send_document(chat_id=user_id, document=FSInputFile(zip_name), caption="📦 <b>بکاپ کامل سورس و دیتابیس ربات.</b>", request_timeout=120)
-    await wait_msg.delete()
-    if os.path.exists(zip_name): os.remove(zip_name)
-
-@router.callback_query(F.data == "admin_back", AdminFilter())
-async def admin_back_handler(callback: types.CallbackQuery, state: FSMContext = None):
-    if state: await state.clear()
-    await callback.message.edit_text("👑 <b>پنل مدیریت ربات</b>", reply_markup=get_admin_keyboard()); await callback.answer()
-
-# --- سیستم تیکتینگ و پاسخگویی به پیام پشتیبانی ---
-@router.callback_query(F.data.startswith("ans_sup_"), AdminFilter())
-async def reply_support_start(callback: types.CallbackQuery, state: FSMContext):
-    parts = callback.data.split("_")
-    ticket_id = int(parts[2])
-    target_uid = int(parts[3])
-
-    ticket = await db.get_support_ticket(ticket_id)
-    if not ticket or ticket["status"] != "open":
-        admin_who = ticket.get("answered_by") if ticket else "ادمین دیگری"
-        await callback.answer(f"⚠️ این تیکت قبلاً توسط {admin_who} پاسخ داده شده است!", show_alert=True)
-        return
-
-    await state.update_data(ans_ticket_id=ticket_id, ans_target_uid=target_uid)
-    await state.set_state(AdminState.waiting_for_support_reply)
-    await callback.message.answer(f"✍️ لطفاً <b>متن پاسخ خود</b> برای کاربر (<code>{target_uid}</code>) را ارسال فرمایید (یا برای انصراف بنویسید <code>انصراف</code>):")
-    await callback.answer()
-
-@router.message(AdminState.waiting_for_support_reply, AdminFilter())
-async def reply_support_send(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        await message.reply("❌ پاسخگویی به پیام پشتیبانی لغو شد.")
-        return
-
-    data = await state.get_data()
-    ticket_id = data["ans_ticket_id"]
-    target_uid = data["ans_target_uid"]
-
-    ticket = await db.get_support_ticket(ticket_id)
-    if not ticket or ticket["status"] != "open":
-        await message.reply(f"⚠️ این تیکت قبلاً توسط {ticket.get('answered_by', 'ادمین دیگری')} پاسخ داده شده است!")
-        await state.clear()
-        return
-
-    admin_name = message.from_user.first_name or str(message.from_user.id)
-    await db.resolve_support_ticket(ticket_id, admin_name)
-
-    user_reply_text = (
-        "💬 <b>پاسخ پشتیبانی به پیام شما:</b>\n\n"
-        f"{message.text}"
-    )
-
-    try:
-        await message.bot.send_message(chat_id=target_uid, text=user_reply_text)
-        await message.reply(f"✅ <b>پاسخ شما با موفقیت برای کاربر ارسال شد.</b> (تیکت #{ticket_id} بسته شد)")
-    except Exception as e:
-        await message.reply(f"❌ خطا در ارسال پیام به کاربر: {e}")
-
-    await state.clear()
-
-# --- تایید/رد هوشمند و ضد دوبل رسید واریز ---
-@router.callback_query(F.data.startswith("app_dep_"), AdminFilter())
-async def approve_deposit_handler(callback: types.CallbackQuery):
-    dep_id = int(callback.data.split("_")[2])
-    dep = await db.get_deposit_rec(dep_id)
-    if not dep or dep["status"] != "pending":
-        await callback.answer("⚠️ این رسید قبلاً توسط ادمین دیگری تعیین تکلیف شده است!", show_alert=True)
-        return
-
-    admin_name = callback.from_user.first_name or str(callback.from_user.id)
-    await db.resolve_deposit_rec(dep_id, "approved", admin_name)
-    await db.update_balance(dep["user_id"], dep["amount"])
-
-    new_caption = (callback.message.caption or "") + f"\n\n🟢 <b>تایید شد توسط: {admin_name}</b>\n💰 مبلغ {dep['amount']:,} ت واریز گردید."
-    await callback.message.edit_caption(caption=new_caption, reply_markup=None)
-    try:
-        await db.send_bot_sticker(callback.bot, dep["user_id"], "sticker_success")
-        await callback.bot.send_message(chat_id=dep["user_id"], text=f"🎉 واریزی شما به مبلغ <b>{dep['amount']:,} تومان</b> تایید و به موجودی شما افزوده شد.")
-    except Exception: pass
-    await callback.answer("شارژ انجام شد.")
-
-@router.callback_query(F.data.startswith("rej_dep_"), AdminFilter())
-async def reject_deposit_handler(callback: types.CallbackQuery):
-    dep_id = int(callback.data.split("_")[2])
-    dep = await db.get_deposit_rec(dep_id)
-    if not dep or dep["status"] != "pending":
-        await callback.answer("⚠️ این رسید قبلاً توسط ادمین دیگری تعیین تکلیف شده است!", show_alert=True)
-        return
-
-    admin_name = callback.from_user.first_name or str(callback.from_user.id)
-    await db.resolve_deposit_rec(dep_id, "rejected", admin_name)
-    new_caption = (callback.message.caption or "") + f"\n\n🔴 <b>رد شد توسط: {admin_name}</b>"
-    await callback.message.edit_caption(caption=new_caption, reply_markup=None)
-    try: await callback.bot.send_message(chat_id=dep["user_id"], text="❌ رسید واریزی شما تایید نشد.")
-    except Exception: pass
-    await callback.answer("رسید رد شد.")
-
-# --- تایید/رد هوشمند و ضد دوبل KYC ---
-@router.callback_query(F.data.startswith("app_kyc_"), AdminFilter())
-async def approve_kyc_safe_handler(callback: types.CallbackQuery):
-    sub_id = int(callback.data.split("_")[2])
-    sub = await db.get_kyc_sub(sub_id)
-    if not sub or sub["status"] != "pending":
-        await callback.answer("⚠️ این احراز هویت قبلاً بررسی شده است!", show_alert=True)
-        return
-
-    admin_name = callback.from_user.first_name or str(callback.from_user.id)
-    await db.resolve_kyc_sub(sub_id, "approved", admin_name)
-    await db.set_user_kyc(sub["user_id"], 2, sub["card_number"])
-
-    new_caption = (callback.message.caption or "") + f"\n\n🟢 <b>تایید شد توسط: {admin_name}</b>"
-    await callback.message.edit_caption(caption=new_caption, reply_markup=None)
-    try:
-        await db.send_bot_sticker(callback.bot, sub["user_id"], "sticker_success")
-        await callback.bot.send_message(chat_id=sub["user_id"], text="🎉 <b>تبریک! مدارک احراز هویت شما با موفقیت تایید شد.</b>\nاکنون می‌توانید نسبت به خرید و افزایش موجودی اقدام فرمایید.")
-    except Exception: pass
-    await callback.answer("احراز هویت تایید شد.")
-
-@router.callback_query(F.data.startswith("rej_kyc_"), AdminFilter())
-async def reject_kyc_safe_handler(callback: types.CallbackQuery):
-    sub_id = int(callback.data.split("_")[2])
-    sub = await db.get_kyc_sub(sub_id)
-    if not sub or sub["status"] != "pending":
-        await callback.answer("⚠️ این احراز هویت قبلاً بررسی شده است!", show_alert=True)
-        return
-
-    admin_name = callback.from_user.first_name or str(callback.from_user.id)
-    await db.resolve_kyc_sub(sub_id, "rejected", admin_name)
-    await db.set_user_kyc(sub["user_id"], 0)
-
-    new_caption = (callback.message.caption or "") + f"\n\n🔴 <b>رد شد توسط: {admin_name}</b>"
-    await callback.message.edit_caption(caption=new_caption, reply_markup=None)
-    try: await callback.bot.send_message(chat_id=sub["user_id"], text="❌ <b>متاسفانه مدارک احراز هویت شما تایید نشد.</b>\nلطفاً مجدداً ارسال فرمایید.")
-    except Exception: pass
-    await callback.answer("احراز رد شد.")
-
-@router.callback_query(F.data.startswith("order_done_"), AdminFilter())
-async def order_done(callback: types.CallbackQuery):
-    oid = int(callback.data.split("_")[2])
-    o = await db.get_order(oid)
-    if not o or o["status"] != "pending":
-        await callback.answer("⚠️ این سفارش قبلاً تعیین تکلیف شده است!", show_alert=True)
-        return
-
-    admin_name = callback.from_user.first_name or str(callback.from_user.id)
-    await db.update_order_status(oid, "completed")
-    
-    new_text = (callback.message.text or "") + f"\n\n🟢 <b>سفارش تحویل داده شد توسط: {admin_name}</b>"
-    await callback.message.edit_text(new_text, reply_markup=None)
-    try:
-        await db.send_bot_sticker(callback.bot, o["user_id"], "sticker_success")
-        await callback.bot.send_message(chat_id=o["user_id"], text=f"🎉 سفارش <code>#{oid}</code> شما با موفقیت تحویل داده شد.")
-    except Exception: pass
-    await callback.answer("سفارش تایید شد.")
-
-@router.callback_query(F.data.startswith("order_cancel_"), AdminFilter())
-async def order_cancel(callback: types.CallbackQuery):
-    oid = int(callback.data.split("_")[2])
-    o = await db.get_order(oid)
-    if not o or o["status"] != "pending":
-        await callback.answer("⚠️ این سفارش قبلاً تعیین تکلیف شده است!", show_alert=True)
-        return
-
-    admin_name = callback.from_user.first_name or str(callback.from_user.id)
-    await db.update_order_status(oid, "cancelled")
-    await db.update_balance(o["user_id"], o["amount_paid"])
-    
-    new_text = (callback.message.text or "") + f"\n\n🔴 <b>سفارش لغو و وجه برگشت داده شد توسط: {admin_name}</b>"
-    await callback.message.edit_text(new_text, reply_markup=None)
-    try: await callback.bot.send_message(chat_id=o["user_id"], text=f"⚠️ سفارش <code>#{oid}</code> لغو شد و مبلغ به کیف پول برگشت داده شد.")
-    except Exception: pass
-    await callback.answer("سفارش لغو شد.")
-EOF
-
-cat << 'EOF' > handlers/auth.py
-import re
-from aiogram import Router, types, F
-from aiogram.filters import CommandStart, CommandObject, BaseFilter
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-from config import config
-import database as db
-
-router = Router()
-
-class SupportState(StatesGroup):
-    waiting_for_msg = State()
-
-class GuideSupportFilter(BaseFilter):
-    async def __call__(self, message: types.Message) -> bool:
-        if not message.text:
-            return False
-        t = message.text.strip()
-        return any(k in t for k in ["راهنما", "پشتیبانی"])
-
-async def check_all_channels(bot, user_id: int):
-    channels = await db.get_all_required_channels()
-    if not channels:
-        return True, []
-    not_joined = []
-    for ch in channels:
-        try:
-            member = await bot.get_chat_member(chat_id=ch["channel_id"], user_id=user_id)
-            if member.status in ["left", "kicked"]:
-                not_joined.append(ch)
-        except Exception:
-            pass
-    return (len(not_joined) == 0), not_joined
-
-async def get_main_keyboard():
-    b_stars = await db.get_setting("btn_stars", "⭐️ خرید استارز")
-    b_prem = await db.get_setting("btn_premium", "💎 خرید پرمیوم")
-    b_ton = await db.get_setting("btn_ton", "🪙 خرید تون")
-    b_gifts = await db.get_setting("btn_gifts", "🎁 گیفت‌های تلگرام")
-    b_self = await db.get_setting("btn_self", "🚀 مدیریت سلف")
-    b_wallet = await db.get_setting("btn_wallet", "💰 کیف پول")
-    b_ref = await db.get_setting("btn_ref", "👥 زیرمجموعه‌گیری")
-    b_guide = await db.get_setting("btn_guide", "📖 راهنما")
-    b_support = await db.get_setting("btn_support", "📞 پشتیبانی")
-
-    clean = lambda t: re.sub(r'<[^>]+>', '', t).strip()
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text=clean(b_stars), style="primary"), KeyboardButton(text=clean(b_prem), style="primary")],
-            [KeyboardButton(text=clean(b_ton), style="primary"), KeyboardButton(text=clean(b_gifts), style="primary")],
-            [KeyboardButton(text=clean(b_self), style="primary")],
-            [KeyboardButton(text=clean(b_wallet), style="primary"), KeyboardButton(text=clean(b_ref), style="primary")],
-            [KeyboardButton(text=clean(b_guide), style="primary"), KeyboardButton(text=clean(b_support), style="primary")]
-        ],
-        resize_keyboard=True
-    )
-
-@router.message(CommandStart())
-@router.message(F.text == "❌ انصراف و بازگشت")
-async def start_handler(message: types.Message, state: FSMContext, command: CommandObject = None):
-    await state.clear()
-    joined, not_joined = await check_all_channels(message.bot, message.from_user.id)
-    if not joined:
-        buttons = [[InlineKeyboardButton(text=f"📢 عضویت در {ch['channel_title']}", url=ch["channel_link"])] for ch in not_joined]
-        buttons.append([InlineKeyboardButton(text="🔵 🔄 بررسی عضویت", callback_data="check_join_channel")])
-        await message.reply("⚠️ جهت استفاده از ربات، ابتدا باید در کانال‌های زیر عضو شوید:", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
-        return
-
-    ref_id = None
-    if command and command.args:
-        if command.args.startswith("ref_") and command.args[4:].isdigit():
-            ref_id = int(command.args[4:])
-        elif command.args.isdigit():
-            ref_id = int(command.args)
-
-    user = await db.get_or_create_user(message.from_user.id, message.from_user.username, message.from_user.full_name, ref_id)
-    wb = await db.get_int_setting("welcome_bonus", 10000)
-    rb = await db.get_int_setting("referral_bonus", 5000)
-
-    if not user.get("is_verified", 0):
-        await db.set_user_verified(message.from_user.id, True)
-        await db.update_balance(message.from_user.id, wb)
-        if user.get("referrer_id"):
-            await db.update_balance(user["referrer_id"], rb)
-            try:
-                await message.bot.send_message(chat_id=user["referrer_id"], text=f"🎉 کاربری با لینک شما عضو شد و <b>{rb:,} تومان</b> هدیه گرفتید!")
-            except Exception:
-                pass
-
-    await db.send_bot_sticker(message.bot, message.chat.id, "sticker_welcome")
-    wt = await db.get_setting("welcome_text", "سلام {name} عزیز، به ربات خوش آمدید!\n\nاز منوی زیر استفاده کنید:")
-    formatted_welcome = wt.replace("{name}", message.from_user.first_name)
-    await message.reply(formatted_welcome, reply_markup=await get_main_keyboard())
-
-@router.callback_query(F.data == "check_join_channel")
-async def check_join_callback(callback: types.CallbackQuery, state: FSMContext):
-    await state.clear()
-    joined, not_joined = await check_all_channels(callback.bot, callback.from_user.id)
-    if joined:
-        await callback.message.delete()
-        user = await db.get_user(callback.from_user.id)
-        wb = await db.get_int_setting("welcome_bonus", 10000)
-        rb = await db.get_int_setting("referral_bonus", 5000)
-        if not user or not user.get("is_verified", 0):
-            await db.set_user_verified(callback.from_user.id, True)
-            await db.update_balance(callback.from_user.id, wb)
-            if user and user.get("referrer_id"):
-                await db.update_balance(user["referrer_id"], rb)
-                try:
-                    await callback.bot.send_message(chat_id=user["referrer_id"], text=f"🎉 کاربری با لینک شما عضو شد و <b>{rb:,} تومان</b> هدیه گرفتید!")
-                except Exception:
-                    pass
-        await db.send_bot_sticker(callback.bot, callback.message.chat.id, "sticker_welcome")
-        wt = await db.get_setting("welcome_text", "سلام {name} عزیز، به ربات خوش آمدید!\n\nاز منوی زیر استفاده کنید:")
-        await callback.message.answer(wt.replace("{name}", callback.from_user.first_name), reply_markup=await get_main_keyboard())
-        await callback.answer("عضویت در تمام کانال‌ها تایید شد!")
-    else:
-        await callback.answer("❌ هنوز در تمام کانال‌ها عضو نشده‌اید!", show_alert=True)
-
-@router.message(GuideSupportFilter())
-async def guide_and_support_handler(message: types.Message, state: FSMContext):
-    text = message.text.strip()
-    if "راهنما" in text:
-        bot_info = await message.bot.get_me()
-        rb = await db.get_int_setting("referral_bonus", 5000)
-        cost = await db.get_int_setting("emoji_msg_cost", 0)
-        cost_txt = f"\n💸 هزینه ارسال هر پیام ایموجی: <b>{cost:,} تومان</b>" if cost > 0 else "\n💸 ارسال پیام‌های ایموجی: <b>رایگان</b>"
-        guide_text = f"📚 <b>راهنمای جامع بخش‌های ربات:</b>\n\n✨ <b>۱. تبدیل پیام به ایموجی پرمیوم:</b>\nهر متنی رو داخل ربات بنویسید خودکار به پرمیوم تبدیل میشه!\n\n💬 <b>۲. ارسال در چت‌ها:</b>\nدر هر چت بنویسید: <code>@{bot_info.username} متن شما</code>{cost_txt}\n\n⭐️ <b>۳. فروشگاه خدمات:</b>\nخرید استارز، پرمیوم، تون و گیفت‌ها با شارژ کیف پول.\n\n👥 <b>۴. زیرمجموعه‌گیری:</b>\nبا هر دعوت <b>{rb:,} تومان</b> پاداش بگیرید."
-        await message.reply(guide_text)
-    elif "پشتیبانی" in text:
-        kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="cancel_support")]])
-        await message.reply("📞 <b>ارتباط با پشتیبانی:</b>\n\nپیام خود را بنویسید و ارسال کنید:", reply_markup=kb)
-        await state.set_state(SupportState.waiting_for_msg)
-
-@router.callback_query(F.data == "cancel_support")
-async def cancel_support_handler(callback: types.CallbackQuery, state: FSMContext):
-    await state.clear()
-    await callback.message.edit_text("❌ لغو شد.")
-    await callback.answer()
-
-@router.message(SupportState.waiting_for_msg)
-async def process_support_msg(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        await message.reply("❌ لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    uid, fname, uname = message.from_user.id, message.from_user.full_name, message.from_user.username
-    msg_text = message.text or message.caption or "ارسال رسانه"
-    ticket_id = await db.create_support_ticket(uid, msg_text)
-
-    mention = f'<a href="tg://user?id={uid}">{fname}</a> (@{uname})' if uname else f'<a href="tg://user?id={uid}">{fname}</a>'
-    admin_caption = (
-        f"📩 <b>پیام پشتیبانی جدید #{ticket_id}:</b>\n\n"
-        f"👤 فرستنده: {mention}\n"
-        f"🆔 آیدی عددی: <code>{uid}</code>\n\n"
-        f"📝 متن پیام:\n<i>{msg_text}</i>"
-    )
-
-    kb = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text="✍️ پاسخ به این پیام", style="primary", callback_data=f"ans_sup_{ticket_id}_{uid}")
-    ]])
-
-    for a in await db.get_all_admins():
-        try:
-            await message.bot.send_message(chat_id=a, text=admin_caption, reply_markup=kb)
-            if not message.text:
-                await message.copy_to(chat_id=a)
-        except Exception:
-            pass
-
-    await message.reply("✅ پیام شما برای پشتیبانی ارسال شد. به زودی پاسخ برای شما ارسال می‌شود.")
-    await state.clear()
-EOF
-
-cat << 'EOF' > handlers/emoji_tools.py
-import re
+cat << 'EOF' > handlers/helper_bot.py
 import uuid
-import logging
+import datetime
+from zoneinfo import ZoneInfo
 from aiogram import Router, types, F, Bot
 from aiogram.types import (
     InlineQuery, 
     InlineQueryResultArticle, 
-    InputTextMessageContent, 
-    ChosenInlineResult,
+    InputTextMessageContent,
     InlineKeyboardMarkup, 
     InlineKeyboardButton
 )
 from aiogram.enums import ParseMode
-from aiogram.fsm.context import FSMContext
 import database as db
-from database import transform_text_emojis
 
 router = Router()
 
-@router.message(F.chat.type == "private", F.text & ~F.text.startswith("/"))
-async def direct_pemojis_editor(message: types.Message, state: FSMContext):
-    current_state = await state.get_state()
-    if current_state is not None:
-        return
+# ۳۶ فریم و کادر اختصاصی دور ساعت
+NAME_TEMPLATES = [
+    "{name} ﹝{clock}﹞",
+    "{name} ❲{clock}❳",
+    "{name} ‹{clock}›",
+    "{name} 「{clock}」",
+    "{name} 【{clock}】",
+    "{name} 〖{clock}〗",
+    "{name} ⟦{clock}⟧",
+    "{name} ⦅{clock}⦆",
+    "{name} ﹤{clock}﹥",
+    "{name} ⟮{clock}⟯",
+    "{name} ⟬{clock}⟭",
+    "{name} ❨{clock}❩",
+    "{name} ❮{clock}❯",
+    "{name} «{clock}»",
+    "{name} 𓆩{clock}𓆪",
+    "{name} ⸢{clock}⸥",
+    "{name} ⌜{clock}⌟",
+    "{name} ☽{clock}☾",
+    "{name} ✦ {clock} ✦",
+    "{name} ✧ {clock} ✧",
+    "{name} ⌁ {clock} ⌁",
+    "{name} ⚡️ {clock}",
+    "{name} 💎 {clock}",
+    "{name} 🔥 {clock}",
+    "{name} ❄️ {clock}",
+    "{name} ⚜️ {clock}",
+    "{name} 亗 {clock} 亗",
+    "{name} ༒ {clock} ༒",
+    "{name} ⊶ {clock} ⊷",
+    "{name} ༺ {clock} ༻",
+    "{name} ⧉ {clock} ⧉",
+    "{name} ⟡ {clock} ⟡",
+    "{name} | {clock} |",
+    "{name} • {clock} •",
+    "{name} × {clock} ×",
+    "{name} ➔ {clock}"
+]
 
-    text = message.text.strip()
-    menu_keywords = ["استارز", "پرمیوم", "تون", "گیفت", "کیف پول", "زیرمجموعه", "راهنما", "پشتیبانی", "انصراف", "سلف"]
-    if any(k in text for k in menu_keywords):
-        return
+# ۳۶ فونت زنده اعداد ساعت
+FONT_LIST = [
+    ("persian", "فارسی کلاسیک", "۱۸:۳۰"),
+    ("digital", "دیجیتال توخالی", "𝟙𝟠:𝟛𝟘"),
+    ("superscript", "بالانویس", "¹⁸:³⁰"),
+    ("subscript", "پایین‌نویس", "₁₈:₃₀"),
+    ("bold", "بولد کلاسیک", "𝟏𝟖:𝟑𝟎"),
+    ("sans_bold", "سانس بولد", "𝟭𝟴:𝟯𝟬"),
+    ("sans", "سانس ساده", "𝟣𝟪:𝟥𝟢"),
+    ("monospace", "مونو ماشین‌تحریر", "𝟷𝟾:𝟹𝟶"),
+    ("circled_dark", "دایره مشکی", "➊➑:➌⓿"),
+    ("circled_white", "دایره سفید", "①⑧:③⓪"),
+    ("circled_serif", "دایره حاشیه‌دار", "➀➇:➂🄋"),
+    ("parenthesized", "پرانتزی", "⑴⑻:⑶⒪"),
+    ("dotted", "نقطه‌دار لوکس", "⒈⒏:⒊🄀"),
+    ("square_dark", "مربعی توپر", "➊➑:➌🄌"),
+    ("fullwidth", "عریض ژاپنی", "１８：３０"),
+    ("segment_7", "ساعت مچی ۷-سگمنت", "🯱🯸:𝯳🯰"),
+    ("arabic", "عربی سنتی", "١٨:٣٠"),
+    ("roman", "رومی باستان", "ⅠⅧ:Ⅲ0"),
+    ("bubble_black", "حباب مشکی", "❶❽:❸⓿"),
+    ("braille", "خط بریل", "⠁⠓:⠉⠚"),
+    ("devanagari", "هندی سانسکریت", "१८:३०"),
+    ("bengali", "بنگالی آرتیستیک", "১৮:৩০"),
+    ("thai", "تایلندی مینیمال", "๑๘:๓๐"),
+    ("tibetan", "تبتی ماورایی", "༡༨:༣༠"),
+    ("khmer", "خمری سلطنتی", "១៨:៣០"),
+    ("myanmar", "میانمار کهکشانی", "၁၈:၃၀"),
+    ("gurmukhi", "گورموکی هندی", "੧੮:੩੦"),
+    ("kannada", "کانادا طلایی", "೧೮:೩೦"),
+    ("malayalam", "مالایالام امواج", "൧൮:൩൦"),
+    ("tamil", "تامیل کلاسیک", "௧௮:௩௦"),
+    ("telugu", "تلوگو فانتزی", "౧౮:౩౦"),
+    ("gujarati", "گجراتی لوکس", "૧૮:૩૦"),
+    ("oriya", "اوریا خاص", "୧୮:୩୦"),
+    ("sinhala", "سینهالی باستانی", "෧෮:෩෦"),
+    ("lao", "لائوسی مدرن", "໑໘:໓໐"),
+    ("regular", "انگلیسی ساده", "18:30")
+]
 
-    loading_msg = await message.reply("⏳ <i>در حال تبدیل پیام...</i>", parse_mode=ParseMode.HTML)
-    formatted_text = transform_text_emojis(text)
-    
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🚀 ارسال با ادیت به چت‌ها", switch_inline_query=text)],
-        [InlineKeyboardButton(text="💬 تست در همین چت", switch_inline_query_current_chat=text)]
-    ])
-
-    await loading_msg.edit_text(
-        formatted_text,
-        reply_markup=kb,
-        parse_mode=ParseMode.HTML
-    )
-
-@router.message(F.chat.type == "private", F.entities | F.caption_entities | F.forward_origin)
-async def extract_emoji_handler(message: types.Message):
-    entities = message.entities or message.caption_entities or []
-    custom_emojis = [e for e in entities if e.type == "custom_emoji"]
-    if not custom_emojis:
-        return
-
-    text_source = message.text or message.caption or ""
-    bot_info = await message.bot.get_me()
-    response_lines = ["✨ <b>کدهای ایموجی پرمیوم شناسایی شدند:</b>\n"]
-    
-    preview_tags = []
-    for idx, entity in enumerate(custom_emojis, start=1):
-        emoji_id = entity.custom_emoji_id
-        char = text_source[entity.offset : entity.offset + entity.length] if text_source else "💎"
-        response_lines.append(f"{idx}. {char} ➔ <code>[{emoji_id}]</code>")
-        preview_tags.append(f'<tg-emoji emoji-id="{emoji_id}">{char}</tg-emoji>')
-    
-    first_id = custom_emojis[0].custom_emoji_id
-    response_lines.append(f"\n💡 <i>(روی کدها بزنید تا کپی شوند)</i>")
-    
-    if preview_tags:
-        response_lines.append(f"\nنمایش ایموجی‌های پرمیوم:\n{' '.join(preview_tags)}")
-
-    kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="💬 تست ارسال در چت", switch_inline_query=f"سلام [{first_id}]")]
-    ])
-    await message.reply("\n".join(response_lines), reply_markup=kb, parse_mode=ParseMode.HTML)
-
-@router.inline_query()
-async def inline_emoji_sender(query: InlineQuery):
-    user_input = query.query.strip()
-    cost = await db.get_int_setting("emoji_msg_cost", 0)
-
-    if not user_input:
-        help_article = InlineQueryResultArticle(
-            id="help",
-            title="💡 متن و ایموجی دلخواه را وارد کنید...",
-            description="مثال: سلام 💎 یا سلام [5382103597371946894]",
-            input_message_content=InputTextMessageContent(
-                message_text="✨ متن خود را بنویسید تا با ایموجی پرمیوم ارسال شود.",
-                parse_mode=ParseMode.HTML
-            )
-        )
-        await query.answer(results=[help_article], cache_time=1, is_personal=True)
-        return
-
-    user = await db.get_user(query.from_user.id)
-    balance = user["balance"] if user else 0
-
-    if cost > 0 and balance < cost:
-        no_balance_article = InlineQueryResultArticle(
-            id="nobalance",
-            title="⚠️ موجودی کیف پول کافی نیست!",
-            description=f"هزینه هر پیام: {cost:,} ت | موجودی شما: {balance:,} ت",
-            input_message_content=InputTextMessageContent(
-                message_text="⚠️ موجودی کیف پول شما برای ارسال پیام پرمیوم کافی نیست.",
-                parse_mode=ParseMode.HTML
-            )
-        )
-        await query.answer(results=[no_balance_article], cache_time=1, is_personal=True)
-        return
-
-    result_article = InlineQueryResultArticle(
-        id=str(uuid.uuid4()),
-        title="✨ ارسال پیام و ادیت با پرمیوم",
-        description=f"پیش‌نمایش: {user_input}",
-        input_message_content=InputTextMessageContent(
-            message_text=user_input,
+async def edit_panel_message(callback: types.CallbackQuery, text: str, reply_markup: InlineKeyboardMarkup = None):
+    if callback.inline_message_id:
+        await callback.bot.edit_message_text(
+            inline_message_id=callback.inline_message_id,
+            text=text,
+            reply_markup=reply_markup,
             parse_mode=ParseMode.HTML
         )
-    )
-    await query.answer(results=[result_article], cache_time=1, is_personal=True)
+    elif callback.message:
+        await callback.message.edit_text(
+            text=text,
+            reply_markup=reply_markup,
+            parse_mode=ParseMode.HTML
+        )
 
-@router.chosen_inline_result()
-async def chosen_inline_edit_handler(chosen: ChosenInlineResult, bot: Bot):
-    cost = await db.get_int_setting("emoji_msg_cost", 0)
-    if cost > 0:
-        await db.update_balance(chosen.from_user.id, -cost)
-
-    if chosen.inline_message_id:
-        formatted_html = transform_text_emojis(chosen.query)
-        try:
-            await bot.edit_message_text(
-                inline_message_id=chosen.inline_message_id,
-                text=formatted_html,
-                parse_mode=ParseMode.HTML
-            )
-        except Exception as e:
-            logging.error(f"Error editing inline message: {e}")
-EOF
-
-cat << 'EOF' > handlers/referral.py
-from aiogram import Router, types
-from aiogram.filters import BaseFilter
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-import database as db
-
-router = Router()
-
-class RefButtonFilter(BaseFilter):
-    async def __call__(self, message: types.Message) -> bool:
-        return bool(message.text and any(k in message.text.strip() for k in ["زیرمجموعه", "دعوت"]))
-
-async def check_channel_member(bot, user_id: int) -> bool:
-    req_ch = await db.get_setting("required_channel", "")
-    if not req_ch: return True
-    try:
-        member = await bot.get_chat_member(chat_id=req_ch, user_id=user_id)
-        return member.status not in ["left", "kicked"]
-    except Exception: return True
-
-@router.message(RefButtonFilter())
-async def referral_entry_handler(message: types.Message):
-    if not await check_channel_member(message.bot, message.from_user.id):
-        ch_link = await db.get_setting("channel_link", "https://t.me")
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="📢 عضویت در کانال", url=ch_link)],
-            [InlineKeyboardButton(text="🔵 🔄 بررسی عضویت", callback_data="check_join_channel")]
-        ])
-        await message.reply("⚠️ جهت استفاده از ربات، ابتدا باید در کانال ما عضو شوید:", reply_markup=kb)
-        return
-
-    uid = message.from_user.id
-    b_info = await message.bot.get_me()
-    ref_link = f"https://t.me/{b_info.username}?start=ref_{uid}"
-    rb = await db.get_int_setting("referral_bonus", 5000)
-    count = await db.get_referrals_count(uid)
-    text = f"👥 <b>سیستم کسب درآمد و دعوت دوستان</b>\n\n🎁 پاداش هر دعوت: <b>{rb:,} تومان</b>\n👥 تعداد زیرمجموعه‌ها: <b>{count:,} نفر</b>\n💰 مجموع درآمد: <b>{count * rb:,} تومان</b>\n\n🔗 <b>لینک اختصاصی دعوت:</b>\n<code>{ref_link}</code>"
-    kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="📢 اشتراک‌گذاری با دوستان", style="primary", url=f"https://t.me/share/url?url={ref_link}&text=هدیه نقدی ورود")]])
-    await message.reply(text, reply_markup=kb)
-EOF
-
-cat << 'EOF' > handlers/self_bot.py
-import datetime
-from aiogram import Router, types, F
-from aiogram.filters import BaseFilter
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
-from telethon import TelegramClient
-from telethon.sessions import StringSession
-from telethon.errors import SessionPasswordNeededError, PhoneCodeInvalidError, PasswordHashInvalidError, PhoneCodeExpiredError
-
-from config import config
-import database as db
-from self_manager import start_userbot_client, stop_userbot_client
-
-router = Router()
-
-class SelfButtonFilter(BaseFilter):
-    async def __call__(self, message: types.Message) -> bool:
-        if not message.text: return False
-        return bool(any(k in message.text for k in ["سلف", "self", "PuLaSeLf"]))
-
-class SelfLoginState(StatesGroup):
-    waiting_for_phone = State()
-    waiting_for_code = State()
-    waiting_for_2fa = State()
-
-TEMP_CLIENTS = {}
-
-def get_numpad_markup(code: str = "") -> InlineKeyboardMarkup:
-    display = " ".join(list(code) + ["_"] * (5 - len(code)))
+def get_main_categories_markup(owner_id: int) -> InlineKeyboardMarkup:
     buttons = [
-        [InlineKeyboardButton(text=f"🔑 کد: [ {display} ]", callback_data="num_ignore")],
-        [InlineKeyboardButton(text="1", callback_data="num_1"), InlineKeyboardButton(text="2", callback_data="num_2"), InlineKeyboardButton(text="3", callback_data="num_3")],
-        [InlineKeyboardButton(text="4", callback_data="num_4"), InlineKeyboardButton(text="5", callback_data="num_5"), InlineKeyboardButton(text="6", callback_data="num_6")],
-        [InlineKeyboardButton(text="7", callback_data="num_7"), InlineKeyboardButton(text="8", callback_data="num_8"), InlineKeyboardButton(text="9", callback_data="num_9")],
-        [InlineKeyboardButton(text="⌫ حذف", callback_data="num_back"), InlineKeyboardButton(text="0", callback_data="num_0"), InlineKeyboardButton(text="❌ انصراف", callback_data="num_cancel")]
+        [
+            InlineKeyboardButton(text="✍️ فرمت خودکار متن", style="primary", callback_data=f"cat_format_{owner_id}"),
+            InlineKeyboardButton(text="👤 پروفایل و ساعت", style="primary", callback_data=f"cat_profile_{owner_id}")
+        ],
+        [
+            InlineKeyboardButton(text="💾 ذخیره‌ساز و ضدکپی", style="primary", callback_data=f"cat_saver_{owner_id}"),
+            InlineKeyboardButton(text="🔔 ری‌اکشن خودکار", style="primary", callback_data=f"cat_react_{owner_id}")
+        ],
+        [
+            InlineKeyboardButton(text="🤔 منشی و حالت AFK", style="primary", callback_data=f"cat_afk_{owner_id}"),
+            InlineKeyboardButton(text="📱 اسپمر و ارسال مکرر", style="primary", callback_data=f"cat_spam_{owner_id}")
+        ],
+        [
+            InlineKeyboardButton(text="💬 پاسخگوی خودکار", style="primary", callback_data=f"cat_autoresp_{owner_id}"),
+            InlineKeyboardButton(text="🎵 موزیک‌یاب آنلاین", style="primary", callback_data=f"cat_music_{owner_id}")
+        ],
+        [
+            InlineKeyboardButton(text="🛠️ جعبه ابزار و تست", style="primary", callback_data=f"cat_tools_{owner_id}")
+        ],
+        [
+            InlineKeyboardButton(text="❌ بستن پنل", style="danger", callback_data=f"cat_close_{owner_id}")
+        ],
+        [
+            InlineKeyboardButton(text="⚡️ Powered by PuLaBoX", callback_data="act_ignore")
+        ]
     ]
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
-@router.message(SelfButtonFilter())
-async def self_menu_handler(message: types.Message, state: FSMContext):
-    await state.clear()
-    uid = message.from_user.id
-    self_data = await db.get_self_bot(uid)
-    hourly_price = await db.get_int_setting("self_hourly_price", 600)
-    per_min = max(1, int(hourly_price / 60))
-    user = await db.get_user(uid)
-    bal = user["balance"] if user else 0
+@router.callback_query(F.data == "act_ignore")
+async def ignore_callback(callback: types.CallbackQuery):
+    await callback.answer()
 
-    if self_data:
-        is_on = self_data.get("is_active", 0) == 1
-        pos_txt = "ابتدای اسم" if self_data.get("clock_name_pos") == "start" else "انتهای اسم"
-        tmpl = self_data.get("name_template") or f"{self_data.get('original_name', 'User')} {{clock}}"
-        
-        status_text = (
-            "🚀 <b>مدیریت سلف‌بات PuLaSeLf</b>\n\n"
-            f"📱 شماره: <code>{self_data['phone_number']}</code>\n"
-            f"⚡️ وضعیت: <b>{'🟢 روشن (در حال مصرف)' if is_on else '🔴 خاموش'}</b>\n"
-            f"💰 موجودی کیف پول: <b>{bal:,} تومان</b>\n"
-            f"⏱ تعرفه مصرف: هر ساعت {hourly_price:,} ت (<b>دقیقه‌ای {per_min:,} تومان</b>)\n\n"
-            f"🕒 ساعت اسم: {'🟢 روشن' if self_data.get('clock_name') else '🔴 خاموش'}\n"
-            f"📝 ساعت بیو: {'🟢 روشن' if self_data.get('clock_bio') else '🔴 خاموش'}\n"
-            f"🏷 الگوی اسم: <code>{tmpl}</code>\n\n"
-            "💡 <i>فقط در دقایقی که سلف روشن است از موجودی کسر می‌گردد.</i>"
-        )
-        buttons = []
-        if is_on:
-            buttons.append([InlineKeyboardButton(text="🔴 خاموش کردن سلف (توقف کسر موجودی)", style="danger", callback_data="self_toggle_off")])
-        else:
-            buttons.append([InlineKeyboardButton(text="🟢 روشن کردن سلف (شروع کارکرد)", style="success", callback_data="self_toggle_on")])
+@router.inline_query()
+async def helper_inline_panel_handler(query: InlineQuery, bot: Bot):
+    owner_id = query.from_user.id
+    if query.query.startswith("panel_"):
+        parts = query.query.split("_")
+        if len(parts) > 1 and parts[1].isdigit():
+            owner_id = int(parts[1])
 
-        buttons.append([InlineKeyboardButton(text="💳 شارژ کیف پول", style="primary", callback_data="charge_wallet")])
-        buttons.append([InlineKeyboardButton(text="🗑️ حذف و خروج کامل سلف", style="danger", callback_data="self_delete")])
-
-        await message.reply(status_text, reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
-    else:
-        intro_text = (
-            "🚀 <b>سرویس سلف‌بات ابری PuLaSeLf</b>\n\n"
-            f"💰 <b>تعرفه:</b> هر ساعت <b>{hourly_price:,} تومان</b> (<b>دقیقه‌ای {per_min:,} تومان</b>)\n"
-            f"💳 موجودی کیف پول شما: <b>{bal:,} تومان</b>\n\n"
-            "💡 <b>پرداخت بر اساس مصرف دقیقه‌ای:</b>\n"
-            "هزینه فقط به ازای دقایقی که سلف روشن است کسر می‌شود و با خاموش کردن سلف کسر موجودی متوقف می‌شود!\n\n"
-            "جهت فعال‌سازی اکانت دکمه زیر را بزنید:"
-        )
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="🚀 فعال‌سازی و اتصال اکانت", style="success", callback_data="self_start_login")]
-        ])
-        await message.reply(intro_text, reply_markup=kb)
-
-@router.callback_query(F.data == "self_toggle_off")
-async def turn_off_self(callback: types.CallbackQuery):
-    await stop_userbot_client(callback.from_user.id)
-    await db.update_self_bot(callback.from_user.id, is_active=0)
-    await callback.answer("🔴 سلف خاموش شد و کسر موجودی متوقف گردید.", show_alert=True)
-    await self_menu_handler(callback.message, None)
-
-@router.callback_query(F.data == "self_toggle_on")
-async def turn_on_self(callback: types.CallbackQuery):
-    user = await db.get_user(callback.from_user.id)
-    bal = user["balance"] if user else 0
-    hourly = await db.get_int_setting("self_hourly_price", 600)
-    per_min = max(1, int(hourly / 60))
-
-    if bal < per_min:
-        await callback.answer("⚠️ موجودی کیف پول برای روشن کردن سلف کافی نیست!", show_alert=True)
+    self_data = await db.get_self_bot(owner_id)
+    if not self_data or self_data.get("is_active", 0) != 1:
         return
 
-    self_data = await db.get_self_bot(callback.from_user.id)
-    if self_data:
-        await db.update_self_bot(callback.from_user.id, is_active=1)
-        await start_userbot_client(callback.from_user.id, self_data["session_string"])
-        await callback.answer("🟢 سلف روشن شد و شروع به کار کرد.", show_alert=True)
-        await self_menu_handler(callback.message, None)
+    text_panel = (
+        f"👑 <b>کنترل پنل اختصاصی سلف‌بات PuLaSeLf</b>\n"
+        f"👤 کاربر: <b>{query.from_user.full_name}</b>\n"
+        f"📡 وضعیت سلف: <code>متصل و آنلاین 🟢</code>\n\n"
+        "👇 <b>جهت دسترسی به تمام ابزارها و دکمه‌های شیشه‌ای، بخش مورد نظر را انتخاب کنید:</b>"
+    )
 
-@router.callback_query(F.data == "self_start_login")
-async def start_login_flow(callback: types.CallbackQuery, state: FSMContext):
-    user = await db.get_user(callback.from_user.id)
-    bal = user["balance"] if user else 0
-    hourly = await db.get_int_setting("self_hourly_price", 600)
-    per_min = max(1, int(hourly / 60))
+    result = InlineQueryResultArticle(
+        id=str(uuid.uuid4()),
+        title="👑 باز کردن کنترل پنل شیشه‌ای PuLaSeLf",
+        description="مدیریت کامل ساعت اسم، بیوگرافی، آنتی‌دلیت، اسپمر، پاسخ خودکار و ابزارها",
+        input_message_content=InputTextMessageContent(
+            message_text=text_panel,
+            parse_mode=ParseMode.HTML
+        ),
+        reply_markup=get_main_categories_markup(owner_id)
+    )
+    await query.answer(results=[result], cache_time=1, is_personal=True)
 
-    if bal < per_min:
-        kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="💳 شارژ کیف پول", style="success", callback_data="charge_wallet")]])
-        await callback.message.answer(
-            f"⚠️ <b>موجودی کیف پول شما کافی نیست!</b>\n\n"
-            f"برای فعال‌سازی اولیه، حداقل باید <b>{per_min:,} تومان</b> موجودی داشته باشید.\n"
-            f"💳 موجودی شما: <b>{bal:,} ت</b>",
-            reply_markup=kb
+@router.callback_query(F.data.startswith("cat_"))
+async def category_router_callback(callback: types.CallbackQuery):
+    parts = callback.data.split("_")
+    category = parts[1]
+    owner_id = int(parts[2])
+
+    if callback.from_user.id != owner_id:
+        await callback.answer("⛔️ این کنترل پنل منحصراً مخصوص صاحب سلف است!", show_alert=True)
+        return
+
+    self_data = await db.get_self_bot(owner_id)
+    if not self_data:
+        await callback.answer("⚠️ سلف‌بات شما در حال حاضر فعال نیست!", show_alert=True)
+        return
+
+    if category == "saver":
+        st_ttl = "🟢 فعال" if self_data.get("save_ttl", 1) else "🔴 غیرفعال"
+        st_del = "🟢 فعال" if self_data.get("anti_delete", 1) else "🔴 غیرفعال"
+        st_edit = "🟢 فعال" if self_data.get("anti_edit", 1) else "🔴 غیرفعال"
+        st_pv = "🟢 فعال" if self_data.get("save_pv", 0) else "🔴 غیرفعال"
+
+        text = (
+            "💾 <b>مدیریت ذخیره‌ساز، عکس تایمردار و ضدکپی:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"🔒 <b>عکس و رسانه‌های تایمردار:</b> <b>{st_ttl}</b>\n"
+            f"🗑️ <b>آنتی‌دلیت پیام‌های پیوی:</b> <b>{st_del}</b>\n"
+            f"✏️ <b>آنتی‌ادیت پیام‌های پیوی:</b> <b>{st_edit}</b>\n"
+            f"📥 <b>سیو خودکار پیام‌های پیوی:</b> <b>{st_pv}</b>\n\n"
+            "💡 <b>دستورات متنی سریع:</b>\n"
+            "• <code>سیو</code> (روی ریپلای یا با لینک) ➔ کپی در Saved Messages\n"
+            "• <code>فور</code> (روی ریپلای یا با لینک) ➔ ساخت لینک فوروارد"
         )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🔒 عکس تایمردار: تغییر وضعیت", style="primary", callback_data=f"act_tog_ttl_{owner_id}")],
+            [InlineKeyboardButton(text="🗑️ آنتی‌دلیت پیوی: تغییر وضعیت", style="primary", callback_data=f"act_tog_del_{owner_id}")],
+            [InlineKeyboardButton(text="✏️ آنتی‌ادیت پیوی: تغییر وضعیت", style="primary", callback_data=f"act_tog_edit_{owner_id}")],
+            [InlineKeyboardButton(text="📥 سیو پیام‌های پیوی: تغییر وضعیت", style="primary", callback_data=f"act_tog_pv_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+        await callback.answer()
+
+    elif category == "format":
+        mode = self_data.get("auto_format_mode", "none")
+        mode_fa = {
+            "bold": "🟢 بولد خودکار (Bold)",
+            "italic": "🟢 ایتالیک خودکار (Italic)",
+            "mono": "🟢 کد/مونو خودکار (Monospace)",
+            "none": "🔴 غیرفعال"
+        }.get(mode, "🔴 غیرفعال")
+
+        text = (
+            "✍️ <b>مدیریت فرمت خودکار پیام‌های ارسالی:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"⚙️ <b>وضعیت فعال:</b> <b>{mode_fa}</b>\n\n"
+            "💡 <i>با فعال‌سازی هر حالت، تمامی پیام‌های ارسالی شما با همان استایل ارسال می‌شوند.</i>\n\n"
+            "دستورات متنی: `بولد روشن/خاموش` | `ایتالیک روشن/خاموش` | `مونو روشن/خاموش`"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🔘 فعال‌سازی: بولد خودکار", style="success", callback_data=f"act_setmode_bold_{owner_id}")],
+            [InlineKeyboardButton(text="🔘 فعال‌سازی: ایتالیک خودکار", style="success", callback_data=f"act_setmode_italic_{owner_id}")],
+            [InlineKeyboardButton(text="🔘 فعال‌سازی: کد/مونو خودکار", style="success", callback_data=f"act_setmode_mono_{owner_id}")],
+            [InlineKeyboardButton(text="🔴 غیرفعال‌سازی فرمت خودکار", style="danger", callback_data=f"act_setmode_none_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+        await callback.answer()
+
+    elif category == "profile":
+        c_name = "🟢 روشن" if self_data.get("clock_name") else "🔴 خاموش"
+        c_bio = "🟢 روشن" if self_data.get("clock_bio") else "🔴 خاموش"
+        tmpl = self_data.get("name_template") or "User {clock}"
+        font_txt = self_data.get("clock_font", "persian")
+
+        text = (
+            "👤 <b>مدیریت ساعت زنده پروفایل و بیوگرافی:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"🕒 <b>ساعت روی اسم:</b> <b>{c_name}</b>\n"
+            f"📝 <b>ساعت روی بیو:</b> <b>{c_bio}</b>\n"
+            f"🎨 <b>فونت فعال اعداد:</b> <code>{font_txt}</code>\n"
+            f"🏷 <b>الگوی فعال اسم:</b> <code>{tmpl}</code>\n\n"
+            "━━━━━━━━━━━━━━━━━━━━\n"
+            "📝 <b>آموزش تغییر دستی اسم و محل ساعت:</b>\n"
+            "کافیست در هر چتی بنویسید:\n"
+            "• <code>تنظیم اسم نام‌شما {clock}</code>\n"
+            "• <code>.setname Ali {clock}</code> (ساعت در آخر)\n"
+            "• <code>.setname {clock} Ali</code> (ساعت در اول)\n"
+            "• <code>حذف ساعت اسم</code> یا <code>.resetname</code> (حذف ساعت)\n\n"
+            "👇 <b>یا از دکمه‌های آماده زیر جهت انتخاب سریع استفاده کنید:</b>"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🎨 ۳۶ کادر و فریم ساعت اسم", style="success", callback_data=f"act_tmpl_list_1_{owner_id}")],
+            [InlineKeyboardButton(text="🔢 ۳۶ فونت زنده اعداد ساعت", style="success", callback_data=f"act_font_list_1_{owner_id}")],
+            [InlineKeyboardButton(text="🕒 تغییر وضعیت ساعت اسم", style="primary", callback_data=f"act_toggle_name_{owner_id}")],
+            [InlineKeyboardButton(text="📝 تغییر وضعیت ساعت بیوگرافی", style="primary", callback_data=f"act_toggle_bio_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+        await callback.answer()
+
+    elif category == "afk":
+        afk_st = "🟢 روشن (پاسخ خودکار فعال)" if self_data.get("afk_status") else "🔴 خاموش"
+        reason = self_data.get("afk_reason") or "در دسترس نیستم"
+        text = (
+            "🤔 <b>مدیریت منشی خودکار و حالت استراحت (AFK):</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"💤 <b>وضعیت منشی:</b> <b>{afk_st}</b>\n"
+            f"📝 <b>متن پاسخ خودکار:</b> <i>{reason}</i>\n\n"
+            "💡 <b>دستورات متنی:</b>\n"
+            "• <code>اف کی [دلیل]</code> ➔ فعال‌سازی\n"
+            "• <code>خروج اف کی</code> ➔ غیرفعال‌سازی"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="💤 روشن/خاموش کردن منشی AFK", style="primary", callback_data=f"act_toggle_afk_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+        await callback.answer()
+
+    elif category == "react":
+        cur_react = await db.get_setting(f"self_react_{owner_id}", "off")
+        text = (
+            "🔔 <b>مدیریت ری‌اکشن خودکار روی پیام‌ها:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"ایموجی فعال فعلی: <b>{cur_react}</b>\n\n"
+            "روی هر ایموجی بزنید تا ری‌اکشن خودکار روی آن تنظیم شود:"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text="❤️ قلب", style="primary", callback_data=f"act_react_heart_{owner_id}"),
+                InlineKeyboardButton(text="🔥 آتش", style="primary", callback_data=f"act_react_fire_{owner_id}"),
+                InlineKeyboardButton(text="👍 لایک", style="primary", callback_data=f"act_react_like_{owner_id}")
+            ],
+            [
+                InlineKeyboardButton(text="👏 تشویق", style="primary", callback_data=f"act_react_clap_{owner_id}"),
+                InlineKeyboardButton(text="😂 خنده", style="primary", callback_data=f"act_react_laugh_{owner_id}"),
+                InlineKeyboardButton(text="⚡️ رعد", style="primary", callback_data=f"act_react_bolt_{owner_id}")
+            ],
+            [InlineKeyboardButton(text="🔴 غیرفعال‌سازی ری‌اکشن خودکار", style="danger", callback_data=f"act_react_off_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+        await callback.answer()
+
+    elif category == "spam":
+        text = (
+            "📱 <b>مدیریت اسپمر و ارسال مکرر پیام:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            "💡 <b>الگوهای متنی اسپمر:</b>\n"
+            "• <code>اسپم 100 بار هر ۲ ثانیه سلام</code>\n"
+            "• <code>اسپم 20 بار هر 1 دقیقه متن</code>\n"
+            "• <code>.spam 10 1 text</code>\n\n"
+            "🛑 <b>توقف فوری:</b> دستور <code>توقف اسپم</code> یا دکمه زیر:"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🛑 توقف فوری تمامی اسپم‌ها", style="danger", callback_data=f"act_stopspam_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+        await callback.answer()
+
+    elif category == "autoresp":
+        raw = await db.get_setting(f"autoans_{owner_id}", "{}")
+        try: ans_dict = json.loads(raw)
+        except Exception: ans_dict = {}
+
+        text = "💬 <b>پاسخ‌دهنده خودکار کلمات (Auto-Answer):</b>\n━━━━━━━━━━━━━━━━━━━━\n\n"
+        if ans_dict:
+            text += "📋 <b>لیست کلمات ثبت‌شده:</b>\n"
+            for idx, (k, v) in enumerate(ans_dict.items(), 1):
+                text += f"{idx}. <code>{k}</code> ➔ <i>{v}</i>\n"
+        else:
+            text += "<i>هیچ کلمه‌ای هنوز ثبت نشده است.</i>\n"
+
+        text += (
+            "\n💡 <b>دستورات متنی:</b>\n"
+            "• افزودن: <code>پاسخ اضافه کلمه | جواب</code>\n"
+            "• حذف: <code>پاسخ حذف کلمه</code>\n"
+            "• لیست: <code>پاسخ لیست</code>"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+        await callback.answer()
+
+    elif category == "music":
+        text = (
+            "🎵 <b>موزیک‌یاب آنلاین و پیشرفته:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🔍 <b>دستورات جستجو و دانلود موزیک:</b>\n"
+            "• <code>موزیک [نام آهنگ یا خواننده]</code>\n"
+            "• <code>آهنگ [نام موزیک]</code>\n"
+            "• <code>.find [نام موزیک]</code>\n\n"
+            "💡 مثال: <code>موزیک شادمهر عقیلی</code>"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+        await callback.answer()
+
+    elif category == "tools":
+        text = (
+            "🛠️ <b>جعبه ابزار و تست‌های کاربردی:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            "• <code>پینگ</code> ➔ تست پینگ لحظه‌ای\n"
+            "• <code>ساعت</code> و <code>تاریخ</code> ➔ زمان دقیق تهران\n"
+            "• <code>حساب 2+2*5</code> ➔ ماشین‌حساب ریاضی\n"
+            "• <code>آمار چت</code> ➔ آنالیز ۱۰۰ پیام اخیر چت\n"
+            "• <code>اطلاعات</code> (ریپلای/آیدی) ➔ مشخصات کاربر و دانلود پروفایل\n"
+            "• <code>تگ همه [متن]</code> ➔ منشن کردن همه اعضای گروه\n"
+            "• <code>حذف</code> (روی ریپلای) ➔ پاک کردن پیام\n"
+            "• <code>ادیت [متن]</code> (روی ریپلای) ➔ ادیت فوری پیام شما"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="⚡️ تست پینگ زنده", style="success", callback_data=f"act_ping_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+        await callback.answer()
+
+    elif category == "close":
+        if callback.inline_message_id:
+            await callback.bot.edit_message_text(
+                inline_message_id=callback.inline_message_id,
+                text="❌ <b>کنترل پنل سلف‌بات بسته شد.</b>",
+                reply_markup=None,
+                parse_mode=ParseMode.HTML
+            )
+        elif callback.message:
+            await callback.message.delete()
+        await callback.answer("پنل بسته شد.")
+
+@router.callback_query(F.data.startswith("act_"))
+async def actions_callback(callback: types.CallbackQuery):
+    if callback.data == "act_ignore":
         await callback.answer()
         return
 
-    cancel_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="❌ انصراف و بازگشت", style="danger")]], resize_keyboard=True)
-    await callback.message.delete()
-    await state.set_state(SelfLoginState.waiting_for_phone)
-    await callback.message.answer(
-        "📱 لطفاً <b>شماره تلفن اکانت تلگرام</b> خود را همراه با کد کشور ارسال فرمایید:\n"
-        "مثال: <code>+989123456789</code>",
-        reply_markup=cancel_kb
-    )
-    await callback.answer()
+    parts = callback.data.split("_")
+    action = parts[1]
 
-@router.message(SelfLoginState.waiting_for_phone, F.text)
-async def process_self_phone(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.answer("❌ عملیات لغو شد.", reply_markup=await get_main_keyboard())
+    # ۱. بخش انتخاب ۳۶ فریم و کادر دور ساعت
+    if action == "tmpl":
+        sub = parts[2]
+        if sub == "list":
+            page = int(parts[3])
+            owner_id = int(parts[4])
+            if callback.from_user.id != owner_id:
+                await callback.answer("⛔️ دسترسی غیرمجاز!", show_alert=True)
+                return
+
+            self_data = await db.get_self_bot(owner_id)
+            raw_name = self_data.get("original_name") or callback.from_user.first_name or "User"
+            user_fname = db.clean_time_from_string(raw_name) or "User"
+
+            per_page = 6
+            total_templates = len(NAME_TEMPLATES)
+            total_pages = (total_templates + per_page - 1) // per_page
+            start_idx = (page - 1) * per_page
+            end_idx = min(start_idx + per_page, total_templates)
+
+            kb_buttons = []
+            for i in range(start_idx, end_idx):
+                tmpl_raw = NAME_TEMPLATES[i]
+                btn_preview = tmpl_raw.replace("{name}", user_fname).replace("{clock}", "18:30")
+                kb_buttons.append([InlineKeyboardButton(text=f"{i+1}. {btn_preview}", style="primary", callback_data=f"act_applytmpl_{i}_{owner_id}")])
+
+            nav_row = []
+            if page > 1:
+                nav_row.append(InlineKeyboardButton(text="⬅️ قبلی", style="primary", callback_data=f"act_tmpl_list_{page-1}_{owner_id}"))
+            nav_row.append(InlineKeyboardButton(text=f"📄 {page} از {total_pages}", callback_data="act_ignore"))
+            if page < total_pages:
+                nav_row.append(InlineKeyboardButton(text="بعدی ➡️", style="primary", callback_data=f"act_tmpl_list_{page+1}_{owner_id}"))
+
+            kb_buttons.append(nav_row)
+            kb_buttons.append([InlineKeyboardButton(text="🔙 بازگشت به تنظیمات پروفایل", style="primary", callback_data=f"cat_profile_{owner_id}")])
+
+            text = (
+                "🎨 <b>انتخاب از ۳۶ کادر و فریم دور ساعت:</b>\n"
+                "━━━━━━━━━━━━━━━━━━━━\n\n"
+                f"👤 نام شما: <b>{user_fname}</b>\n\n"
+                "روی هر کادر بزنید تا در جا ساعت اسمتان داخل آن قرار گرفته و فعال شود:"
+            )
+            await edit_panel_message(callback, text, InlineKeyboardMarkup(inline_keyboard=kb_buttons))
+            await callback.answer()
+            return
+
+    # ۲. بخش انتخاب ۳۶ فونت زنده اعداد ساعت
+    elif action == "font":
+        sub = parts[2]
+        if sub == "list":
+            page = int(parts[3])
+            owner_id = int(parts[4])
+            if callback.from_user.id != owner_id:
+                await callback.answer("⛔️ دسترسی غیرمجاز!", show_alert=True)
+                return
+
+            per_page = 6
+            total_fonts = len(FONT_LIST)
+            total_pages = (total_fonts + per_page - 1) // per_page
+            start_idx = (page - 1) * per_page
+            end_idx = min(start_idx + per_page, total_fonts)
+
+            kb_buttons = []
+            for i in range(start_idx, end_idx):
+                f_key, f_title, f_sample = FONT_LIST[i]
+                kb_buttons.append([InlineKeyboardButton(text=f"{i+1}. {f_sample} ({f_title})", style="primary", callback_data=f"act_applyfont_{f_key}_{owner_id}")])
+
+            nav_row = []
+            if page > 1:
+                nav_row.append(InlineKeyboardButton(text="⬅️ قبلی", style="primary", callback_data=f"act_font_list_{page-1}_{owner_id}"))
+            nav_row.append(InlineKeyboardButton(text=f"📄 {page} از {total_pages}", callback_data="act_ignore"))
+            if page < total_pages:
+                nav_row.append(InlineKeyboardButton(text="بعدی ➡️", style="primary", callback_data=f"act_font_list_{page+1}_{owner_id}"))
+
+            kb_buttons.append(nav_row)
+            kb_buttons.append([InlineKeyboardButton(text="🔙 بازگشت به تنظیمات پروفایل", style="primary", callback_data=f"cat_profile_{owner_id}")])
+
+            text = (
+                "🔢 <b>انتخاب از ۳۶ فونت زنده اعداد ساعت:</b>\n"
+                "━━━━━━━━━━━━━━━━━━━━\n\n"
+                "روی هر فونت بزنید تا ارقام ساعت روی اسمتان با همان سبک نمایش داده شود:"
+            )
+            await edit_panel_message(callback, text, InlineKeyboardMarkup(inline_keyboard=kb_buttons))
+            await callback.answer()
+            return
+
+    elif action == "applytmpl":
+        tmpl_idx = int(parts[2])
+        owner_id = int(parts[3])
+        if callback.from_user.id != owner_id:
+            await callback.answer("⛔️ دسترسی غیرمجاز!", show_alert=True)
+            return
+
+        self_data = await db.get_self_bot(owner_id)
+        raw_name = self_data.get("original_name") or callback.from_user.first_name or "User"
+        user_fname = db.clean_time_from_string(raw_name) or "User"
+        
+        # پاک‌سازی کامل و الحاق فریم به اسم تمیز بدون ساعت تکراری
+        selected_template = NAME_TEMPLATES[tmpl_idx].replace("{name}", user_fname)
+        
+        await db.update_self_bot(owner_id, name_template=selected_template, original_name=user_fname, clock_name=1)
+        await callback.answer(f"✅ فریم شماره {tmpl_idx+1} با موفقیت اعمال شد!", show_alert=True)
+        
+        self_data = await db.get_self_bot(owner_id)
+        c_name = "🟢 روشن"
+        c_bio = "🟢 روشن" if self_data.get("clock_bio") else "🔴 خاموش"
+        tmpl = selected_template
+        font_txt = self_data.get("clock_font", "persian")
+
+        text = (
+            "👤 <b>مدیریت ساعت زنده پروفایل و بیوگرافی:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"🕒 <b>ساعت روی اسم:</b> <b>{c_name}</b>\n"
+            f"📝 <b>ساعت روی بیو:</b> <b>{c_bio}</b>\n"
+            f"🎨 <b>فونت فعال اعداد:</b> <code>{font_txt}</code>\n"
+            f"🏷 <b>الگوی فعال اسم:</b> <code>{tmpl}</code>\n\n"
+            "━━━━━━━━━━━━━━━━━━━━\n"
+            "📝 <b>آموزش تغییر دستی اسم و محل ساعت:</b>\n"
+            "کافیست در هر چتی بنویسید:\n"
+            "• <code>تنظیم اسم نام‌شما {clock}</code>\n"
+            "• <code>.setname Ali {clock}</code> (ساعت در آخر)\n"
+            "• <code>.setname {clock} Ali</code> (ساعت در اول)\n"
+            "• <code>حذف ساعت اسم</code> یا <code>.resetname</code> (حذف ساعت)\n\n"
+            "👇 <b>یا از دکمه‌های آماده زیر جهت انتخاب سریع استفاده کنید:</b>"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🎨 ۳۶ کادر و فریم ساعت اسم", style="success", callback_data=f"act_tmpl_list_1_{owner_id}")],
+            [InlineKeyboardButton(text="🔢 ۳۶ فونت زنده اعداد ساعت", style="success", callback_data=f"act_font_list_1_{owner_id}")],
+            [InlineKeyboardButton(text="🕒 تغییر وضعیت ساعت اسم", style="primary", callback_data=f"act_toggle_name_{owner_id}")],
+            [InlineKeyboardButton(text="📝 تغییر وضعیت ساعت بیوگرافی", style="primary", callback_data=f"act_toggle_bio_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
         return
 
-    phone = message.text.strip().replace(" ", "")
-    wait_msg = await message.answer("⏳ در حال ارسال کد تایید از طرف تلگرام...")
+    elif action == "applyfont":
+        font_key = parts[2]
+        owner_id = int(parts[3])
+        if callback.from_user.id != owner_id:
+            await callback.answer("⛔️ دسترسی غیرمجاز!", show_alert=True)
+            return
+
+        await db.update_self_bot(owner_id, clock_font=font_key)
+        await callback.answer(f"✅ فونت اعداد ساعت به «{font_key}» تغییر یافت!", show_alert=True)
+
+        self_data = await db.get_self_bot(owner_id)
+        c_name = "🟢 روشن" if self_data.get("clock_name") else "🔴 خاموش"
+        c_bio = "🟢 روشن" if self_data.get("clock_bio") else "🔴 خاموش"
+        tmpl = self_data.get("name_template") or "User {clock}"
+        font_txt = font_key
+
+        text = (
+            "👤 <b>مدیریت ساعت زنده پروفایل و بیوگرافی:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"🕒 <b>ساعت روی اسم:</b> <b>{c_name}</b>\n"
+            f"📝 <b>ساعت روی بیو:</b> <b>{c_bio}</b>\n"
+            f"🎨 <b>فونت فعال اعداد:</b> <code>{font_txt}</code>\n"
+            f"🏷 <b>الگوی فعال اسم:</b> <code>{tmpl}</code>\n\n"
+            "━━━━━━━━━━━━━━━━━━━━\n"
+            "📝 <b>آموزش تغییر دستی اسم و محل ساعت:</b>\n"
+            "کافیست در هر چتی بنویسید:\n"
+            "• <code>تنظیم اسم نام‌شما {clock}</code>\n"
+            "• <code>.setname Ali {clock}</code> (ساعت در آخر)\n"
+            "• <code>.setname {clock} Ali</code> (ساعت در اول)\n"
+            "• <code>حذف ساعت اسم</code> یا <code>.resetname</code> (حذف ساعت)\n\n"
+            "👇 <b>یا از دکمه‌های آماده زیر جهت انتخاب سریع استفاده کنید:</b>"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🎨 ۳۶ کادر و فریم ساعت اسم", style="success", callback_data=f"act_tmpl_list_1_{owner_id}")],
+            [InlineKeyboardButton(text="🔢 ۳۶ فونت زنده اعداد ساعت", style="success", callback_data=f"act_font_list_1_{owner_id}")],
+            [InlineKeyboardButton(text="🕒 تغییر وضعیت ساعت اسم", style="primary", callback_data=f"act_toggle_name_{owner_id}")],
+            [InlineKeyboardButton(text="📝 تغییر وضعیت ساعت بیوگرافی", style="primary", callback_data=f"act_toggle_bio_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+        return
+
+    owner_id = int(parts[3]) if len(parts) > 3 else int(parts[2])
+    if callback.from_user.id != owner_id:
+        await callback.answer("⛔️ این دکمه منحصراً مخصوص صاحب سلف است!", show_alert=True)
+        return
+
+    if action == "back":
+        caption = (
+            f"👑 <b>کنترل پنل اختصاصی سلف‌بات PuLaSeLf</b>\n"
+            f"👤 کاربر: <b>{callback.from_user.full_name}</b>\n"
+            f"📡 وضعیت سلف: <code>متصل و آنلاین 🟢</code>\n\n"
+            "👇 <b>جهت دسترسی به تنظیمات و ابزارها روی دسته‌بندی مورد نظر بزنید:</b>"
+        )
+        await edit_panel_message(callback, caption, get_main_categories_markup(owner_id))
+        await callback.answer()
+
+    elif action == "tog":
+        sub = parts[2]
+        self_data = await db.get_self_bot(owner_id)
+        if sub == "ttl":
+            n_val = 0 if self_data.get("save_ttl", 1) == 1 else 1
+            await db.update_self_bot(owner_id, save_ttl=n_val)
+            await callback.answer(f"🔒 ذخیره عکس تایمردار {'🟢 فعال' if n_val else '🔴 غیرفعال'} شد.", show_alert=True)
+        elif sub == "del":
+            n_val = 0 if self_data.get("anti_delete", 1) == 1 else 1
+            await db.update_self_bot(owner_id, anti_delete=n_val)
+            await callback.answer(f"🗑️ آنتی‌دلیت پیام پیوی {'🟢 فعال' if n_val else '🔴 غیرفعال'} شد.", show_alert=True)
+        elif sub == "edit":
+            n_val = 0 if self_data.get("anti_edit", 1) == 1 else 1
+            await db.update_self_bot(owner_id, anti_edit=n_val)
+            await callback.answer(f"✏️ آنتی‌ادیت پیام پیوی {'🟢 فعال' if n_val else '🔴 غیرفعال'} شد.", show_alert=True)
+        elif sub == "pv":
+            n_val = 0 if self_data.get("save_pv", 0) == 1 else 1
+            await db.update_self_bot(owner_id, save_pv=n_val)
+            await callback.answer(f"📥 سیو پیام‌های پیوی {'🟢 فعال' if n_val else '🔴 غیرفعال'} شد.", show_alert=True)
+
+        self_data = await db.get_self_bot(owner_id)
+        st_ttl = "🟢 فعال" if self_data.get("save_ttl", 1) else "🔴 غیرفعال"
+        st_del = "🟢 فعال" if self_data.get("anti_delete", 1) else "🔴 غیرفعال"
+        st_edit = "🟢 فعال" if self_data.get("anti_edit", 1) else "🔴 غیرفعال"
+        st_pv = "🟢 فعال" if self_data.get("save_pv", 0) else "🔴 غیرفعال"
+
+        text = (
+            "💾 <b>مدیریت ذخیره‌ساز، عکس تایمردار و ضدکپی:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"🔒 <b>عکس و رسانه‌های تایمردار:</b> <b>{st_ttl}</b>\n"
+            f"🗑️ <b>آنتی‌دلیت پیام‌های پیوی:</b> <b>{st_del}</b>\n"
+            f"✏️ <b>آنتی‌ادیت پیام‌های پیوی:</b> <b>{st_edit}</b>\n"
+            f"📥 <b>سیو خودکار پیام‌های پیوی:</b> <b>{st_pv}</b>\n\n"
+            "💡 <b>دستورات متنی سریع:</b>\n"
+            "• <code>سیو</code> (روی ریپلای یا با لینک) ➔ کپی در Saved Messages\n"
+            "• <code>فور</code> (روی ریپلای یا با لینک) ➔ ساخت لینک فوروارد"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🔒 عکس تایمردار: تغییر وضعیت", style="primary", callback_data=f"act_tog_ttl_{owner_id}")],
+            [InlineKeyboardButton(text="🗑️ آنتی‌دلیت پیوی: تغییر وضعیت", style="primary", callback_data=f"act_tog_del_{owner_id}")],
+            [InlineKeyboardButton(text="✏️ آنتی‌ادیت پیوی: تغییر وضعیت", style="primary", callback_data=f"act_tog_edit_{owner_id}")],
+            [InlineKeyboardButton(text="📥 سیو پیام‌های پیوی: تغییر وضعیت", style="primary", callback_data=f"act_tog_pv_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+
+    elif action == "setmode":
+        mode = parts[2]
+        await db.update_self_bot(owner_id, auto_format_mode=mode)
+        mode_fa = {"bold": "بولد خودکار", "italic": "ایتالیک خودکار", "mono": "کد/مونو خودکار", "none": "غیرفعال"}.get(mode, mode)
+        await callback.answer(f"✅ فرمت خودکار به «{mode_fa}» تنظیم شد.", show_alert=True)
+        
+        self_data = await db.get_self_bot(owner_id)
+        mode = self_data.get("auto_format_mode", "none")
+        mode_fa = {
+            "bold": "🟢 بولد خودکار (Bold)",
+            "italic": "🟢 ایتالیک خودکار (Italic)",
+            "mono": "🟢 کد/مونو خودکار (Monospace)",
+            "none": "🔴 غیرفعال"
+        }.get(mode, "🔴 غیرفعال")
+
+        text = (
+            "✍️ <b>مدیریت فرمت خودکار پیام‌های ارسالی:</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"⚙️ <b>وضعیت فعال:</b> <b>{mode_fa}</b>\n\n"
+            "💡 <i>با فعال‌سازی هر حالت، تمامی پیام‌های ارسالی شما با همان استایل ارسال می‌شوند.</i>\n\n"
+            "دستورات متنی: `بولد روشن/خاموش` | `ایتالیک روشن/خاموش` | `مونو روشن/خاموش`"
+        )
+        kb = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="🔘 فعال‌سازی: بولد خودکار", style="success", callback_data=f"act_setmode_bold_{owner_id}")],
+            [InlineKeyboardButton(text="🔘 فعال‌سازی: ایتالیک خودکار", style="success", callback_data=f"act_setmode_italic_{owner_id}")],
+            [InlineKeyboardButton(text="🔘 فعال‌سازی: کد/مونو خودکار", style="success", callback_data=f"act_setmode_mono_{owner_id}")],
+            [InlineKeyboardButton(text="🔴 غیرفعال‌سازی فرمت خودکار", style="danger", callback_data=f"act_setmode_none_{owner_id}")],
+            [InlineKeyboardButton(text="🔙 بازگشت به منوی اصلی", style="primary", callback_data=f"act_back_home_{owner_id}")]
+        ])
+        await edit_panel_message(callback, text, kb)
+
+    elif action == "toggle":
+        sub_act = parts[2]
+        self_data = await db.get_self_bot(owner_id)
+        if sub_act == "name":
+            new_val = 0 if self_data.get("clock_name") else 1
+            await db.update_self_bot(owner_id, clock_name=new_val)
+            await callback.answer(f"🕒 ساعت اسم {'🟢 روشن' if new_val else '🔴 خاموش'} شد.", show_alert=True)
+        elif sub_act == "bio":
+            new_val = 0 if self_data.get("clock_bio") else 1
+            await db.update_self_bot(owner_id, clock_bio=new_val)
+            await callback.answer(f"📝 ساعت بیو {'🟢 روشن' if new_val else '🔴 خاموش'} شد.", show_alert=True)
+        elif sub_act == "afk":
+            cur_afk = self_data.get("afk_status", 0)
+            new_afk = 0 if cur_afk == 1 else 1
+            await db.update_self_bot(owner_id, afk_status=new_afk)
+            await callback.answer(f"💤 منشی AFK {'🟢 فعال' if new_afk else '🔴 غیرفعال'} شد.", show_alert=True)
+
+    elif action == "cycle":
+        self_data = await db.get_self_bot(owner_id)
+        fonts = [f[0] for f in FONT_LIST]
+        cur = self_data.get("clock_font", "persian")
+        next_font = fonts[(fonts.index(cur) + 1) % len(fonts)] if cur in fonts else "persian"
+        await db.update_self_bot(owner_id, clock_font=next_font)
+        await callback.answer(f"🎨 فونت ساعت به «{next_font}» تغییر یافت.", show_alert=True)
+
+    elif action == "react":
+        react_type = parts[2]
+        emoji_map = {
+            "heart": "❤️", "fire": "🔥", "like": "👍", 
+            "clap": "👏", "laugh": "😂", "bolt": "⚡️", "off": "off"
+        }
+        selected = emoji_map.get(react_type, "off")
+        await db.set_setting(f"self_react_{owner_id}", selected)
+        await callback.answer(f"🔔 ری‌اکشن به {selected} تنظیم شد.", show_alert=True)
+
+    elif action == "stopspam":
+        from self_manager import stop_user_spam
+        stop_user_spam(owner_id)
+        await callback.answer("🛑 تمامی ارسال‌های مکرر و اسپمر متوقف شدند.", show_alert=True)
+
+    elif action == "ping":
+        await callback.answer("🏓 Pong! سلف‌بات آنلاین و متصل است.", show_alert=True)
+EOF
+
+cat << 'EOF' > self_manager.py
+import asyncio
+import datetime
+import logging
+import os
+import random
+import re
+import json
+import ssl
+import hashlib
+import urllib.parse
+import urllib.request
+from zoneinfo import ZoneInfo
+from telethon import TelegramClient, events, functions, types
+from telethon.sessions import StringSession
+from telethon.errors import AuthKeyUnregisteredError, SessionRevokedError, UserDeactivatedError
+
+from config import config
+import database as db
+
+logging.basicConfig(level=logging.INFO)
+
+ACTIVE_CLIENTS = {}
+SPAM_STOP_FLAGS = {}
+PV_MESSAGE_CACHE = {}
+
+# ۳۶ فونت کامل و متنوع برای اعداد ساعت
+TIME_FONTS = {
+    "persian": {"0": "۰", "1": "۱", "2": "۲", "3": "۳", "4": "۴", "5": "۵", "6": "۶", "7": "۷", "8": "۸", "9": "۹", ":": ":"},
+    "digital": {"0": "𝟘", "1": "𝟙", "2": "𝟚", "3": "𝟛", "4": "𝟜", "5": "𝟝", "6": "𝟞", "7": "𝟟", "8": "𝟠", "9": "𝟡", ":": ":"},
+    "superscript": {"0": "⁰", "1": "¹", "2": "²", "3": "³", "4": "⁴", "5": "⁵", "6": "⁶", "7": "⁷", "8": "⁸", "9": "⁹", ":": ":"},
+    "subscript": {"0": "₀", "1": "₁", "2": "₂", "3": "₃", "4": "₄", "5": "₅", "6": "₆", "7": "₇", "8": "₈", "9": "₉", ":": ":"},
+    "bold": {"0": "𝟎", "1": "𝟏", "2": "𝟐", "3": "𝟑", "4": "𝟒", "5": "𝟓", "6": "𝟔", "7": "𝟕", "8": "𝟖", "9": "𝟗", ":": ":"},
+    "sans_bold": {"0": "𝟬", "1": "𝟭", "2": "𝟮", "3": "𝟯", "4": "𝟰", "5": "𝟱", "6": "𝟲", "7": "𝟳", "8": "𝟴", "9": "𝟵", ":": ":"},
+    "sans": {"0": "𝟢", "1": "𝟣", "2": "𝟤", "3": "𝟥", "4": "𝟦", "5": "𝟧", "6": "𝟨", "7": "𝟩", "8": "𝟪", "9": "𝟫", ":": ":"},
+    "monospace": {"0": "𝟶", "1": "𝟷", "2": "𝟸", "3": "𝟹", "4": "𝟺", "5": "𝟻", "6": "𝟼", "7": "𝟽", "8": "𝟾", "9": "𝟿", ":": ":"},
+    "circled_dark": {"0": "⓿", "1": "➊", "2": "➋", "3": "➌", "4": "➍", "5": "➎", "6": "➏", "7": "➐", "8": "➑", "9": "➒", ":": ":"},
+    "circled_white": {"0": "⓪", "1": "①", "2": "②", "3": "③", "4": "④", "5": "⑤", "6": "⑥", "7": "⑦", "8": "⑧", "9": "⑨", ":": ":"},
+    "circled_serif": {"0": "🄋", "1": "➀", "2": "➁", "3": "➂", "4": "➃", "5": "➄", "6": "➅", "7": "➆", "8": "➇", "9": "➈", ":": ":"},
+    "parenthesized": {"0": "⒪", "1": "⑴", "2": "⑵", "3": "⑶", "4": "⑷", "5": "⑸", "6": "⑹", "7": "⑺", "8": "⑻", "9": "⑼", ":": ":"},
+    "dotted": {"0": "🄀", "1": "⒈", "2": "⒉", "3": "⒋", "4": "⒋", "5": "⒌", "6": "⒍", "7": "⒎", "8": "⒏", "9": "⒐", ":": ":"},
+    "square_dark": {"0": "🄌", "1": "➊", "2": "➋", "3": "➌", "4": "➍", "5": "➎", "6": "➏", "7": "➐", "8": "➑", "9": "➒", ":": ":"},
+    "fullwidth": {"0": "０", "1": "１", "2": "２", "3": "３", "4": "４", "5": "５", "6": "６", "7": "７", "8": "８", "9": "９", ":": "："},
+    "segment_7": {"0": "🯰", "1": "🯱", "2": "🯲", "3": "𝯳", "4": "𝯴", "5": "𝯵", "6": "𝯶", "7": "𝯷", "8": "𝯸", "9": "𝯹", ":": ":"},
+    "arabic": {"0": "٠", "1": "١", "2": "٢", "3": "٣", "4": "٤", "5": "٥", "6": "٦", "7": "٧", "8": "٨", "9": "٩", ":": ":"},
+    "roman": {"0": "0", "1": "Ⅰ", "2": "Ⅱ", "3": "Ⅲ", "4": "Ⅳ", "5": "Ⅴ", "6": "Ⅵ", "7": "Ⅶ", "8": "Ⅷ", "9": "Ⅸ", ":": ":"},
+    "bubble_black": {"0": "⓿", "1": "❶", "2": "❷", "3": "❸", "4": "❹", "5": "❺", "6": "❻", "7": "❼", "8": "❽", "9": "❾", ":": ":"},
+    "braille": {"0": "⠚", "1": "⠁", "2": "⠃", "3": "⠉", "4": "⠙", "5": "⠑", "6": "⠋", "7": "⠛", "8": "⠓", "9": "⠊", ":": "⠒"},
+    "devanagari": {"0": "०", "1": "१", "2": "२", "3": "३", "4": "४", "5": "५", "6": "६", "7": "७", "8": "८", "9": "९", ":": ":"},
+    "bengali": {"0": "০", "1": "১", "2": "২", "3": "৩", "4": "৪", "5": "৫", "6": "৬", "7": "৭", "8": "৮", "9": "৯", ":": ":"},
+    "thai": {"0": "๐", "1": "๑", "2": "๒", "3": "๓", "4": "๔", "5": "๕", "6": "๖", "7": "๗", "8": "๘", "9": "๙", ":": ":"},
+    "tibetan": {"0": "༠", "1": "༡", "2": "༢", "3": "༣", "4": "༤", "5": "༥", "6": "༦", "7": "༧", "8": "༨", "9": "༩", ":": ":"},
+    "khmer": {"0": "០", "1": "១", "2": "۲", "3": "۳", "4": "۴", "5": "۵", "6": "۶", "7": "۷", "8": "۸", "9": "۹", ":": ":"},
+    "myanmar": {"0": "၀", "1": "၁", "2": "၂", "3": "၃", "4": "၄", "5": "၅", "6": "၆", "7": "၇", "8": "၈", "9": "၉", ":": ":"},
+    "gurmukhi": {"0": "੦", "1": "੧", "2": "੨", "3": "੩", "4": "੪", "5": "੫", "6": "੬", "7": "੭", "8": "੮", "9": "੯", ":": ":"},
+    "kannada": {"0": "೦", "1": "೧", "2": "೨", "3": "೩", "4": "೪", "5": "೫", "6": "೬", "7": "೭", "8": "೮", "9": "೯", ":": ":"},
+    "malayalam": {"0": "൦", "1": "൧", "2": "൨", "3": "൩", "4": "൪", "5": "൫", "6": "൬", "7": "൭", "8": "൮", "9": "൯", ":": ":"},
+    "tamil": {"0": "௦", "1": "௧", "2": "௨", "3": "௩", "4": "௪", "5": "௫", "6": "௬", "7": "௭", "8": "௮", "9": "௯", ":": ":"},
+    "telugu": {"0": "౦", "1": "౧", "2": "౨", "3": "౩", "4": "౪", "5": "౫", "6": "౬", "7": "౭", "8": "౮", "9": "౯", ":": ":"},
+    "gujarati": {"0": "૦", "1": "૧", "2": "૨", "3": "૩", "4": "૪", "5": "૫", "6": "૬", "7": "૭", "8": "૮", "9": "૯", ":": ":"},
+    "oriya": {"0": "୦", "1": "୧", "2": "୨", "3": "୩", "4": "୪", "5": "୫", "6": "୬", "7": "୭", "8": "୮", "9": "୯", ":": ":"},
+    "sinhala": {"0": "෦", "1": "෧", "2": "෨", "3": "෩", "4": "෪", "5": "෫", "6": "෬", "7": "෭", "8": "෮", "9": "෯", ":": ":"},
+    "lao": {"0": "໐", "1": "໑", "2": "໒", "3": "໓", "4": "໔", "5": "໕", "6": "໖", "7": "໗", "8": "໘", "9": "໙", ":": ":"},
+    "regular": {"0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8", "9": "9", ":": ":"}
+}
+
+def stop_user_spam(user_id: int):
+    SPAM_STOP_FLAGS[user_id] = True
+
+def get_styled_time(font_name="persian"):
+    now = datetime.datetime.now(ZoneInfo("Asia/Tehran"))
+    raw = now.strftime("%H:%M")
+    fmap = TIME_FONTS.get(font_name, TIME_FONTS["persian"])
+    return "".join(fmap.get(c, c) for c in raw)
+
+def parse_telegram_message_link(link: str):
+    if not link:
+        return None, None
+    link = link.strip()
+    m_priv = re.search(r"t\.me/c/(\d+)/(\d+)", link)
+    if m_priv:
+        channel_id = int(f"-100{m_priv.group(1)}")
+        msg_id = int(m_priv.group(2))
+        return channel_id, msg_id
+
+    m_pub = re.search(r"t\.me/([a-zA-Z0-9_]+)/(\d+)", link)
+    if m_pub:
+        username = m_pub.group(1)
+        msg_id = int(m_pub.group(2))
+        return username, msg_id
+
+    return None, None
+
+async def search_music_online(query: str):
+    try:
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        url = f"https://itunes.apple.com/search?term={urllib.parse.quote(query)}&entity=song&limit=5"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+        def fetch():
+            with urllib.request.urlopen(req, context=ctx, timeout=8) as r:
+                return json.loads(r.read().decode())
+        data = await asyncio.to_thread(fetch)
+        results = data.get("results", [])
+        tracks = []
+        for item in results:
+            tracks.append({
+                "title": item.get("trackName", "آهنگ"),
+                "artist": {"name": item.get("artistName", "خواننده")},
+                "preview": item.get("previewUrl", "")
+            })
+        return tracks
+    except Exception as e:
+        logging.error(f"Music search error: {e}")
+        return []
+
+async def resolve_destination_peer(client, dest_str: str):
+    if not dest_str or dest_str.strip().lower() == "me":
+        return "me"
+    target = dest_str.strip()
+    try:
+        if target.startswith("-100") or (target.startswith("-") and target[1:].isdigit()):
+            return int(target)
+        if target.isdigit():
+            return int(target)
+        if target.startswith("@"):
+            return target
+        return target
+    except Exception:
+        return "me"
+
+async def start_userbot_client(user_id: int, session_str: str):
+    if user_id in ACTIVE_CLIENTS:
+        try:
+            await ACTIVE_CLIENTS[user_id].disconnect()
+        except Exception:
+            pass
 
     client = TelegramClient(
-        StringSession(),
+        StringSession(session_str),
         api_id=config.API_ID,
         api_hash=config.API_HASH,
         device_model="PuLaSeLf Core",
@@ -1902,779 +1408,918 @@ async def process_self_phone(message: types.Message, state: FSMContext):
 
     try:
         await client.connect()
-        sent = await client.send_code_request(phone)
-        TEMP_CLIENTS[message.from_user.id] = {
-            "client": client,
-            "phone": phone,
-            "phone_code_hash": sent.phone_code_hash,
-            "code_buffer": ""
-        }
-        await state.update_data(phone=phone)
-        await state.set_state(SelfLoginState.waiting_for_code)
-        await wait_msg.delete()
+        if not await client.is_user_authorized():
+            await db.delete_self_bot(user_id)
+            return False
 
-        prompt_text = (
-            "📩 <b>کد تایید تلگرام برای شما ارسال شد.</b>\n\n"
-            "⚠️ <b>توجه:</b> جهت جلوگیری از مسدود شدن کد توسط تلگرام، کد را از طریق <b>کیبورد شیشه‌ای زیر</b> وارد نمایید:"
-        )
-        await message.answer(prompt_text, reply_markup=get_numpad_markup(""))
+        ACTIVE_CLIENTS[user_id] = client
+        PV_MESSAGE_CACHE[user_id] = {}
+        SPAM_STOP_FLAGS[user_id] = False
 
+        logging.info(f"🚀 PuLaSeLf userbot active for {user_id}")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(پنل|\.panel|panel)$"))
+        async def panel_trigger(event):
+            sent = False
+            try:
+                input_chat = await event.get_input_chat()
+            except Exception:
+                input_chat = event.chat_id
+
+            for attempt in range(4):
+                try:
+                    results = await client.inline_query("PuLaherperbot", f"panel_{user_id}")
+                    if results:
+                        await results[0].click(input_chat, reply_to=event.reply_to_msg_id)
+                        await event.delete()
+                        sent = True
+                        break
+                except Exception as e:
+                    logging.warning(f"Inline retry attempt {attempt + 1}: {e}")
+                await asyncio.sleep(0.25)
+
+            if not sent:
+                me = await client.get_me()
+                self_data = await db.get_self_bot(user_id)
+                tmpl = self_data.get("name_template") or "User {clock}"
+                c_name = "🟢 روشن" if self_data and self_data.get('clock_name') else "🔴 خاموش"
+                c_bio = "🟢 روشن" if self_data and self_data.get('clock_bio') else "🔴 خاموش"
+                
+                panel_text = (
+                    "👑 <b>کنترل پنل کاربری سلف‌بات پیشرفته PuLaSeLf</b>\n"
+                    "━━━━━━━━━━━━━━━━━━━━\n\n"
+                    f"👤 <b>کاربر:</b> {me.first_name}\n"
+                    f"🆔 <b>شناسه عددی:</b> <code>{user_id}</code>\n"
+                    f"🕒 <b>ساعت روی اسم:</b> {c_name}\n"
+                    f"📝 <b>ساعت روی بیو:</b> {c_bio}\n"
+                    f"🏷 <b>الگوی اسم:</b> <code>{tmpl}</code>\n\n"
+                    "━━━━━━━━━━━━━━━━━━━━\n"
+                    "⚙️ <b>دستورات پرکاربرد سلف:</b>\n\n"
+                    "📱 <b>اسپمر:</b>\n"
+                    "• <code>اسپم 50 بار هر 2 ثانیه سلام</code>\n"
+                    "• <code>توقف اسپم</code> | <code>.stopspam</code>\n\n"
+                    "✏️ <b>ادیت و حذف پیام:</b>\n"
+                    "• <code>حذف</code> | <code>.del</code> (روی ریپلای)\n"
+                    "• <code>ادیت [متن]</code> | <code>.edit [text]</code> (روی ریپلای)\n\n"
+                    "💾 <b>ذخیره و فوروارد (ضد قفل):</b>\n"
+                    "• <code>سیو</code> | <code>.save</code> (ریپلای یا با لینک)\n"
+                    "• <code>فور</code> | <code>.for</code> (ریپلای یا با لینک)\n\n"
+                    "🛠️ <b>ابزارها:</b>\n"
+                    "• <code>پینگ</code> | <code>ساعت</code> | <code>تگ همه</code> | <code>موزیک</code> | <code>اطلاعات</code>\n\n"
+                    "📖 برای دیدن لیست تمام دستورات ارسال کنید: <code>راهنما</code> یا <code>.help</code>"
+                )
+                try:
+                    await event.edit(panel_text, parse_mode="html")
+                except Exception:
+                    pass
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:\.help|راهنما|دستورات|\.menu|منو|help)$"))
+        async def help_cmd(event):
+            help_text = (
+                "👑 <b>راهنمای جامع دستورات سلف‌بات PuLaSeLf:</b>\n"
+                "━━━━━━━━━━━━━━━━━━━━\n\n"
+                "📱 <b>اسپمر و ارسال مکرر (فارسی و انگلیسی):</b>\n"
+                "• <code>اسپم 100 بار هر 2 ثانیه متن</code>\n"
+                "• <code>اسپم 20 بار هر 1 دقیقه متن</code>\n"
+                "• <code>.spam 20 1.5 hello</code> | <code>spam 20 1.5 hello</code>\n"
+                "• <code>توقف اسپم</code> | <code>توقف</code> | <code>.stopspam</code> | <code>stop</code>\n\n"
+                "✏️ <b>مدیریت و ادیت پیام‌ها:</b>\n"
+                "• <code>حذف</code> | <code>.del</code> ➔ پاک کردن پیام ریپلای‌شده\n"
+                "• <code>ادیت [متن جدید]</code> | <code>.edit [text]</code> ➔ تغییر پیام شما\n\n"
+                "💾 <b>ذخیره‌ساز و ضد کپی (حتی کانال‌های قفل):</b>\n"
+                "• <code>سیو</code> | <code>.save</code> (ریپلای روی پیام یا <code>سیو لینک</code>)\n"
+                "• <code>فور</code> | <code>.for</code> (ریپلای روی پیام یا <code>فور لینک</code>)\n"
+                "• <code>سیو تایمر روشن/خاموش</code> | <code>.savettl on/off</code>\n"
+                "• <code>انتی دلیت روشن/خاموش</code> | <code>.antidel on/off</code>\n"
+                "• <code>انتی ادیت روشن/خاموش</code> | <code>.antiedit on/off</code>\n"
+                "• <code>سیو پیوی روشن/خاموش</code> | <code>.savepv on/off</code>\n\n"
+                "👤 <b>پروفایل و ساعت زنده:</b>\n"
+                "• <code>تنظیم اسم Ali {clock}</code> | <code>.setname Ali {clock}</code>\n"
+                "• <code>ساعت اسم روشن/خاموش</code> | <code>.name on/off</code>\n"
+                "• <code>ساعت بیو روشن/خاموش</code> | <code>.bio on/off</code>\n"
+                "• <code>حذف ساعت اسم</code> | <code>.resetname</code>\n"
+                "• <code>فونت [نام فونت]</code> | <code>.font [name]</code> (۳۶ فونت عددی)\n\n"
+                "✍️ <b>استایل و فرمت خودکار:</b>\n"
+                "• <code>بولد روشن/خاموش</code> | <code>.autobold on/off</code>\n"
+                "• <code>ایتالیک روشن/خاموش</code> | <code>.autoitalic on/off</code>\n"
+                "• <code>مونو روشن/خاموش</code> | <code>.automono on/off</code>\n\n"
+                "💬 <b>پاسخگوی خودکار کلمات (منشی):</b>\n"
+                "• <code>پاسخ اضافه کلمه | جواب</code> | <code>.autoans add کلمه | جواب</code>\n"
+                "• <code>پاسخ حذف کلمه</code> | <code>.autoans del کلمه</code>\n"
+                "• <code>پاسخ لیست</code> | <code>.autoans list</code>\n\n"
+                "🛠️ <b>ابزارهای کاربردی:</b>\n"
+                "• <code>پینگ</code> | <code>.ping</code> ➔ تست سرعت سلف\n"
+                "• <code>ساعت</code> | <code>تاریخ</code> | <code>.time</code> ➔ زمان دقیق تهران\n"
+                "• <code>حساب 2+2*5</code> | <code>.calc 2+2*5</code> ➔ ماشین‌حساب ریاضی\n"
+                "• <code>موزیک [نام آهنگ]</code> | <code>.music [name]</code> ➔ دانلود آنلاین آهنگ\n"
+                "• <code>اطلاعات</code> | <code>.info</code> (ریپلای/آیدی/یوزر) ➔ مشخصات و عکس کاربر\n"
+                "• <code>تگ همه [متن]</code> | <code>.tagall [text]</code> ➔ منشن کردن اعضای گروه\n"
+                "• <code>آمار چت</code> | <code>.lm</code> ➔ آنالیز ۱۰۰ پیام اخیر\n"
+                "• <code>اف کی [دلیل]</code> | <code>.afk [reason]</code> ➔ منشی استراحت\n"
+                "• <code>خروج اف کی</code> | <code>.unafk</code> ➔ خروج از استراحت\n\n"
+                "━━━━━━━━━━━━━━━━━━━━\n"
+                "⚡️ <b>PuLaSeLf Engine v2.5</b>"
+            )
+            await event.edit(help_text, parse_mode="html")
+
+        # --- ۱. اسپمر دو زبانه و هوشمند ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:اسپم|\.spam|spam)\s+(\d+)\s*(?:بار)?\s*(?:هر)?\s*([\d\.]+)?\s*(ثانیه|دقیقه|ساعت|روز|s|m|h|d)?(?:\s+(.+))?$"))
+        async def advanced_spam_cmd(event):
+            count = int(event.pattern_match.group(1))
+            interval_raw = event.pattern_match.group(2)
+            unit_raw = event.pattern_match.group(3)
+            text_to_send = event.pattern_match.group(4)
+
+            interval = float(interval_raw) if interval_raw else 1.0
+            if unit_raw in ["دقیقه", "m"]:
+                interval *= 60
+            elif unit_raw in ["ساعت", "h"]:
+                interval *= 3600
+            elif unit_raw in ["روز", "d"]:
+                interval *= 86400
+
+            if not text_to_send:
+                text_to_send = "Spam"
+
+            chat_id = event.chat_id
+            SPAM_STOP_FLAGS[user_id] = False
+            await event.delete()
+
+            for _ in range(count):
+                if SPAM_STOP_FLAGS.get(user_id, False):
+                    break
+                await client.send_message(chat_id, text_to_send)
+                await asyncio.sleep(interval)
+
+            SPAM_STOP_FLAGS[user_id] = False
+
+        # --- ۲. توقف قطعی و دو زبانه اسپمر ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:توقف\s*اسپم|توقف|\.stopspam|\.stop|stopspam|stop|استپ)$"))
+        async def stop_all_spam_cmd(event):
+            SPAM_STOP_FLAGS[user_id] = True
+            await event.edit("🛑 <b>تمامی ارسال‌های مکرر و اسپمر متوقف شدند.</b>", parse_mode="html")
+
+        # --- ۳. حذف پیام دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:حذف|دلیت|\.del|del|\.delete|delete)$"))
+        async def delete_reply_msg_handler(event):
+            if not event.is_reply:
+                await event.edit("⚠️ <i>لطفاً این دستور را روی یک پیام ریپلای کنید.</i>", parse_mode="html")
+                await asyncio.sleep(2)
+                await event.delete()
+                return
+
+            rep = await event.get_reply_message()
+            await event.delete()
+            try:
+                await rep.delete()
+            except Exception:
+                pass
+
+        # --- ۴. ادیت پیام دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:ادیت|ویرایش|\.edit|edit)\s+(.+)$"))
+        async def edit_reply_msg_handler(event):
+            new_text = event.pattern_match.group(1).strip()
+            if not event.is_reply:
+                await event.edit("⚠️ <i>لطفاً روی پیام خودتان ریپلای کنید:</i> <code>ادیت متن جدید</code>", parse_mode="html")
+                await asyncio.sleep(2.5)
+                await event.delete()
+                return
+
+            rep = await event.get_reply_message()
+            if not rep.out:
+                await event.edit("⚠️ <i>فقط می‌توانید پیام‌های ارسالی خودتان را ادیت کنید.</i>", parse_mode="html")
+                await asyncio.sleep(2.5)
+                await event.delete()
+                return
+
+            try:
+                await rep.edit(new_text)
+                await event.delete()
+            except Exception as e:
+                await event.edit(f"❌ خطا در ادیت پیام: {e}")
+
+        # --- ۵. سیو پیام دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:سیو|\.save|save|\.dl|dl)(?:\s+(.+))?$"))
+        async def save_msg_handler(event):
+            link_input = event.pattern_match.group(1)
+            target_msg = None
+
+            if link_input:
+                peer, msg_id = parse_telegram_message_link(link_input)
+                if not peer or not msg_id:
+                    await event.edit("⚠️ لینک تلگرام نامعتبر است.\nمثال: <code>سیو https://t.me/channel/123</code>", parse_mode="html")
+                    return
+                await event.edit(f"⏳ در حال دریافت پیام از لینک...", parse_mode="html")
+                try:
+                    target_msg = await client.get_messages(peer, ids=msg_id)
+                except Exception as e:
+                    await event.edit(f"❌ خطا در دسترسی به پیام لینک: {e}")
+                    return
+            elif event.is_reply:
+                target_msg = await event.get_reply_message()
+                await event.edit("⏳ در حال دریافت و کپی پیام در Saved Messages...")
+            else:
+                await event.edit("⚠️ لطفاً روی پیام ریپلای کنید یا لینک پیام را بفرستید:\nمثال: <code>سیو https://t.me/channel/123</code>", parse_mode="html")
+                return
+
+            if not target_msg:
+                await event.edit("❌ پیام مورد نظر یافت نشد.")
+                return
+
+            try:
+                await client.forward_messages("me", target_msg)
+                await event.edit("✅ <b>پیام با موفقیت در Saved Messages ذخیره شد!</b>", parse_mode="html")
+            except Exception:
+                try:
+                    if target_msg.media:
+                        file_path = await client.download_media(target_msg)
+                        if file_path:
+                            cap = target_msg.text or target_msg.caption or "💾 رسانه کپی‌شده:"
+                            await client.send_file("me", file_path, caption=cap)
+                            if os.path.exists(file_path):
+                                os.remove(file_path)
+                            await event.edit("✅ <b>رسانه از چت قفل در Saved Messages کپی شد!</b>", parse_mode="html")
+                        else:
+                            await event.edit("❌ خطا در دانلود رسانه.")
+                    elif target_msg.text:
+                        await client.send_message("me", target_msg.text)
+                        await event.edit("✅ <b>متن پیام با موفقیت در Saved Messages کپی شد!</b>", parse_mode="html")
+                    else:
+                        await event.edit("❌ محتوای قابل ذخیره‌ای یافت نشد.")
+                except Exception as ex:
+                    await event.edit(f"❌ خطا در ذخیره پیام: {ex}")
+
+        # --- ۶. فور پیام دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:فور|\.for|for|\.f|share)(?:\s+(.+))?$"))
+        async def forward_share_link_handler(event):
+            link_input = event.pattern_match.group(1)
+            target_msg = None
+
+            if link_input:
+                peer, msg_id = parse_telegram_message_link(link_input)
+                if not peer or not msg_id:
+                    await event.edit("⚠️ لینک تلگرام نامعتبر است.\nمثال: <code>فور https://t.me/channel/123</code>", parse_mode="html")
+                    return
+                await event.edit(f"⏳ در حال استخراج محتوای لینک...", parse_mode="html")
+                try:
+                    target_msg = await client.get_messages(peer, ids=msg_id)
+                except Exception as e:
+                    await event.edit(f"❌ خطا در دسترسی به پیام: {e}")
+                    return
+            elif event.is_reply:
+                target_msg = await event.get_reply_message()
+            else:
+                await event.edit("⚠️ لطفاً روی پیام ریپلای کنید یا لینک پیام را بفرستید:\nمثال: <code>فور https://t.me/channel/123</code>", parse_mode="html")
+                return
+
+            if not target_msg:
+                await event.edit("❌ پیام مورد نظر یافت نشد.")
+                return
+
+            content_text = target_msg.text or target_msg.caption or ""
+            encoded_text = urllib.parse.quote(content_text.strip())
+            share_link = f"https://t.me/share/url?url=&text={encoded_text}" if encoded_text else "https://t.me/share/url"
+
+            response_html = (
+                "📤 <b>فوروارد و ارسال سریع پیام:</b>\n"
+                "━━━━━━━━━━━━━━━━━━━━\n\n"
+                f"🔗 <a href='{share_link}'>👈 <b>برای انتخاب چت و فوروارد اینجا کلیک کنید</b> 👉</a>\n\n"
+                "💡 <i>با زدن روی لینک بالا، صفحه انتخاب چت باز می‌شود تا پیام را به هر گروه یا پیوی بفرستید.</i>"
+            )
+            await event.edit(response_html, parse_mode="html")
+
+        # --- ۷. تگ همگانی دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:تگ\s*همه|تگ|\.tagall|\.tag|tagall|tag)(?:\s+(.+))?$"))
+        async def tagall_cmd(event):
+            if not event.is_group:
+                await event.edit("⚠️ <i>این دستور فقط داخل گروه‌ها کار می‌کند.</i>", parse_mode="html")
+                return
+            msg_custom = event.pattern_match.group(1) or "سلام دوستان"
+            await event.delete()
+            async for user in client.iter_participants(event.chat_id):
+                if not user.bot and not user.deleted:
+                    mention = f"[{user.first_name}](tg://user?id={user.id})"
+                    await client.send_message(event.chat_id, f"{mention} {msg_custom}")
+                    await asyncio.sleep(1.5)
+
+        # --- ۸. مشخصات کاربر دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:اطلاعات|مشخصات|\.info|info|\.user|user)(?:\s+(.+))?$"))
+        async def info_cmd(event):
+            raw_arg = event.pattern_match.group(1)
+            reply_target_id = event.reply_to_msg_id if event.is_reply else None
+            chat_id = event.chat_id
+            target_entity = None
+
+            await event.delete()
+
+            if raw_arg:
+                arg = raw_arg.strip()
+                try:
+                    if arg.isdigit() or (arg.startswith("-") and arg[1:].isdigit()):
+                        target_entity = await client.get_entity(int(arg))
+                    else:
+                        clean_un = arg.replace("https://t.me/", "").replace("@", "").strip()
+                        target_entity = await client.get_entity(clean_un)
+                except Exception:
+                    await client.send_message(chat_id, f"❌ کاربر با شناسه/یوزرنیم «{arg}» یافت نشد.", reply_to=reply_target_id)
+                    return
+            elif event.is_reply:
+                rep = await event.get_reply_message()
+                try:
+                    target_entity = await client.get_entity(rep.sender_id)
+                except Exception:
+                    pass
+            elif event.is_private:
+                target_entity = await client.get_chat()
+            else:
+                target_entity = await client.get_me()
+
+            if not target_entity:
+                return
+
+            t_id = target_entity.id
+            fn = getattr(target_entity, 'first_name', '') or ''
+            ln = getattr(target_entity, 'last_name', '') or ''
+            full_name = f"{fn} {ln}".strip() or "بدون نام"
+            un = f"@{target_entity.username}" if getattr(target_entity, 'username', None) else "ندارد"
+            bot_stat = "بله 🤖" if getattr(target_entity, 'bot', False) else "خیر 👤"
+            prem_stat = "دارد ⭐️" if getattr(target_entity, 'premium', False) else "ندارد ❌"
+
+            bio = "ندارد"
+            try:
+                full_user = await client(functions.users.GetFullUserRequest(id=t_id))
+                bio = full_user.full_user.about or "ندارد"
+            except Exception:
+                pass
+
+            total_msgs = 0
+            today_msgs = 0
+            try:
+                total_res = await client.get_messages(chat_id, from_user=t_id, limit=0)
+                total_msgs = getattr(total_res, 'total', 0)
+
+                now_tehran = datetime.datetime.now(ZoneInfo("Asia/Tehran"))
+                start_of_today = now_tehran.replace(hour=0, minute=0, second=0, microsecond=0)
+                async for msg in client.iter_messages(chat_id, from_user=t_id):
+                    msg_tehran = msg.date.astimezone(ZoneInfo("Asia/Tehran"))
+                    if msg_tehran >= start_of_today:
+                        today_msgs += 1
+                    else:
+                        break
+            except Exception:
+                pass
+
+            caption = (
+                "👤 <b>پروفایل و مشخصات کاربر:</b>\n"
+                "━━━━━━━━━━━━━━━━━━━━\n\n"
+                f"📝 <b>نام:</b> {full_name}\n"
+                f"🆔 <b>آیدی عددی:</b> <code>{t_id}</code>\n"
+                f"🏷 <b>یوزرنیم:</b> {un}\n"
+                f"🤖 <b>ربات:</b> {bot_stat}\n"
+                f"💎 <b>پرمیوم:</b> {prem_stat}\n\n"
+                f"💬 <b>پیام‌های امروز در این چت:</b> <code>{today_msgs}</code>\n"
+                f"📊 <b>کل پیام‌ها در این چت:</b> <code>{total_msgs}</code>\n\n"
+                f"📄 <b>بیوگرافی:</b>\n<i>{bio}</i>\n"
+                "━━━━━━━━━━━━━━━━━━━━"
+            )
+
+            photo_path = None
+            try:
+                photo_path = await client.download_profile_photo(target_entity, file=f"pfp_{t_id}_{user_id}.jpg")
+            except Exception:
+                photo_path = None
+
+            if photo_path and os.path.exists(photo_path):
+                try:
+                    await client.send_file(chat_id, photo_path, caption=caption, parse_mode="html", reply_to=reply_target_id)
+                finally:
+                    if os.path.exists(photo_path):
+                        os.remove(photo_path)
+            else:
+                await client.send_message(chat_id, caption, parse_mode="html", reply_to=reply_target_id)
+
+        # --- ۹. آنالیز چت (LM) دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:آمار\s*چت|امار\s*چت|\.lm|lm|\.stats|stats)$"))
+        async def lm_cmd(event):
+            await event.edit("⏳ <i>در حال تحلیل ۱۰۰ پیام اخیر چت...</i>", parse_mode="html")
+            total, media_cnt, text_cnt = 0, 0, 0
+            async for msg in client.iter_messages(event.chat_id, limit=100):
+                total += 1
+                if msg.media:
+                    media_cnt += 1
+                else:
+                    text_cnt += 1
+            await event.edit(
+                "📊 <b>گزارش آماری ۱۰۰ پیام اخیر چت:</b>\n"
+                "━━━━━━━━━━━━━━━━━━━━\n\n"
+                f"💬 <b>کل پیام‌ها:</b> <code>{total}</code>\n"
+                f"📝 <b>پیام‌های متنی:</b> <code>{text_cnt}</code>\n"
+                f"📁 <b>فایل و رسانه:</b> <code>{media_cnt}</code>\n"
+                "━━━━━━━━━━━━━━━━━━━━",
+                parse_mode="html"
+            )
+
+        # --- ۱۰. پاسخگوی خودکار کلمات دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:پاسخ|\.autoans|autoans)\s+(اضافه|حذف|لیست|add|del|list)(?:\s+(.+))?$"))
+        async def autoans_manage(event):
+            act_raw = event.pattern_match.group(1).lower()
+            arg = event.pattern_match.group(2)
+            raw = await db.get_setting(f"autoans_{user_id}", "{}")
+            try:
+                ans_dict = json.loads(raw)
+            except Exception:
+                ans_dict = {}
+
+            if act_raw in ["add", "اضافه"]:
+                if not arg or "|" not in arg:
+                    await event.edit("⚠️ <b>الگو:</b> <code>پاسخ اضافه کلمه | جواب</code>", parse_mode="html")
+                    return
+                k, v = arg.split("|", 1)
+                ans_dict[k.strip().lower()] = v.strip()
+                await db.set_setting(f"autoans_{user_id}", json.dumps(ans_dict, ensure_ascii=False))
+                await event.edit(f"✅ پاسخ خودکار برای «<code>{k.strip()}</code>» تنظیم شد.", parse_mode="html")
+            elif act_raw in ["del", "حذف"]:
+                if not arg or arg.strip().lower() not in ans_dict:
+                    await event.edit("❌ <i>کلمه در لیست یافت نشد.</i>", parse_mode="html")
+                    return
+                del ans_dict[arg.strip().lower()]
+                await db.set_setting(f"autoans_{user_id}", json.dumps(ans_dict, ensure_ascii=False))
+                await event.edit(f"🗑 کلمه «<code>{arg.strip()}</code>» با موفقیت حذف شد.", parse_mode="html")
+            elif act_raw in ["list", "لیست"]:
+                if not ans_dict:
+                    await event.edit("📭 <i>هیچ پاسخ خودکاری ثبت نشده است.</i>", parse_mode="html")
+                    return
+                t = "💬 <b>لیست پاسخ‌های خودکار تنظیم‌شده:</b>\n━━━━━━━━━━━━━━━━━━━━\n\n"
+                for idx, (k, v) in enumerate(ans_dict.items(), 1):
+                    t += f"{idx}. <code>{k}</code> ➔ <i>{v}</i>\n"
+                t += "━━━━━━━━━━━━━━━━━━━━"
+                await event.edit(t, parse_mode="html")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^\.setdst\s+(ttl|del|edit|pv)\s+(.+)$"))
+        async def set_destination_cmd(event):
+            target_type = event.pattern_match.group(1).lower()
+            dest_input = event.pattern_match.group(2).strip()
+
+            target_names = {
+                "ttl": ("dst_ttl", "عکس‌های تایمردار"),
+                "del": ("dst_del", "پیام‌های حذف‌شده (آنتی‌دلیت)"),
+                "edit": ("dst_edit", "پیام‌های ویرایش‌شده (آنتی‌ادیت)"),
+                "pv": ("dst_pv", "سیو پیام‌های پیوی")
+            }
+            col_name, fa_title = target_names[target_type]
+            await db.update_self_bot(user_id, **{col_name: dest_input})
+
+            dest_display = "Saved Messages (پیام‌های ذخیره‌شده)" if dest_input.lower() == "me" else f"کانال خصوصی <code>{dest_input}</code>"
+            await event.edit(f"✅ مقصد ارسال **{fa_title}** با موفقیت به {dest_display} تغییر یافت.", parse_mode="html")
+
+        @client.on(events.NewMessage(incoming=True))
+        async def incoming_global_listener(event):
+            react_emoji = await db.get_setting(f"self_react_{user_id}", "off")
+            if react_emoji and react_emoji != "off":
+                try:
+                    await client(functions.messages.SendReactionRequest(
+                        peer=event.chat_id,
+                        msg_id=event.id,
+                        reaction=[types.ReactionEmoji(emoticon=react_emoji)]
+                    ))
+                except Exception:
+                    pass
+
+            if event.text:
+                raw_ans = await db.get_setting(f"autoans_{user_id}", "{}")
+                try:
+                    ans_map = json.loads(raw_ans)
+                    k_match = event.text.strip().lower()
+                    if k_match in ans_map:
+                        await event.reply(ans_map[k_match])
+                except Exception:
+                    pass
+
+            if event.is_private or event.mentioned:
+                self_data = await db.get_self_bot(user_id)
+                if self_data and self_data.get("afk_status", 0) == 1:
+                    r = self_data.get("afk_reason") or "در دسترس نیستم"
+                    await event.reply(f"💤 **کاربر در حال حاضر آفلاین (AFK) است.**\n📝 دلیل: _{r}_")
+
+        @client.on(events.NewMessage(incoming=True, func=lambda e: e.is_private))
+        async def pv_message_listener(event):
+            self_data = await db.get_self_bot(user_id)
+            if not self_data:
+                return
+
+            sender = await event.get_sender()
+            sender_name = getattr(sender, "first_name", "کاربر")
+            time_now = datetime.datetime.now(ZoneInfo("Asia/Tehran")).strftime("%H:%M:%S")
+
+            user_cache = PV_MESSAGE_CACHE.setdefault(user_id, {})
+            user_cache[event.id] = {
+                "sender_id": event.sender_id,
+                "sender_name": sender_name,
+                "text": event.text or "بدون متن",
+                "date": time_now,
+                "media": event.media
+            }
+            if len(user_cache) > 500:
+                user_cache.pop(next(iter(user_cache)))
+
+            if self_data.get("save_ttl", 1) == 1 and event.media:
+                is_ttl = getattr(event.media, "ttl_seconds", None) or getattr(event.message, "ttl_period", None)
+                if is_ttl:
+                    try:
+                        dst_peer = await resolve_destination_peer(client, self_data.get("dst_ttl", "me"))
+                        path = await event.download_media()
+                        if path:
+                            cap = f"🔒 <b>عکس/رسانه تایمردار دریافتی از {sender_name}:</b>\n⏱ تایمر: <code>{is_ttl}</code> ثانیه\n🕒 زمان: <code>{time_now}</code>"
+                            try:
+                                await client.send_file(dst_peer, path, caption=cap, parse_mode="html")
+                            except Exception:
+                                await client.send_file("me", path, caption=cap, parse_mode="html")
+                            if os.path.exists(path):
+                                os.remove(path)
+                    except Exception as e:
+                        logging.error(f"Error saving TTL media: {e}")
+
+            if self_data.get("save_pv", 0) == 1:
+                try:
+                    dst_peer = await resolve_destination_peer(client, self_data.get("dst_pv", "me"))
+                    await client.forward_messages(dst_peer, event.message)
+                except Exception:
+                    pass
+
+        @client.on(events.MessageEdited(func=lambda e: e.is_private))
+        async def anti_edit_handler(event):
+            self_data = await db.get_self_bot(user_id)
+            if not self_data or self_data.get("anti_edit", 1) != 1:
+                return
+
+            user_cache = PV_MESSAGE_CACHE.get(user_id, {})
+            if event.id in user_cache:
+                cached = user_cache[event.id]
+                old_text = cached["text"]
+                new_text = event.text or "بدون متن"
+
+                if old_text != new_text:
+                    s_name = cached["sender_name"]
+                    s_id = cached["sender_id"]
+                    dst_peer = await resolve_destination_peer(client, self_data.get("dst_edit", "me"))
+
+                    report = (
+                        f"✏️ <b>پیام ویرایش شده در پیوی ( {s_name} - <code>{s_id}</code> )</b>\n"
+                        "━━━━━━━━━━━━━━━━━━━━\n\n"
+                        f"<b>متن قبلی:</b>\n<i>{old_text}</i>\n\n"
+                        f"<b>متن جدید:</b>\n<i>{new_text}</i>\n"
+                        "━━━━━━━━━━━━━━━━━━━━"
+                    )
+                    try:
+                        await client.send_message(dst_peer, report, parse_mode="html")
+                    except Exception:
+                        try:
+                            await client.send_message("me", report, parse_mode="html")
+                        except Exception:
+                            pass
+
+                    cached["text"] = new_text
+
+        @client.on(events.MessageDeleted())
+        async def anti_delete_handler(event):
+            self_data = await db.get_self_bot(user_id)
+            if not self_data or self_data.get("anti_delete", 1) != 1:
+                return
+
+            user_cache = PV_MESSAGE_CACHE.get(user_id, {})
+            dst_peer = await resolve_destination_peer(client, self_data.get("dst_del", "me"))
+
+            for deleted_id in event.deleted_ids:
+                if deleted_id in user_cache:
+                    cached = user_cache.pop(deleted_id)
+                    s_name = cached["sender_name"]
+                    s_text = cached["text"]
+                    s_date = cached["date"]
+                    
+                    report = (
+                        "🗑️ <b>پیام حذف‌شده در پیوی:</b>\n"
+                        "━━━━━━━━━━━━━━━━━━━━\n\n"
+                        f"👤 فرستنده: <b>{s_name}</b>\n"
+                        f"🕒 زمان ارسال: <code>{s_date}</code>\n\n"
+                        f"💬 <b>متن پیام حذف‌شده:</b>\n<i>{s_text}</i>\n"
+                        "━━━━━━━━━━━━━━━━━━━━"
+                    )
+                    try:
+                        await client.send_message(dst_peer, report, parse_mode="html")
+                    except Exception:
+                        try:
+                            await client.send_message("me", report, parse_mode="html")
+                        except Exception:
+                            pass
+
+        @client.on(events.NewMessage(outgoing=True))
+        async def auto_format_outgoing(event):
+            if not event.text or event.text.startswith(".") or event.text in ["پنل", "panel", "سیو", "فور", "حذف", "پینگ", "ساعت", "تاریخ"] or event.text.startswith("سیو ") or event.text.startswith("فور ") or event.text.startswith("ادیت ") or event.text.startswith("اسپم ") or event.text.startswith("تگ "):
+                return
+            self_data = await db.get_self_bot(user_id)
+            if not self_data:
+                return
+            mode = self_data.get("auto_format_mode", "none")
+            if mode == "bold" and not event.text.startswith("**"):
+                try:
+                    await event.edit(f"**{event.text}**")
+                except Exception:
+                    pass
+            elif mode == "italic" and not event.text.startswith("__"):
+                try:
+                    await event.edit(f"__{event.text}__")
+                except Exception:
+                    pass
+            elif mode == "mono" and not event.text.startswith("`"):
+                try:
+                    await event.edit(f"`{event.text}`")
+                except Exception:
+                    pass
+
+        # --- فرمت خودکار دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:بولد|\.autobold|\.ab|autobold|ab)\s+(روشن|خاموش|on|off)$"))
+        async def toggle_ab(event):
+            act = event.pattern_match.group(1).lower()
+            is_on = act in ["on", "روشن"]
+            mode = "bold" if is_on else "none"
+            await db.update_self_bot(user_id, auto_format_mode=mode)
+            await event.edit(f"✍️ **حالت بولد خودکار {'🟢 روشن' if is_on else '🔴 خاموش'} شد.**")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:ایتالیک|\.autoitalic|\.ai|autoitalic|ai)\s+(روشن|خاموش|on|off)$"))
+        async def toggle_ai(event):
+            act = event.pattern_match.group(1).lower()
+            is_on = act in ["on", "روشن"]
+            mode = "italic" if is_on else "none"
+            await db.update_self_bot(user_id, auto_format_mode=mode)
+            await event.edit(f"✍️ **حالت ایتالیک خودکار {'🟢 روشن' if is_on else '🔴 خاموش'} شد.**")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:مونو|کد|\.automono|\.am|automono|am)\s+(روشن|خاموش|on|off)$"))
+        async def toggle_am(event):
+            act = event.pattern_match.group(1).lower()
+            is_on = act in ["on", "روشن"]
+            mode = "mono" if is_on else "none"
+            await db.update_self_bot(user_id, auto_format_mode=mode)
+            await event.edit(f"✍️ **حالت کد/مونو خودکار {'🟢 روشن' if is_on else '🔴 خاموش'} شد.**")
+
+        # --- سوئیچ‌های تایمر و آنتی‌دلیت دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:سیو\s*تایمر|\.savettl|savettl)\s+(روشن|خاموش|on|off)$"))
+        async def toggle_savettl_cmd(event):
+            val = 1 if event.pattern_match.group(1).lower() in ["on", "روشن"] else 0
+            await db.update_self_bot(user_id, save_ttl=val)
+            await event.edit(f"🔒 **ذخیره خودکار عکس‌های تایمردار {'🟢 فعال' if val else '🔴 غیرفعال'} شد.**")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:انتی\s*دلیت|\.antidel|antidel)\s+(روشن|خاموش|on|off)$"))
+        async def toggle_antidel_cmd(event):
+            val = 1 if event.pattern_match.group(1).lower() in ["on", "روشن"] else 0
+            await db.update_self_bot(user_id, anti_delete=val)
+            await event.edit(f"🗑️ **آنتی‌دلیت پیام‌های پیوی {'🟢 فعال' if val else '🔴 غیرفعال'} شد.**")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:انتی\s*ادیت|\.antiedit|antiedit)\s+(روشن|خاموش|on|off)$"))
+        async def toggle_antiedit_cmd(event):
+            val = 1 if event.pattern_match.group(1).lower() in ["on", "روشن"] else 0
+            await db.update_self_bot(user_id, anti_edit=val)
+            await event.edit(f"✏️ **لاگر پیام‌های ویرایش‌شده (آنتی‌ادیت) {'🟢 فعال' if val else '🔴 غیرفعال'} شد.**")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:سیو\s*پیوی|\.savepv|savepv)\s+(روشن|خاموش|on|off)$"))
+        async def toggle_savepv_cmd(event):
+            val = 1 if event.pattern_match.group(1).lower() in ["on", "روشن"] else 0
+            await db.update_self_bot(user_id, save_pv=val)
+            await event.edit(f"📥 **سیو پیام‌های پیوی {'🟢 فعال' if val else '🔴 غیرفعال'} شد.**")
+
+        # --- تنظیمات اسم و ساعت دو زبانه ---
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:تنظیم\s*اسم|\.setname|setname)\s+(.+)$"))
+        async def set_my_name_template(event):
+            template = event.pattern_match.group(1).strip()
+            me = await client.get_me()
+            orig_name = db.clean_time_from_string(me.first_name) or "User"
+            
+            # ذخیره الگو و تنظیم دقیق نام اولیه
+            await db.update_self_bot(user_id, name_template=template, original_name=orig_name)
+            
+            styled_time = get_styled_time(b.get("clock_font", "persian") if 'b' in locals() else "persian")
+            clean_tmpl = template.replace("{name}", orig_name)
+            preview_name = clean_tmpl.replace("{clock}", styled_time) if "{clock}" in clean_tmpl else f"{clean_tmpl} {styled_time}"
+            
+            await client(functions.account.UpdateProfileRequest(first_name=preview_name[:64]))
+            await event.edit(
+                "✅ <b>الگوی جدید ساعت در اسم ست شد:</b>\n"
+                f"🏷 <code>{template}</code>\n\n"
+                f"👀 <b>پیش‌نمایش زنده:</b> <b>{preview_name}</b>",
+                parse_mode="html"
+            )
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:حذف\s*ساعت\s*اسم|\.resetname|resetname)$"))
+        async def reset_my_name(event):
+            me = await client.get_me()
+            clean_n = db.clean_time_from_string(me.first_name) or "User"
+            await db.update_self_bot(user_id, clock_name=0, clock_bio=0, original_name=clean_n)
+            await client(functions.account.UpdateProfileRequest(first_name=clean_n))
+            await event.edit("✅ <b>ساعت از روی اسم و بیو حذف شد.</b>", parse_mode="html")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:موزیک|آهنگ|\.find|\.music|music|find)\s+(.+)$"))
+        async def music_finder(event):
+            q = event.pattern_match.group(1).strip()
+            await event.edit(f"🔍 <i>در حال جستجوی موزیک:</i> <code>{q}</code>...", parse_mode="html")
+            tracks = await search_music_online(q)
+            if not tracks:
+                await event.edit(f"❌ موزیکی برای «<code>{q}</code>» پیدا نشد.", parse_mode="html")
+                return
+            t = f"🎵 <b>نتایج جستجوی آنلاین موزیک برای «{q}»:</b>\n━━━━━━━━━━━━━━━━━━━━\n\n"
+            for idx, tr in enumerate(tracks, 1):
+                t += f"{idx}. <b>{tr.get('artist',{}).get('name','خواننده')}</b> - {tr.get('title','آهنگ')}\n🔗 <a href='{tr.get('preview','')}'>شنیدن و دانلود پیش‌نمایش</a>\n\n"
+            t += "━━━━━━━━━━━━━━━━━━━━"
+            await event.edit(t, parse_mode="html")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:ساعت\s*اسم|ساعت\s*بیو|\.name|\.bio|name|bio)\s+(روشن|خاموش|on|off)$"))
+        async def clock_toggle(event):
+            text_first = event.text.split()[0].replace(".", "").lower()
+            act = event.pattern_match.group(1).lower()
+            val = 1 if act in ["on", "روشن"] else 0
+            if "اسم" in text_first or text_first == "name":
+                await db.update_self_bot(user_id, clock_name=val)
+                await event.edit(f"🕒 ساعت اسم {'🟢 روشن' if val else '🔴 خاموش'} شد.")
+            else:
+                await db.update_self_bot(user_id, clock_bio=val)
+                await event.edit(f"📝 ساعت بیو {'🟢 روشن' if val else '🔴 خاموش'} شد.")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:فونت|\.font|font)(?:\s+(.+))?$"))
+        async def font_change(event):
+            f_name = event.pattern_match.group(1)
+            if not f_name:
+                await event.edit("💡 برای انتخاب فونت اعداد ساعت، دستور `پنل` را بفرستید و دکمه **🔢 ۳۶ فونت زنده اعداد ساعت** را بزنید یا بنویسید:\n`.font digital` یا `.font bold`")
+                return
+
+            f_name = f_name.strip().lower()
+            if f_name in TIME_FONTS:
+                await db.update_self_bot(user_id, clock_font=f_name)
+                styled_sample = get_styled_time(f_name)
+                await event.edit(f"🎨 فونت ساعت به <code>{f_name}</code> تغییر یافت.\n👀 پیش‌نمایش: <b>{styled_sample}</b>", parse_mode="html")
+            else:
+                await event.edit("⚠️ نام فونت نامعتبر است. از داخل دستور `پنل` دکمه فونت را انتخاب کنید.")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:پین|\.pin|pin)$"))
+        async def pin_msg(event):
+            if event.is_reply:
+                r = await event.get_reply_message()
+                await client.pin_message(event.chat_id, r.id, notify=True)
+                await event.edit("📌 **پیام با موفقیت پین شد.**")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:انپین|\.unpin|unpin)$"))
+        async def unpin_msg(event):
+            if event.is_reply:
+                r = await event.get_reply_message()
+                await client.unpin_message(event.chat_id, r.id)
+                await event.edit("📌 **پیام از پین خارج شد.**")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:اف\s*کی|\.afk|afk)(?:\s+(.+))?$"))
+        async def set_afk(event):
+            r = event.pattern_match.group(1) or "در دسترس نیستم"
+            await db.update_self_bot(user_id, afk_status=1, afk_reason=r)
+            await event.edit(
+                "💤 <b>حالت استراحت (AFK) فعال شد.</b>\n"
+                f"📝 <b>دلیل:</b> <i>{r}</i>",
+                parse_mode="html"
+            )
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:خروج\s*اف\s*کی|ان\s*اف\s*کی|\.unafk|unafk)$"))
+        async def unset_afk(event):
+            await db.update_self_bot(user_id, afk_status=0)
+            await event.edit("☀️ <b>از حالت استراحت (AFK) خارج شدید.</b>", parse_mode="html")
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:پینگ|\.ping|ping)$"))
+        async def ping_cmd(event):
+            start = datetime.datetime.now()
+            await event.edit("🏓 <b>Pong!</b>", parse_mode="html")
+            end = datetime.datetime.now()
+            ms = (end - start).microseconds / 1000
+            await event.edit(
+                "🏓 <b>Pong!</b>\n"
+                f"⚡️ سرعت پاسخ‌دهی سلف: <code>{ms:.1f}ms</code>\n"
+                "📡 وضعیت اتصال: <b>آنلاین و پرسرعت 🟢</b>",
+                parse_mode="html"
+            )
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:ساعت|زمان|تاریخ|\.time|time|\.date|date)$"))
+        async def time_cmd(event):
+            now = datetime.datetime.now(ZoneInfo("Asia/Tehran"))
+            await event.edit(
+                "🕒 <b>ساعت و تقویم رسمی تهران:</b>\n"
+                "━━━━━━━━━━━━━━━━━━━━\n\n"
+                f"⏰ زمان: <code>{now.strftime('%H:%M:%S')}</code>\n"
+                f"📅 تاریخ میلادی: <code>{now.strftime('%Y/%m/%d')}</code>\n"
+                f"🗓 روز: <b>{now.strftime('%A')}</b>\n"
+                "━━━━━━━━━━━━━━━━━━━━",
+                parse_mode="html"
+            )
+
+        @client.on(events.NewMessage(outgoing=True, pattern=r"^(?:حساب|ماشین\s*حساب|\.calc|calc)\s+(.+)$"))
+        async def calc_cmd(event):
+            try:
+                expr = event.pattern_match.group(1).strip().replace("×", "*").replace("÷", "/")
+                res = eval(expr, {"__builtins__": None}, {})
+                await event.edit(
+                    "🧮 <b>ماشین‌حساب هوشمند:</b>\n\n"
+                    f"📝 عبارت: <code>{expr}</code>\n"
+                    f"📊 نتیجه: <b>{res}</b>",
+                    parse_mode="html"
+                )
+            except Exception:
+                await event.edit("❌ عبارت ریاضی نامعتبر است.")
+
+        return True
+
+    except (AuthKeyUnregisteredError, SessionRevokedError, UserDeactivatedError):
+        await db.delete_self_bot(user_id)
+        if user_id in ACTIVE_CLIENTS:
+            del ACTIVE_CLIENTS[user_id]
+        return False
     except Exception as e:
-        await wait_msg.delete()
-        await message.answer(f"❌ خطا در ارسال کد: {e}\nلطفاً شماره را مجدداً بررسی و ارسال کنید.")
+        logging.error(f"Userbot error for {user_id}: {e}")
+        return False
 
-@router.callback_query(F.data.startswith("num_"), SelfLoginState.waiting_for_code)
-async def numpad_click_handler(callback: types.CallbackQuery, state: FSMContext):
-    action = callback.data.replace("num_", "")
-    user_id = callback.from_user.id
-    temp = TEMP_CLIENTS.get(user_id)
-
-    if not temp:
-        await callback.answer("⚠️ نشست منقضی شد. لطفاً مجدداً اقدام کنید.", show_alert=True)
-        await state.clear()
-        return
-
-    if action == "ignore":
-        await callback.answer()
-        return
-
-    if action == "cancel":
-        await state.clear()
-        if user_id in TEMP_CLIENTS:
-            try: await TEMP_CLIENTS[user_id]["client"].disconnect()
-            except Exception: pass
-            del TEMP_CLIENTS[user_id]
-        await callback.message.delete()
-        from handlers.auth import get_main_keyboard
-        await callback.message.answer("❌ عملیات ورود لغو شد.", reply_markup=await get_main_keyboard())
-        await callback.answer()
-        return
-
-    code_buf = temp.get("code_buffer", "")
-
-    if action == "back":
-        code_buf = code_buf[:-1]
-    elif action.isdigit() and len(code_buf) < 5:
-        code_buf += action
-
-    temp["code_buffer"] = code_buf
-
-    if len(code_buf) < 5:
-        await callback.message.edit_reply_markup(reply_markup=get_numpad_markup(code_buf))
-        await callback.answer()
-        return
-
-    await callback.message.edit_text("⏳ <i>در حال بررسی کد و اتصال به اکانت...</i>")
-    client = temp["client"]
-    phone = temp["phone"]
-    phone_code_hash = temp["phone_code_hash"]
-
-    try:
-        await client.sign_in(phone=phone, code=code_buf, phone_code_hash=phone_code_hash)
-        session_str = client.session.save()
-        
-        me_user = await client.get_me()
-        user_fname = me_user.first_name or "User"
-        user_template = user_fname + " {clock}"
-
-        await db.save_self_bot(user_id, phone, session_str)
-        await db.update_self_bot(user_id, name_template=user_template, original_name=user_fname)
-        await start_userbot_client(user_id, session_str)
-
-        if user_id in TEMP_CLIENTS:
-            del TEMP_CLIENTS[user_id]
-
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await callback.message.answer(
-            "🎉 <b>سلف‌بات PuLaSeLf با موفقیت روشن شد!</b>\n\n"
-            "💡 از این لحظه سلف فعال است و در هر چتی بنویسید <code>پنل</code>، کنترل پنل شیشه‌ای شما باز خواهد شد.",
-            reply_markup=await get_main_keyboard()
-        )
-    except SessionPasswordNeededError:
-        await state.set_state(SelfLoginState.waiting_for_2fa)
-        await callback.message.answer("🔐 <b>اکانت شما دارای تایید دو مرحله‌ای (۲FA) است.</b>\nلطفاً رمز عبور خود را ارسال فرمایید:")
-    except (PhoneCodeInvalidError, PhoneCodeExpiredError):
-        temp["code_buffer"] = ""
-        await callback.message.answer("❌ کد نامعتبر یا منقضی شده است. مجدداً با کیبورد زیر وارد کنید:", reply_markup=get_numpad_markup(""))
-    except Exception as e:
-        await callback.message.answer(f"❌ خطا در ورود: {e}")
-
-@router.message(SelfLoginState.waiting_for_2fa, F.text)
-async def process_self_2fa(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.answer("❌ عملیات لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    password = message.text.strip()
-    temp = TEMP_CLIENTS.get(message.from_user.id)
-    if not temp:
-        await message.answer("⚠️ نشست منقضی شد. مجدداً اقدام کنید.")
-        await state.clear()
-        return
-
-    client = temp["client"]
-    phone = temp["phone"]
-
-    try:
-        await client.sign_in(password=password)
-        session_str = client.session.save()
-
-        me_user = await client.get_me()
-        user_fname = me_user.first_name or "User"
-        user_template = user_fname + " {clock}"
-
-        await db.save_self_bot(message.from_user.id, phone, session_str)
-        await db.update_self_bot(message.from_user.id, name_template=user_template, original_name=user_fname)
-        await start_userbot_client(message.from_user.id, session_str)
-
-        if message.from_user.id in TEMP_CLIENTS:
-            del TEMP_CLIENTS[message.from_user.id]
-
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.answer(
-            "🎉 <b>سلف‌بات PuLaSeLf با موفقیت متصل و روشن گردید!</b>\n\n"
-            "💡 در هر گروه یا چتی بنویسید <code>پنل</code> تا کنترل پنل شیشه‌ای شما باز شود.",
-            reply_markup=await get_main_keyboard()
-        )
-    except PasswordHashInvalidError:
-        await message.answer("❌ رمز دو مرحله‌ای نادرست است. مجدداً وارد فرمایید:")
-    except Exception as e:
-        await message.answer(f"❌ خطا: {e}")
-
-@router.callback_query(F.data == "self_delete")
-async def delete_self_handler(callback: types.CallbackQuery):
-    await stop_userbot_client(callback.from_user.id)
-    await db.delete_self_bot(callback.from_user.id)
-    await callback.message.edit_text("✅ <b>سلف‌بات شما خاموش و سشن آن با موفقیت حذف گردید.</b>")
-    await callback.answer("سلف حذف شد.")
-EOF
-
-cat << 'EOF' > handlers/shop.py
-import html
-from aiogram import Router, types, F
-from aiogram.filters import BaseFilter
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, KeyboardButton
-from config import config
-import database as db
-
-router = Router()
-
-class ShopButtonFilter(BaseFilter):
-    async def __call__(self, message: types.Message) -> bool:
-        if not message.text: return False
-        t = message.text.strip()
-        return any(k in t for k in ["استارز", "پرمیوم", "تون", "گیفت", "ton"])
-
-class OrderState(StatesGroup):
-    waiting_for_ton_amount = State()
-    waiting_for_custom_stars = State()
-    waiting_for_target = State()
-    waiting_for_gift_note_choice = State()
-    waiting_for_gift_note = State()
-    waiting_for_coupon = State()
-
-async def check_all_channels(bot, user_id: int):
-    channels = await db.get_all_required_channels()
-    if not channels:
-        return True, []
-    not_joined = []
-    for ch in channels:
+async def stop_userbot_client(user_id: int):
+    if user_id in ACTIVE_CLIENTS:
         try:
-            member = await bot.get_chat_member(chat_id=ch["channel_id"], user_id=user_id)
-            if member.status in ["left", "kicked"]:
-                not_joined.append(ch)
+            await ACTIVE_CLIENTS[user_id].disconnect()
         except Exception:
             pass
-    return (len(not_joined) == 0), not_joined
+        del ACTIVE_CLIENTS[user_id]
 
-@router.message(ShopButtonFilter())
-async def shop_entry_router(message: types.Message, state: FSMContext):
-    await state.clear()
-    joined, not_joined = await check_all_channels(message.bot, message.from_user.id)
-    if not joined:
-        buttons = [[InlineKeyboardButton(text=f"📢 عضویت در {ch['channel_title']}", url=ch["channel_link"])] for ch in not_joined]
-        buttons.append([InlineKeyboardButton(text="🔵 🔄 بررسی عضویت", callback_data="check_join_channel")])
-        await message.reply("⚠️ جهت استفاده از ربات، ابتدا باید در کانال‌های زیر عضو شوید:", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
-        return
-
-    text = message.text.strip()
-
-    if "استارز" in text:
-        packages = await db.get_all_stars_packages()
-        buttons = []
-        for pkg in packages:
-            buttons.append([InlineKeyboardButton(text=f"⭐️ {pkg['btn_title']} ➔ {pkg['price']:,} تومان", style="primary", callback_data=f"buy_pack_stars_{pkg['stars_amount']}_{pkg['price']}")])
-        buttons.append([InlineKeyboardButton(text="⭐️ خرید تعداد دلخواه", style="success", callback_data="buy_custom_stars")])
-        await message.reply("⭐️ <b>فروشگاه استارز تلگرام:</b>\nبسته مورد نظر یا گزینه خرید تعداد دلخواه را انتخاب کنید:", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
-
-    elif "پرمیوم" in text:
-        p3 = await db.get_int_setting("prem_3m", 360000)
-        p6 = await db.get_int_setting("prem_6m", 680000)
-        p12 = await db.get_int_setting("prem_12m", 1250000)
-        buttons = [
-            [InlineKeyboardButton(text=f"💎 اشتراک ۳ ماهه ➔ {p3:,} تومان", style="primary", callback_data=f"buy_pack_prem_3_{p3}")],
-            [InlineKeyboardButton(text=f"💎 اشتراک ۶ ماهه ➔ {p6:,} تومان", style="primary", callback_data=f"buy_pack_prem_6_{p6}")],
-            [InlineKeyboardButton(text=f"💎 اشتراک ۱۲ ماهه ➔ {p12:,} تومان", style="primary", callback_data=f"buy_pack_prem_12_{p12}")]
-        ]
-        await message.reply("💎 <b>فروشگاه تلگرام پرمیوم:</b>\nمدت زمان اشتراک را انتخاب کنید:", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
-
-    elif "تون" in text or "ton" in text.lower():
-        ton_unit = await db.get_int_setting("ton_unit_price", 330423)
-        calc_text = (
-            "🪙 <b>خرید تون کوین</b>\n\n"
-            f"💰 <b>قیمت هر تون کوین / گرام:</b> {ton_unit:,} تومان\n\n"
-            "📊 <b>محاسبه سریع:</b>\n"
-            f"🪙 1 تون: {ton_unit:,} تومان\n"
-            f"🪙 5 تون: {5 * ton_unit:,} تومان\n"
-            f"🪙 10 تون: {10 * ton_unit:,} تومان\n\n"
-            "لطفاً <b>تعداد تون کوین</b> مورد نظر خود را ارسال کنید:"
-        )
-        cancel_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="❌ انصراف و بازگشت", style="danger")]], resize_keyboard=True)
-        await message.answer(calc_text, reply_markup=cancel_kb)
-        await state.set_state(OrderState.waiting_for_ton_amount)
-
-    elif "گیفت" in text:
-        gifts = await db.get_all_gifts()
-        buttons = []
-        for g in gifts:
-            st_text = f" ({g['stars_cost']} ⭐)" if g.get('stars_cost') else ""
-            btn_title = f"🎁 {g['name']}{st_text} ➔ {g['price']:,} تومان"
-            buttons.append([InlineKeyboardButton(text=btn_title, style="primary", callback_data=f"buy_pack_gift_{g['id']}_{g['price']}")])
-        await message.reply("🎁 <b>فروشگاه گیفت‌های اختصاصی تلگرام:</b>\nگیفت مورد نظر را انتخاب فرمایید:", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
-
-@router.callback_query(F.data == "buy_custom_stars")
-async def start_custom_stars(callback: types.CallbackQuery, state: FSMContext):
-    base_50 = await db.get_int_setting("stars_base_50_price", 75000)
-    min_stars = await db.get_int_setting("stars_min_buy", 50)
-    max_stars = await db.get_int_setting("stars_max_buy", 25000)
-    unit_rate = base_50 / 50.0
-
-    calc_text = (
-        "⭐️ <b>خرید استارز تلگرام (تعداد دلخواه)</b>\n\n"
-        f"💰 <b>قیمت پایه هر ۵۰ استارز:</b> {base_50:,} تومان\n"
-        f"🔹 حداقل خرید: <b>{min_stars:,} استارز</b>\n"
-        f"🔺 حداکثر خرید: <b>{max_stars:,} استارز</b>\n\n"
-        "📊 <b>محاسبه سریع:</b>\n"
-        f"⭐️ ۵۰ استارز: {int(50 * unit_rate):,} تومان\n"
-        f"⭐️ ۱۰۰ استارز: {int(100 * unit_rate):,} تومان\n"
-        f"⭐️ ۵۰۰ استارز: {int(500 * unit_rate):,} تومان\n"
-        f"⭐️ ۱۰۰۰ استارز: {int(1000 * unit_rate):,} تومان\n\n"
-        f"لطفاً <b>تعداد استارز</b> مورد نظر خود را (بین {min_stars:,} تا {max_stars:,}) ارسال فرمایید:"
-    )
-    cancel_kb = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="❌ انصراف و بازگشت", style="danger")]], resize_keyboard=True)
-    await callback.message.delete()
-    await callback.message.answer(calc_text, reply_markup=cancel_kb)
-    await state.set_state(OrderState.waiting_for_custom_stars)
-    await callback.answer()
-
-@router.message(OrderState.waiting_for_custom_stars, F.text)
-async def process_custom_stars_input(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.answer("❌ عملیات خرید لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    amt = db.clean_number(message.text)
-    min_stars = await db.get_int_setting("stars_min_buy", 50)
-    max_stars = await db.get_int_setting("stars_max_buy", 25000)
-
-    if amt < min_stars or amt > max_stars:
-        await message.answer(f"⚠️ تعداد استارز باید بین <b>{min_stars:,}</b> تا <b>{max_stars:,}</b> باشد. لطفاً مجدداً وارد کنید:")
-        return
-
-    base_50 = await db.get_int_setting("stars_base_50_price", 75000)
-    unit_rate = base_50 / 50.0
-    total_price = int(amt * unit_rate)
-    service_name = f"بسته {amt:,} استارز"
-
-    await state.update_data(
-        service_name=service_name,
-        base_price=total_price,
-        final_price=total_price,
-        applied_coupon=None,
-        is_gift=False,
-        gift_note="بدون پیام"
-    )
-    cancel_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="cancel_order_flow")]])
-    await message.answer(
-        f"🛒 شما <b>{service_name}</b> را انتخاب کردید.\n💰 مبلغ کل: <b>{total_price:,} تومان</b>\n\nلطفاً <b>آیدی یا لینک مقصد (@username یا لینک کانال/ربات)</b> را ارسال فرمایید:",
-        reply_markup=cancel_kb
-    )
-    await state.set_state(OrderState.waiting_for_target)
-
-@router.message(OrderState.waiting_for_ton_amount, F.text)
-async def process_ton_amount_input(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.answer("❌ عملیات خرید لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    try:
-        amount = float(message.text.strip().replace(",", "."))
-        if amount <= 0: raise ValueError
-    except ValueError:
-        await message.answer("❌ لطفاً یک مقدار عددی معتبر وارد کنید:")
-        return
-
-    ton_unit = await db.get_int_setting("ton_unit_price", 330423)
-    total_price = int(amount * ton_unit)
-    service_name = f"بسته {amount} TON"
-
-    await state.update_data(
-        service_name=service_name,
-        base_price=total_price,
-        final_price=total_price,
-        applied_coupon=None,
-        is_gift=False,
-        gift_note="بدون پیام"
-    )
-    cancel_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="cancel_order_flow")]])
-    await message.answer(f"🛒 شما <b>{service_name}</b> را انتخاب کردید.\n💰 مبلغ کل: <b>{total_price:,} تومان</b>\n\nلطفاً <b>آدرس کیف پول TON مقصد</b> را ارسال کنید:", reply_markup=cancel_kb)
-    await state.set_state(OrderState.waiting_for_target)
-
-@router.callback_query(F.data.startswith("buy_pack_"))
-async def start_package_order(callback: types.CallbackQuery, state: FSMContext):
-    parts = callback.data.split("_")
-    category, amount, price = parts[2], parts[3], int(parts[4])
-    is_gift = False
-
-    if category == "stars":
-        service_name = f"بسته {int(amount):,} استارز"
-        prompt = "لطفاً <b>آیدی یا لینک اکانت/کانال/ربات مقصد</b> را ارسال کنید:"
-    elif category == "prem":
-        service_name = f"پرمیوم {amount} ماهه"
-        prompt = "لطفاً <b>آیدی اکانت تلگرام مقصد (@username)</b> را ارسال کنید:"
-    elif category == "gift":
-        is_gift = True
-        g = await db.get_gift(int(amount))
-        st_text = f" ({g['stars_cost']} ⭐)" if g and g.get('stars_cost') else ""
-        service_name = f"{g['name']}{st_text}" if g else "گیفت تلگرام"
-        prompt = "لطفاً <b>آیدی اکانت تلگرام مقصد (@username)</b> را جهت دریافت گیفت وارد کنید:"
-    else:
-        service_name = f"بسته {amount} TON"
-        prompt = "لطفاً <b>آدرس کیف پول TON مقصد</b> را ارسال کنید:"
-
-    await state.update_data(
-        service_name=service_name,
-        base_price=price,
-        final_price=price,
-        applied_coupon=None,
-        is_gift=is_gift,
-        gift_note="بدون پیام"
-    )
-
-    cancel_kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="cancel_order_flow")]])
-    await callback.message.answer(f"🛒 شما <b>{service_name}</b> را انتخاب کردید.\n\n{prompt}", reply_markup=cancel_kb)
-    await state.set_state(OrderState.waiting_for_target)
-    await callback.answer()
-
-@router.callback_query(F.data == "cancel_order_flow")
-async def cancel_order_flow_handler(callback: types.CallbackQuery, state: FSMContext):
-    await state.clear()
-    await callback.message.edit_text("❌ عملیات خرید لغو شد.")
-    await callback.answer()
-
-@router.message(OrderState.waiting_for_target)
-async def process_target(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.answer("❌ عملیات خرید لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    target = message.text.strip()
-    await state.update_data(target=target)
-    data = await state.get_data()
-
-    if data.get("is_gift", False):
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="✍️ بله، متن بنویسم", style="primary", callback_data="gift_note_yes")],
-            [InlineKeyboardButton(text="❌ خیر، بدون متن ارسال شود", style="primary", callback_data="gift_note_no")]
-        ])
-        await message.reply(
-            "📝 <b>آیا می‌خواهید پیام یا متنی زیر گیفت برای گیرنده نوشته شود؟</b>",
-            reply_markup=kb
-        )
-        await state.set_state(OrderState.waiting_for_gift_note_choice)
-        return
-
-    await show_checkout_invoice(message, state)
-
-@router.callback_query(F.data == "gift_note_yes", OrderState.waiting_for_gift_note_choice)
-async def gift_note_yes_handler(callback: types.CallbackQuery, state: FSMContext):
-    await callback.message.answer("✍️ لطفاً <b>متن دلخواهی</b> که می‌خواهید زیر گیفت برای گیرنده نوشته شود را بفرستید:")
-    await state.set_state(OrderState.waiting_for_gift_note)
-    await callback.answer()
-
-@router.callback_query(F.data == "gift_note_no", OrderState.waiting_for_gift_note_choice)
-async def gift_note_no_handler(callback: types.CallbackQuery, state: FSMContext):
-    await state.update_data(gift_note="بدون پیام")
-    await show_checkout_invoice(callback, state)
-    await callback.answer()
-
-@router.message(OrderState.waiting_for_gift_note)
-async def process_gift_note_text(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.answer("❌ عملیات خرید لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    note = message.text.strip()
-    await state.update_data(gift_note=note)
-    await show_checkout_invoice(message, state)
-
-async def show_checkout_invoice(event_obj, state: FSMContext):
-    data = await state.get_data()
-    s_name = data["service_name"]
-    final_price = data["final_price"]
-    target = data["target"]
-    coupon = data.get("applied_coupon")
-    gift_note = data.get("gift_note", "بدون پیام")
-
-    coupon_text = f"\n🎟 کد تخفیف: <code>{coupon}</code>" if coupon else ""
-    note_text = f"\n📝 پیام روی گیفت: <i>{html.escape(gift_note)}</i>" if data.get("is_gift") and gift_note != "بدون پیام" else ""
-
-    checkout_kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=f"💳 پرداخت نهایی ({final_price:,} تومان)", style="success", callback_data="checkout_pay")],
-        [InlineKeyboardButton(text="🎟 ثبت کد تخفیف", style="primary", callback_data="checkout_add_coupon")],
-        [InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="cancel_order_flow")]
-    ])
-
-    text = (
-        f"🛒 <b>پیش‌فاکتور سفارش:</b>\n\n"
-        f"🔹 سرویس: <b>{s_name}</b>\n"
-        f"🎯 مقصد: <code>{html.escape(target)}</code>"
-        f"{note_text}\n"
-        f"💰 مبلغ قابل پرداخت: <b>{final_price:,} تومان</b>"
-        f"{coupon_text}\n\n"
-        "جهت تکمیل گزینه مورد نظر را انتخاب کنید:"
-    )
-
-    if isinstance(event_obj, types.CallbackQuery):
-        await event_obj.message.edit_text(text, reply_markup=checkout_kb)
-    elif isinstance(event_obj, types.Message):
-        await event_obj.answer(text, reply_markup=checkout_kb)
-
-@router.callback_query(F.data == "checkout_add_coupon")
-async def ask_coupon(callback: types.CallbackQuery, state: FSMContext):
-    await callback.message.answer("🎟 لطفاً کد تخفیف خود را بفرستید:")
-    await state.set_state(OrderState.waiting_for_coupon)
-    await callback.answer()
-
-@router.message(OrderState.waiting_for_coupon)
-async def apply_coupon(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.answer("❌ عملیات خرید لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    code = message.text.strip()
-    data = await state.get_data()
-    valid, msg, new_price = await db.validate_coupon(code, message.from_user.id, data["base_price"])
-    if not valid:
-        await message.reply(msg)
-        return
-
-    await state.update_data(final_price=new_price, applied_coupon=code)
-    data = await state.get_data()
-    gift_note = data.get("gift_note", "بدون پیام")
-    note_text = f"\n📝 پیام روی گیفت: <i>{html.escape(gift_note)}</i>" if data.get("is_gift") and gift_note != "بدون پیام" else ""
-
-    checkout_kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=f"💳 پرداخت نهایی ({new_price:,} تومان)", style="success", callback_data="checkout_pay")],
-        [InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="cancel_order_flow")]
-    ])
-    await message.reply(f"{msg}\n\n🛒 <b>فاکتور نهایی:</b>\n🔹 سرویس: <b>{data['service_name']}</b>\n🎯 مقصد: <code>{html.escape(data['target'])}</code>{note_text}\n💰 قیمت نهایی: <b>{new_price:,} تومان</b>", reply_markup=checkout_kb)
-
-@router.callback_query(F.data == "checkout_pay")
-async def finalize_order(callback: types.CallbackQuery, state: FSMContext):
-    data = await state.get_data()
-    if not data or "final_price" not in data:
-        await callback.message.answer("⚠️ نشست خرید منقضی شده است.")
-        await state.clear()
-        await callback.answer()
-        return
-
-    final_price = data["final_price"]
-    s_name = data["service_name"]
-    target = data["target"]
-    coupon = data.get("applied_coupon")
-    gift_note = data.get("gift_note", "بدون پیام")
-
-    user = await db.get_user(callback.from_user.id)
-    balance = user["balance"] if user else 0
-
-    if balance < final_price:
-        kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="💳 شارژ کیف پول", style="success", callback_data="charge_wallet")]])
-        await callback.message.answer(f"⚠️ <b>موجودی کیف پول کافی نیست!</b>\n\n💰 قیمت سفارش: <b>{final_price:,} ت</b>\n💳 موجودی شما: <b>{balance:,} ت</b>\n🔻 کسری: <b>{final_price - balance:,} ت</b>", reply_markup=kb)
-        await callback.answer()
-        return
-
-    await db.update_balance(callback.from_user.id, -final_price)
-    if coupon:
-        await db.apply_coupon_use(coupon, callback.from_user.id)
-
-    order_recipient = target if gift_note == "بدون پیام" else f"{target} (متن گیفت: {gift_note})"
-    order_id = await db.create_order(callback.from_user.id, s_name, order_recipient, final_price)
-
-    admin_kb = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text="✅ تحویل و انجام شد", style="success", callback_data=f"order_done_{order_id}"),
-        InlineKeyboardButton(text="❌ لغو و برگشت وجه", style="danger", callback_data=f"order_cancel_{order_id}")
-    ]])
-
-    safe_target = html.escape(str(target))
-    safe_sname = html.escape(str(s_name))
-    safe_uname = f"@{callback.from_user.username}" if callback.from_user.username else "ندارد"
-    safe_fname = html.escape(str(callback.from_user.full_name))
-    note_admin_text = f"\n📝 <b>متن روی گیفت:</b> <code>{html.escape(gift_note)}</code>" if gift_note != "بدون پیام" else ""
-
-    admin_text = (
-        f"🛍 <b>سفارش جدید دریافت شد #{order_id}:</b>\n\n"
-        f"👤 <b>خریدار:</b> {safe_fname} (<code>{callback.from_user.id}</code>) | {safe_uname}\n"
-        f"🔹 <b>سرویس:</b> <b>{safe_sname}</b>\n"
-        f"💰 <b>مبلغ پرداختی:</b> <b>{final_price:,} تومان</b>\n"
-        f"🎯 <b>مقصد:</b> <code>{safe_target}</code>"
-        f"{note_admin_text}"
-    )
-
-    admins = await db.get_all_admins()
-    for a_id in admins:
+async def clock_background_task():
+    from aiogram import Bot
+    while True:
         try:
-            await callback.bot.send_message(chat_id=a_id, text=admin_text, reply_markup=admin_kb)
+            active_bots = await db.get_all_active_self_bots()
+            hourly_price = await db.get_int_setting("self_hourly_price", 600)
+            cost_per_minute = max(1, int(hourly_price / 60))
+
+            for b in active_bots:
+                uid = b["user_id"]
+                user = await db.get_user(uid)
+                bal = user["balance"] if user else 0
+
+                if bal < cost_per_minute:
+                    await stop_userbot_client(uid)
+                    await db.update_self_bot(uid, is_active=0)
+                    try:
+                        main_b = Bot(token=config.BOT_TOKEN)
+                        await main_b.send_message(
+                            chat_id=uid,
+                            text="⚠️ <b>موجودی کیف پول شما به اتمام رسید!</b>\nسلف بات شما به صورت خودکار متوقف شد. لطفاً جهت فعال‌سازی مجدد، حساب خود را شارژ فرمایید.",
+                            parse_mode="HTML"
+                        )
+                        await main_b.session.close()
+                    except Exception:
+                        pass
+                    continue
+
+                await db.update_balance(uid, -cost_per_minute)
+
+                client = ACTIVE_CLIENTS.get(uid)
+                if not client or not client.is_connected():
+                    started = await start_userbot_client(uid, b["session_string"])
+                    if not started:
+                        continue
+                    client = ACTIVE_CLIENTS.get(uid)
+
+                styled_time = get_styled_time(b.get("clock_font", "persian"))
+
+                if b.get("clock_name", 0) == 1:
+                    try:
+                        me = await client.get_me()
+                        orig_name = db.clean_time_from_string(b.get("original_name") or me.first_name) or "User"
+                        template = b.get("name_template") or f"{orig_name} {{clock}}"
+                        clean_tmpl = template.replace("{name}", orig_name)
+                        new_name = clean_tmpl.replace("{clock}", styled_time) if "{clock}" in clean_tmpl else f"{clean_tmpl} {styled_time}"
+                        await client(functions.account.UpdateProfileRequest(first_name=new_name[:64]))
+                    except Exception:
+                        pass
+
+                if b.get("clock_bio", 0) == 1:
+                    try:
+                        raw_bio = b.get("original_bio") or "PuLaSeLf User"
+                        base_bio = db.clean_time_from_string(raw_bio) or "PuLaSeLf"
+                        new_bio = f"{base_bio} | {styled_time}"
+                        await client(functions.account.UpdateProfileRequest(about=new_bio[:70]))
+                    except Exception:
+                        pass
+
         except Exception as e:
-            print(f"Error sending order to admin {a_id}: {e}")
+            logging.error(f"Clock error: {e}")
 
-    await db.send_bot_sticker(callback.bot, callback.message.chat.id, "sticker_success")
-    await callback.message.edit_text(f"✅ <b>سفارش شماره #{order_id} با موفقیت ثبت شد.</b>\nبه زودی توسط تیم پشتیبانی انجام خواهد شد.")
-    await state.clear()
-    await callback.answer("سفارش شما با موفقیت ثبت شد!")
-EOF
+        await asyncio.sleep(60)
 
-cat << 'EOF' > handlers/wallet.py
-from aiogram import Router, types, F
-from aiogram.filters import BaseFilter
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from config import config
-import database as db
-
-router = Router()
-
-class WalletButtonFilter(BaseFilter):
-    async def __call__(self, message: types.Message) -> bool:
-        return bool(message.text and "کیف پول" in message.text.strip())
-
-class KYCState(StatesGroup):
-    waiting_for_card_photo = State()
-    waiting_for_card_number = State()
-
-class DepositState(StatesGroup):
-    waiting_for_amount = State()
-    waiting_for_receipt = State()
-
-async def check_channel_member(bot, user_id: int) -> bool:
-    req_ch = await db.get_setting("required_channel", "")
-    if not req_ch: return True
-    try:
-        member = await bot.get_chat_member(chat_id=req_ch, user_id=user_id)
-        return member.status not in ["left", "kicked"]
-    except Exception: return True
-
-@router.message(WalletButtonFilter())
-async def wallet_entry_handler(message: types.Message):
-    if not await check_channel_member(message.bot, message.from_user.id):
-        ch_link = await db.get_setting("channel_link", "https://t.me")
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="📢 عضویت در کانال", url=ch_link)],
-            [InlineKeyboardButton(text="🔄 بررسی عضویت", callback_data="check_join_channel")]
-        ])
-        await message.reply("⚠️ جهت استفاده از ربات، ابتدا باید در کانال ما عضو شوید:", reply_markup=kb)
-        return
-
-    user = await db.get_user(message.from_user.id)
-    balance = user["balance"] if user else 0
-    min_d = await db.get_int_setting("min_deposit", 100000)
-    max_d = await db.get_int_setting("max_deposit", 5000000)
-    kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="💳 افزایش موجودی (کارت به کارت)", style="success", callback_data="charge_wallet")]])
-    
-    text = (
-        f"💼 <b>کیف پول کاربری شما</b>\n\n"
-        f"💳 موجودی فعلی: <b>{balance:,} تومان</b>\n\n"
-        f"🔹 حداقل شارژ: <code>{min_d:,}</code> ت\n"
-        f"🔹 حداکثر شارژ: <code>{max_d:,}</code> ت\n\n"
-        "جهت افزایش موجودی، دکمه زیر را بزنید:"
-    )
-    await message.reply(text, reply_markup=kb)
-
-@router.callback_query(F.data == "charge_wallet")
-async def start_charge(callback: types.CallbackQuery, state: FSMContext):
-    user = await db.get_user(callback.from_user.id)
-    raw_kyc = user.get("kyc_status", 0) if user else 0
-    try:
-        kyc = int(raw_kyc)
-    except:
-        kyc = 2 if str(raw_kyc) == "verified" else 0
-
-    if kyc == 1:
-        await callback.message.answer("⏳ <b>مدارک احراز هویت شما ارسال شده و در صف بررسی ادمین است.</b>\nبه محض بررسی نتیجه همینجا به شما اعلام می‌گردد.")
-        await callback.answer()
-        return
-
-    if kyc != 2:
-        kyc_guide = (
-            "🪪 <b>بخش احراز هویت</b>\n\n"
-            "✔️ <b>برای استفاده از این روش پرداخت، یک بار باید هویتتان توسط ادمین تأیید شود.</b>\n\n"
-            "⁉️ <b>چه باید بفرستید:</b>\n\n"
-            "• عکس کارت بانکی به نام خودتان (CVV2 و تاریخ انقضا را بپوشانید و فقط شماره کارت و نام خوانا باشد)\n\n"
-            "• عکس کارت را در کنار یک دست‌نوشته قرار دهید:\n"
-            "<i>«جهت خرید خدمات از این ربات از کارت [شماره کارت خودتان] احراز هویت انجام می‌شود.»</i>\n\n"
-            "• فقط با کارتی که احراز هویت انجام دادید قادر به پرداخت هستید!\n\n"
-            "💡 <i>این کار فقط یک‌بار لازم است.</i>"
-        )
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="📸 ارسال عکس مدارک همینجا", style="success", callback_data="start_kyc_upload")],
-            [InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="cancel_deposit")]
-        ])
-        await callback.message.answer(kyc_guide, reply_markup=kb)
-        await callback.answer()
-        return
-
-    min_d = await db.get_int_setting("min_deposit", 100000)
-    max_d = await db.get_int_setting("max_deposit", 5000000)
-    kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="cancel_deposit")]])
-    await callback.message.answer(f"💵 مبلغ مورد نظر برای شارژ را به <b>تومان</b> وارد کنید:\n\n🔻 حداقل: <b>{min_d:,} ت</b> | 🔺 حداکثر: <b>{max_d:,} ت</b>", reply_markup=kb)
-    await state.set_state(DepositState.waiting_for_amount)
-    await callback.answer()
-
-@router.callback_query(F.data == "start_kyc_upload")
-async def start_kyc_upload(callback: types.CallbackQuery, state: FSMContext):
-    await callback.message.answer("📸 لطفاً <b>عکس کارت بانکی در کنار دست‌نوشته</b> را همینجا در چت ارسال فرمایید:")
-    await state.set_state(KYCState.waiting_for_card_photo)
-    await callback.answer()
-
-@router.message(KYCState.waiting_for_card_photo, F.photo)
-async def process_kyc_photo(message: types.Message, state: FSMContext):
-    await state.update_data(kyc_photo=message.photo[-1].file_id)
-    await message.reply("💳 لطفاً <b>شماره ۱۶ رقمی کارت بانکی</b> خود را وارد کنید:")
-    await state.set_state(KYCState.waiting_for_card_number)
-
-@router.message(KYCState.waiting_for_card_number)
-async def process_kyc_card_num(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.reply("❌ لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    num = message.text.strip().replace("-", "").replace(" ", "")
-    if not num.isdigit() or len(num) != 16:
-        await message.reply("⚠️ شماره کارت باید ۱۶ رقم باشد. مجدداً وارد کنید:")
-        return
-
-    data = await state.get_data()
-    uid, fname, uname = message.from_user.id, message.from_user.full_name, message.from_user.username
-    await db.set_user_kyc(uid, 1, num)
-    sub_id = await db.create_kyc_sub(uid, num, data["kyc_photo"])
-    mention = f'<a href="tg://user?id={uid}">{fname}</a> (@{uname})' if uname else f'<a href="tg://user?id={uid}">{fname}</a>'
-    
-    kb = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text="🟢 ✅ تایید احراز هویت", style="success", callback_data=f"app_kyc_{sub_id}"),
-        InlineKeyboardButton(text="🔴 ❌ رد احراز هویت", style="danger", callback_data=f"rej_kyc_{sub_id}")
-    ]])
-    
-    cap = (
-        f"🪪 <b>درخواست احراز هویت #{sub_id}:</b>\n\n"
-        f"👤 کاربر: {mention}\n"
-        f"🆔 آیدی عددی: <code>{uid}</code>\n"
-        f"💳 شماره کارت: <code>{num}</code>"
-    )
-
-    for a in await db.get_all_admins():
-        try:
-            await message.bot.send_photo(chat_id=a, photo=data["kyc_photo"], caption=cap, reply_markup=kb)
-        except Exception:
-            pass
-
-    await db.send_bot_sticker(message.bot, message.chat.id, "sticker_kyc")
-    await message.reply("✅ <b>مدارک شما با موفقیت برای مدیریت ارسال شد.</b>\nبه زودی بررسی و تایید خواهد شد.")
-    await state.clear()
-
-@router.callback_query(F.data == "cancel_deposit")
-async def cancel_deposit(callback: types.CallbackQuery, state: FSMContext):
-    await state.clear()
-    await callback.message.edit_text("❌ عملیات لغو شد.")
-    await callback.answer()
-
-@router.message(DepositState.waiting_for_amount)
-async def process_amount(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.reply("❌ لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    amt = db.clean_number(message.text)
-    mi, ma = await db.get_int_setting("min_deposit", 100000), await db.get_int_setting("max_deposit", 5000000)
-    if amt < mi or amt > ma:
-        await message.reply(f"⚠️ مبلغ باید بین {mi:,} تا {ma:,} ت باشد:")
-        return
-
-    await state.update_data(amount=amt)
-    c, h = await db.get_setting("card_number"), await db.get_setting("card_holder")
-    
-    info_text = (
-        f"💳 <b>اطلاعات حساب جهت واریز:</b>\n\n"
-        f"🔹 شماره کارت: <code>{c}</code>\n"
-        f"🔹 به نام: <b>{h}</b>\n"
-        f"🔹 مبلغ: <b>{amt:,} تومان</b>\n\n"
-        "📸 لطفاً پس از واریز، <b>عکس رسید/فیش واریزی</b> را ارسال فرمایید:"
-    )
-    await message.reply(info_text)
-    await state.set_state(DepositState.waiting_for_receipt)
-
-@router.message(DepositState.waiting_for_receipt, F.photo)
-async def process_receipt(message: types.Message, state: FSMContext):
-    data = await state.get_data()
-    amt, uid = data.get("amount", 0), message.from_user.id
-    u = await db.get_user(uid)
-    photo_id = message.photo[-1].file_id
-    dep_id = await db.create_deposit_rec(uid, amt, photo_id)
-    mention = f'<a href="tg://user?id={uid}">{message.from_user.full_name}</a>'
-    
-    kb = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text=f"🟢 ✅ تایید ({amt:,} ت)", style="success", callback_data=f"app_dep_{dep_id}"),
-        InlineKeyboardButton(text="🔴 ❌ رد رسید", style="danger", callback_data=f"rej_dep_{dep_id}")
-    ]])
-    
-    cap = (
-        f"📥 <b>رسید واریز جدید #{dep_id}:</b>\n\n"
-        f"👤 کاربر: {mention}\n"
-        f"🆔 آیدی: <code>{uid}</code>\n"
-        f"💳 کارت تایید شده: <code>{u.get('verified_card','نامشخص')}</code>\n"
-        f"💰 مبلغ: <b>{amt:,} تومان</b>"
-    )
-
-    for a in await db.get_all_admins():
-        try:
-            await message.bot.send_photo(chat_id=a, photo=photo_id, caption=cap, reply_markup=kb)
-        except Exception:
-            pass
-
-    await db.send_bot_sticker(message.bot, message.chat.id, "sticker_wallet")
-    await message.reply("✅ رسید شما با موفقیت برای مدیریت ارسال شد.")
-    await state.clear()
+async def start_all_active_userbots():
+    bots = await db.get_all_active_self_bots()
+    for b in bots:
+        asyncio.create_task(start_userbot_client(b["user_id"], b["session_string"]))
+    asyncio.create_task(clock_background_task())
 EOF
 ```
 
-بعد از اجرای این دستور در سرور، ربات را دوباره ران کنید تا تمام متون و دکمه‌ها با نگارش تمیز و استاندارد فارسی لود شوند.
+---
+
+دستور بالا رو اجرا و ری‌استارت کن. 
+الان برو توی **`پنل`** ➔ **`👤 پروفایل و ساعت`** ➔ **`🎨 ۳۶ کادر و فریم ساعت اسم`** و قالبی که می‌خوای رو انتخاب کن. ساعت قبلی پاک میشه و دقیقاً فقط یک ساعت با همون کادر خوشگل انتخابی برات ست میشه!
+
+تغییر بعدی رو بگو تا انجام بدیم!
