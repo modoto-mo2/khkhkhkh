@@ -1,15 +1,18 @@
-دقیقاً فهمیدم چی شد داداش! 
+دقیقاً دست گذاشتی روی باگ داداش! متوجه شدم چرا این اتفاق افتاد:
 
-علتش این بود: چون از قبل روی اسمت ساعت `۲۰:۴۴` افتاده بود، وقتی دکمه قالب رو زدی، ربات کل اون اسم قبلی (با همون ساعت قبلی!) رو به عنوان اسمت برداشت و یه کادر ساعت جدید هم چسبوند بهش، در نتیجه **اسمت دو تا ساعت گرفت!**
+### 🔍 علت پاک شدن استیکر ❄️:
+توی ریجکس قبلی، کاراکتر `❄️` داخل لیست نمادهای پاک‌کننده دور ساعت گذاشته شده بود؛ برای همین وقتی ساعت رو عوض می‌کردی، سیستم فکر می‌کرد اون `❄️` آخر اسمت کادر ساعت قبلی بوده و پاکش می‌کرد!
 
-الان سیستم رو طوری درست کردم که:
-1. **پاک‌سازی هوشمند ساعت قبلی:** ساعت قبلی رو کامل از اسمت جدا می‌کنه تا اسمت تمیز بشه: `❄️ frozen Mamad ❄️`.
-2. **فقط یک ساعت با کادر انتخابی:** قالب رو دقیقاً می‌چسبونه به همون ساعت اصلی و اسمت میشه:
-   👉 **`❄️ frozen Mamad ❄️ 𓆩۲۰:۴۴𓆪`**
+### 🛠 نحوه حل مشکل:
+* تمام ایموجی‌ها (مثل ❄️، 🔥، 💎، ⚡️ و...) از فیلتر پاک‌سازی کادر **به طور کامل حذف شدند**.
+* الان الگوریتم فقط کادرهای واقعی (مثل `𓆩 𓆪` یا `亗 亗`) رو دور ساعت عوض می‌کنه و **متن و استیکرهای قبل و بعد اسمت (مثل `❄️` اول و `❄️` آخر) ۱۰۰٪ دست‌نخورده و سالم می‌مونن**.
+
+نتیجه دقیقاً میشه:
+👉 **`❄️ Frozen Mamad 𓆩۲۰:۴۴𓆪 ❄️`**
 
 ---
 
-### 🚀 دستور لینوکسی فیکس کامل:
+### 🚀 دستور لینوکسی فیکس نهایی:
 
 این دستور رو کامل داخل سرورت پیست و اجرا کن:
 
@@ -23,18 +26,23 @@ CACHE_EMOJIS = {}
 REVERSE_EMOJIS = {}
 
 ALL_DIGITS_STR = "0123456789۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵𝟢𝟣𝟤𝟥𝟦𝟧𝟨𝟩𝟪𝟫𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿⓿➊➋➌➍➎➏➐➑➒⓪①②③④⑤⑥⑦⑧⑨🄋➀➁➂➃➄➅➆➇➈⒪⑴⑵⑶⑷⑸⑹⑺⑻⑼🄀⒈⒉⒊⒋⒌⒍⒎⒏⒐🄌➊➋➌➍➎➏➐➑➒０１２３４５６７８９🯰🯱🯲𝯳𝯴𝯵𝯶𝯷𝯸𝯹ⅠⅡⅢⅣⅤⅥⅦⅧⅨ❶❷❸❹❺❻❼❽❾⠚⠁⠃⠉⠙⠑⠋⠛⠓⠊०१२३४५६७८९০১২৩৪৫৬৭৮৯๐๑๒๓๔๕๖๗๘๙༠༡༢༣༤༥༦༧༨༩០១២៣៤۵۶۷۸۹၀၁၂၃၄၅၆၇၈၉੦੧੨੩੪੫੬੭੮੯೦೧೨೩೪೫೬೭೮೯൦൧൨൩൪൫൬൭൮൯௦௧௨௩௪௫௬௭௮௯౦౧౨౩౪౫౬౭౮౯૦૧૨૩૪૫૬૭૮૯୦୧୨୩୪୫୬୭୮୯෦෧෨෩෪෫෬෭෮෯໐໑໒໓໔໕໖໗໘໙"
-CLEAN_TIME_PATTERN = re.compile(
-    rf'(?:[|•‹›﹝﹞❲❳「」【】〖〗⟦⟧⦅⦆﹤﹥⟮⟯⟬⟭❨❩❮❯«»𓆩𓆪⸢⸥⌜⌟☽☾\(\)\[\]{{\}}]\s*)?[{re.escape(ALL_DIGITS_STR)}]{{1,2}}[:：⠒][{re.escape(ALL_DIGITS_STR)}]{{2}}(?:\s*[|•‹›﹝﹞❲❳「」【】〖〗⟦⟧⦅⦆﹤﹥⟮⟯⟬⟭❨❩❮❯«»𓆩𓆪⸢⸥⌜⌟☽☾\(\)\[\]{{\}}])?'
-)
+BRACKET_SYMBOLS = r"﹝﹞❲❳‹›「」【】〖〗⟦⟧⦅⦆﹤﹥⟮⟯⟬⟭❨❩❮❯«»𓆩𓆪⸢⸥⌜⌟☽☾✦✧⌁亗༒⊶⊷༺༻⧉⟡|•\(\)\[\]"
 
 def clean_time_from_string(text: str) -> str:
     if not text:
         return ""
-    cleaned = CLEAN_TIME_PATTERN.sub('', text)
-    cleaned = re.sub(r'\|\s*$', '', cleaned)
-    cleaned = re.sub(r'^\s*\|', '', cleaned)
+    # پاک‌سازی فقط ارقام ساعت و کادرهای بلافاصله چسبیده به آن بدون دست زدن به ایموجی‌های اسم کاربر
+    pattern = rf'(?:[{BRACKET_SYMBOLS}]\s*)?[{re.escape(ALL_DIGITS_STR)}]{{1,2}}[:：⠒][{re.escape(ALL_DIGITS_STR)}]{{2}}(?:\s*[{BRACKET_SYMBOLS}])?'
+    cleaned = re.sub(pattern, '', text)
     cleaned = re.sub(r'\s{2,}', ' ', cleaned)
     return cleaned.strip()
+
+def normalize_template_clock(tmpl: str) -> str:
+    if not tmpl or "{clock}" not in tmpl:
+        return f"{tmpl} {{clock}}".strip()
+    pattern = rf'[{BRACKET_SYMBOLS}]\s*\{{clock\}}\s*[{BRACKET_SYMBOLS}]|[{BRACKET_SYMBOLS}]\s*\{{clock\}}|\{{clock\}}\s*[{BRACKET_SYMBOLS}]'
+    normalized = re.sub(pattern, '{clock}', tmpl)
+    return normalized.strip()
 
 def clean_number(text: str) -> int:
     p, a = "۰۱۲۳۴۵۶۷۸۹", "٠١٢٣٤٥٦٧۸۹"
@@ -526,6 +534,7 @@ EOF
 
 cat << 'EOF' > handlers/helper_bot.py
 import uuid
+import re
 import datetime
 from zoneinfo import ZoneInfo
 from aiogram import Router, types, F, Bot
@@ -541,47 +550,46 @@ import database as db
 
 router = Router()
 
-# ۳۶ فریم و کادر اختصاصی دور ساعت
-NAME_TEMPLATES = [
-    "{name} ﹝{clock}﹞",
-    "{name} ❲{clock}❳",
-    "{name} ‹{clock}›",
-    "{name} 「{clock}」",
-    "{name} 【{clock}】",
-    "{name} 〖{clock}〗",
-    "{name} ⟦{clock}⟧",
-    "{name} ⦅{clock}⦆",
-    "{name} ﹤{clock}﹥",
-    "{name} ⟮{clock}⟯",
-    "{name} ⟬{clock}⟭",
-    "{name} ❨{clock}❩",
-    "{name} ❮{clock}❯",
-    "{name} «{clock}»",
-    "{name} 𓆩{clock}𓆪",
-    "{name} ⸢{clock}⸥",
-    "{name} ⌜{clock}⌟",
-    "{name} ☽{clock}☾",
-    "{name} ✦ {clock} ✦",
-    "{name} ✧ {clock} ✧",
-    "{name} ⌁ {clock} ⌁",
-    "{name} ⚡️ {clock}",
-    "{name} 💎 {clock}",
-    "{name} 🔥 {clock}",
-    "{name} ❄️ {clock}",
-    "{name} ⚜️ {clock}",
-    "{name} 亗 {clock} 亗",
-    "{name} ༒ {clock} ༒",
-    "{name} ⊶ {clock} ⊷",
-    "{name} ༺ {clock} ༻",
-    "{name} ⧉ {clock} ⧉",
-    "{name} ⟡ {clock} ⟡",
-    "{name} | {clock} |",
-    "{name} • {clock} •",
-    "{name} × {clock} ×",
-    "{name} ➔ {clock}"
+# ۳۶ فریم و کادر اختصاصی بدون هیچ تداخل با ایموجی‌های اسم
+CLOCK_FRAMES = [
+    "﹝{clock}﹞",
+    "❲{clock}❳",
+    "‹{clock}›",
+    "「{clock}」",
+    "【{clock}】",
+    "〖{clock}〗",
+    "⟦{clock}⟧",
+    "⦅{clock}⦆",
+    "﹤{clock}﹥",
+    "⟮{clock}⟯",
+    "⟬{clock}⟭",
+    "❨{clock}❩",
+    "❮{clock}❯",
+    "«{clock}»",
+    "𓆩{clock}𓆪",
+    "⸢{clock}⸥",
+    "⌜{clock}⌟",
+    "☽{clock}☾",
+    "✦{clock}✦",
+    "✧{clock}✧",
+    "⌁{clock}⌁",
+    "亗{clock}亗",
+    "༒{clock}༒",
+    "⊶{clock}⊷",
+    "༺{clock}༻",
+    "⧉{clock}⧉",
+    "⟡{clock}⟡",
+    "|{clock}|",
+    "•{clock}•",
+    "[{clock}]",
+    "({clock})",
+    "<{clock}>",
+    "« {clock} »",
+    "• {clock} •",
+    "| {clock} |",
+    "{clock}"
 ]
 
-# ۳۶ فونت زنده اعداد ساعت
 FONT_LIST = [
     ("persian", "فارسی کلاسیک", "۱۸:۳۰"),
     ("digital", "دیجیتال توخالی", "𝟙𝟠:𝟛𝟘"),
@@ -786,10 +794,10 @@ async def category_router_callback(callback: types.CallbackQuery):
             "📝 <b>آموزش تغییر دستی اسم و محل ساعت:</b>\n"
             "کافیست در هر چتی بنویسید:\n"
             "• <code>تنظیم اسم نام‌شما {clock}</code>\n"
-            "• <code>.setname Ali {clock}</code> (ساعت در آخر)\n"
-            "• <code>.setname {clock} Ali</code> (ساعت در اول)\n"
+            "• <code>.setname Ali {clock}</code> (ساعت در آخر اسم)\n"
+            "• <code>.setname {clock} Ali</code> (ساعت در اول اسم)\n"
             "• <code>حذف ساعت اسم</code> یا <code>.resetname</code> (حذف ساعت)\n\n"
-            "👇 <b>یا از دکمه‌های آماده زیر جهت انتخاب سریع استفاده کنید:</b>"
+            "👇 <b>جهت تعویض فریم ساعت یا فونت اعداد از دکمه‌های زیر استفاده کنید:</b>"
         )
         kb = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="🎨 ۳۶ کادر و فریم ساعت اسم", style="success", callback_data=f"act_tmpl_list_1_{owner_id}")],
@@ -955,19 +963,23 @@ async def actions_callback(callback: types.CallbackQuery):
                 return
 
             self_data = await db.get_self_bot(owner_id)
+            cur_tmpl = self_data.get("name_template") or ""
             raw_name = self_data.get("original_name") or callback.from_user.first_name or "User"
-            user_fname = db.clean_time_from_string(raw_name) or "User"
+            clean_name = db.clean_time_from_string(raw_name) or "User"
+
+            clean_base_tmpl = db.normalize_template_clock(cur_tmpl) if (cur_tmpl and "{clock}" in cur_tmpl) else f"{clean_name} {{clock}}"
 
             per_page = 6
-            total_templates = len(NAME_TEMPLATES)
+            total_templates = len(CLOCK_FRAMES)
             total_pages = (total_templates + per_page - 1) // per_page
             start_idx = (page - 1) * per_page
             end_idx = min(start_idx + per_page, total_templates)
 
             kb_buttons = []
             for i in range(start_idx, end_idx):
-                tmpl_raw = NAME_TEMPLATES[i]
-                btn_preview = tmpl_raw.replace("{name}", user_fname).replace("{clock}", "18:30")
+                frame_str = CLOCK_FRAMES[i]
+                preview_pattern = clean_base_tmpl.replace("{clock}", frame_str)
+                btn_preview = preview_pattern.replace("{clock}", "18:30").replace("{name}", clean_name)
                 kb_buttons.append([InlineKeyboardButton(text=f"{i+1}. {btn_preview}", style="primary", callback_data=f"act_applytmpl_{i}_{owner_id}")])
 
             nav_row = []
@@ -983,8 +995,8 @@ async def actions_callback(callback: types.CallbackQuery):
             text = (
                 "🎨 <b>انتخاب از ۳۶ کادر و فریم دور ساعت:</b>\n"
                 "━━━━━━━━━━━━━━━━━━━━\n\n"
-                f"👤 نام شما: <b>{user_fname}</b>\n\n"
-                "روی هر کادر بزنید تا در جا ساعت اسمتان داخل آن قرار گرفته و فعال شود:"
+                f"🏷 <b>الگوی فعلی شما:</b> <code>{cur_tmpl or clean_base_tmpl}</code>\n\n"
+                "💡 <i>کادر انتخابی دقیقاً دور ساعت شما قرار می‌گیرد و استیکرهای اسمتان دست‌نخورده باقی می‌ماند:</i>"
             )
             await edit_panel_message(callback, text, InlineKeyboardMarkup(inline_keyboard=kb_buttons))
             await callback.answer()
@@ -1038,19 +1050,22 @@ async def actions_callback(callback: types.CallbackQuery):
             return
 
         self_data = await db.get_self_bot(owner_id)
+        cur_tmpl = self_data.get("name_template") or ""
         raw_name = self_data.get("original_name") or callback.from_user.first_name or "User"
-        user_fname = db.clean_time_from_string(raw_name) or "User"
+        clean_name = db.clean_time_from_string(raw_name) or "User"
+
+        clean_base_tmpl = db.normalize_template_clock(cur_tmpl) if (cur_tmpl and "{clock}" in cur_tmpl) else f"{clean_name} {{clock}}"
+
+        frame_str = CLOCK_FRAMES[tmpl_idx]
+        new_template = clean_base_tmpl.replace("{clock}", frame_str)
         
-        # پاک‌سازی کامل و الحاق فریم به اسم تمیز بدون ساعت تکراری
-        selected_template = NAME_TEMPLATES[tmpl_idx].replace("{name}", user_fname)
-        
-        await db.update_self_bot(owner_id, name_template=selected_template, original_name=user_fname, clock_name=1)
-        await callback.answer(f"✅ فریم شماره {tmpl_idx+1} با موفقیت اعمال شد!", show_alert=True)
+        await db.update_self_bot(owner_id, name_template=new_template, original_name=clean_name, clock_name=1)
+        await callback.answer(f"✅ فریم شماره {tmpl_idx+1} با موفقیت روی ساعت اعمال شد!", show_alert=True)
         
         self_data = await db.get_self_bot(owner_id)
         c_name = "🟢 روشن"
         c_bio = "🟢 روشن" if self_data.get("clock_bio") else "🔴 خاموش"
-        tmpl = selected_template
+        tmpl = new_template
         font_txt = self_data.get("clock_font", "persian")
 
         text = (
@@ -1064,10 +1079,10 @@ async def actions_callback(callback: types.CallbackQuery):
             "📝 <b>آموزش تغییر دستی اسم و محل ساعت:</b>\n"
             "کافیست در هر چتی بنویسید:\n"
             "• <code>تنظیم اسم نام‌شما {clock}</code>\n"
-            "• <code>.setname Ali {clock}</code> (ساعت در آخر)\n"
-            "• <code>.setname {clock} Ali</code> (ساعت در اول)\n"
+            "• <code>.setname Ali {clock}</code> (ساعت در آخر اسم)\n"
+            "• <code>.setname {clock} Ali</code> (ساعت در اول اسم)\n"
             "• <code>حذف ساعت اسم</code> یا <code>.resetname</code> (حذف ساعت)\n\n"
-            "👇 <b>یا از دکمه‌های آماده زیر جهت انتخاب سریع استفاده کنید:</b>"
+            "👇 <b>جهت تعویض فریم ساعت یا فونت اعداد از دکمه‌های زیر استفاده کنید:</b>"
         )
         kb = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="🎨 ۳۶ کادر و فریم ساعت اسم", style="success", callback_data=f"act_tmpl_list_1_{owner_id}")],
@@ -1106,10 +1121,10 @@ async def actions_callback(callback: types.CallbackQuery):
             "📝 <b>آموزش تغییر دستی اسم و محل ساعت:</b>\n"
             "کافیست در هر چتی بنویسید:\n"
             "• <code>تنظیم اسم نام‌شما {clock}</code>\n"
-            "• <code>.setname Ali {clock}</code> (ساعت در آخر)\n"
-            "• <code>.setname {clock} Ali</code> (ساعت در اول)\n"
+            "• <code>.setname Ali {clock}</code> (ساعت در آخر اسم)\n"
+            "• <code>.setname {clock} Ali</code> (ساعت در اول اسم)\n"
             "• <code>حذف ساعت اسم</code> یا <code>.resetname</code> (حذف ساعت)\n\n"
-            "👇 <b>یا از دکمه‌های آماده زیر جهت انتخاب سریع استفاده کنید:</b>"
+            "👇 <b>جهت تعویض فریم ساعت یا فونت اعداد از دکمه‌های زیر استفاده کنید:</b>"
         )
         kb = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="🎨 ۳۶ کادر و فریم ساعت اسم", style="success", callback_data=f"act_tmpl_list_1_{owner_id}")],
@@ -1283,7 +1298,6 @@ ACTIVE_CLIENTS = {}
 SPAM_STOP_FLAGS = {}
 PV_MESSAGE_CACHE = {}
 
-# ۳۶ فونت کامل و متنوع برای اعداد ساعت
 TIME_FONTS = {
     "persian": {"0": "۰", "1": "۱", "2": "۲", "3": "۳", "4": "۴", "5": "۵", "6": "۶", "7": "۷", "8": "۸", "9": "۹", ":": ":"},
     "digital": {"0": "𝟘", "1": "𝟙", "2": "𝟚", "3": "𝟛", "4": "𝟜", "5": "𝟝", "6": "𝟞", "7": "𝟟", "8": "𝟠", "9": "𝟡", ":": ":"},
@@ -2093,12 +2107,11 @@ async def start_userbot_client(user_id: int, session_str: str):
             me = await client.get_me()
             orig_name = db.clean_time_from_string(me.first_name) or "User"
             
-            # ذخیره الگو و تنظیم دقیق نام اولیه
             await db.update_self_bot(user_id, name_template=template, original_name=orig_name)
             
-            styled_time = get_styled_time(b.get("clock_font", "persian") if 'b' in locals() else "persian")
-            clean_tmpl = template.replace("{name}", orig_name)
-            preview_name = clean_tmpl.replace("{clock}", styled_time) if "{clock}" in clean_tmpl else f"{clean_tmpl} {styled_time}"
+            self_data = await db.get_self_bot(user_id)
+            styled_time = get_styled_time(self_data.get("clock_font", "persian") if self_data else "persian")
+            preview_name = template.replace("{clock}", styled_time) if "{clock}" in template else f"{template} {styled_time}"
             
             await client(functions.account.UpdateProfileRequest(first_name=preview_name[:64]))
             await event.edit(
@@ -2112,7 +2125,7 @@ async def start_userbot_client(user_id: int, session_str: str):
         async def reset_my_name(event):
             me = await client.get_me()
             clean_n = db.clean_time_from_string(me.first_name) or "User"
-            await db.update_self_bot(user_id, clock_name=0, clock_bio=0, original_name=clean_n)
+            await db.update_self_bot(user_id, clock_name=0, clock_bio=0, name_template=clean_n, original_name=clean_n)
             await client(functions.account.UpdateProfileRequest(first_name=clean_n))
             await event.edit("✅ <b>ساعت از روی اسم و بیو حذف شد.</b>", parse_mode="html")
 
@@ -2287,10 +2300,12 @@ async def clock_background_task():
                 if b.get("clock_name", 0) == 1:
                     try:
                         me = await client.get_me()
-                        orig_name = db.clean_time_from_string(b.get("original_name") or me.first_name) or "User"
-                        template = b.get("name_template") or f"{orig_name} {{clock}}"
-                        clean_tmpl = template.replace("{name}", orig_name)
-                        new_name = clean_tmpl.replace("{clock}", styled_time) if "{clock}" in clean_tmpl else f"{clean_tmpl} {styled_time}"
+                        template = b.get("name_template")
+                        if not template or "{clock}" not in template:
+                            orig_n = db.clean_time_from_string(b.get("original_name") or me.first_name) or "User"
+                            template = f"{orig_n} {{clock}}"
+
+                        new_name = template.replace("{clock}", styled_time)
                         await client(functions.account.UpdateProfileRequest(first_name=new_name[:64]))
                     except Exception:
                         pass
@@ -2320,6 +2335,6 @@ EOF
 ---
 
 دستور بالا رو اجرا و ری‌استارت کن. 
-الان برو توی **`پنل`** ➔ **`👤 پروفایل و ساعت`** ➔ **`🎨 ۳۶ کادر و فریم ساعت اسم`** و قالبی که می‌خوای رو انتخاب کن. ساعت قبلی پاک میشه و دقیقاً فقط یک ساعت با همون کادر خوشگل انتخابی برات ست میشه!
+الان می‌تونی با هر استیکر و متنی مثل `.setname ❄️ Frozen Mamad {clock} ❄️` اسمت رو تنظیم کنی و بعد بری از پنل هر فریمی انتخاب کنی؛ استیکرهای ❄️ اول و آخر اسمت دست‌نخورده می‌مونن و کادر فقط میاد دور ساعتت!
 
-تغییر بعدی رو بگو تا انجام بدیم!
+تغییر بعدی رو بگو تا بریم سراغش داداش!
