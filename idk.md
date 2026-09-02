@@ -1,31 +1,25 @@
-درود داداش! این پیام رو به دو بخش تقسیم می‌کنیم. در **بخش اول (همین پیام)** تمام این باگ‌های حساس و قابلیت‌های زیر رو ۱۰۰٪ ردیف می‌کنیم:
+حل شد داداش! هر ۳ مورد دقیقاً پیاده‌سازی شدند:
 
 ---
 
-### 🛠 باگ‌ها و قابلیت‌های حل شده در بخش اول:
+### 🛠 جزئیات ۳ تغییر جدید:
 
-1. **فیکس اساسی باگ استارت، عدم ثبت کاربران و نگرفتن هدیه ورود:**
-   * **علت باگ:** اگر کاربر عضو کانال‌های اجباری نبود، کلاً در دیتابیس ساخته نمی‌شد و بعد از عضویت هم چون در دیتابیس نبود، نه به لیست کاربران اضافه می‌شد و نه هدیه ورود یا پورسانت دعوت بهش می‌رسید!
-   * **حل شد:** کاربر در لحظه اول استارت در دیتابیس ثبت و رفرالش ذخیره میشه و بلافاصله پس از عضویت در کانال‌ها هدیه و تاییدیه ثبت میشه.
+1. **جلوگیری از برگشت بسته‌های استارز بعد از ری‌استارت:**
+   * **علت باگ:** کد شرط گذاشته بود که اگر تعداد بسته‌ها صفر شد، دوباره بسته‌های پیش‌فرض ارزان رو از نو بسازه!
+   * **حل شد:** سیستم سیدینگ یک‌بار مصرف شد؛ از این به بعد وقتی بسته‌ای رو حذف کنی، با ۱۰۰ بار ری‌استارت هم دیگه هرگز بسته‌های پیش‌فرض برنمی‌گردن.
 
-2. **فیکس باگ لوپ احراز هویت (KYC):**
-   * دیتابیس و اعتبارسنجی وضعیت کاربر دقیق و عددی شد (وضعیت ۲ = تایید شده، ۱ = در انتظار، ۰ = احراز نشده). کاربر تایید شده دیگر هرگز پیام احراز مجدد دریافت نمی‌کند.
+2. **اعمال کامل استایل‌ها (`style="primary"`, `style="success"`, `style="danger"`) روی تمام دکمه‌های ادمین:**
+   * تمام دکمه‌های منوی اصلی ادمین، زیرمنوها، تنظیمات، لیست‌ها و عملیات‌ها استایل رنگی گرفتند.
 
-3. **خاموش/روشن کردن ربات (حالت تعمیرات) و ری‌استارت از داخل تلگرام:**
-   * دکمه **`🔄 ری‌استارت ربات`** به پنل ادمین اضافه شد.
-   * دکمه **`⚡️ وضعیت ربات: روشن 🟢 / خاموش 🔴`** اضافه شد (وقتی خاموش کنی، کاربران عادی پیام «در حال تعمیر» می‌گیرند ولی ادمین‌ها دسترسی کامل دارند).
-
-4. **مدیریت و ویرایش کامل متن‌های ربات از پنل:**
-   * دکمه جدید **`📝 ویرایش متن‌های ربات`** در پنل ادمین با قابلیت تغییر دلخواه:
-     * متن احراز هویت
-     * متن خوشامدگویی
-     * متن راهنما
+3. **اضافه شدن قابلیت پروندن / لغو احراز هویت (KYC) کاربر:**
+   * دکمه قرمز رنگ **`🪪 لغو / ابطال KYC کاربر`** به پنل ادمین اضافه شد.
+   * کافیه آیدی عددی یا یوزرنیم طرف رو بدی ➔ احراز هویت و کارت تایید شده‌ش در جا باطل و صفر میشه و به پیویش پیام میره که احراز شما لغو شد و باید مجدداً احراز کنه!
 
 ---
 
-### 🚀 دستور لینوکسی پارت اول (اجرا در ترمینال):
+### 🚀 دستور لینوکسی جایگزینی (اجرا در ترمینال سرور):
 
-این دستور رو کامل توی سرور اجرا کن:
+این دستور رو کامل داخل سرورت پیست و اجرا کن:
 
 ```bash
 cat << 'EOF' > database.py
@@ -36,7 +30,7 @@ from config import config
 CACHE_EMOJIS = {}
 REVERSE_EMOJIS = {}
 
-ALL_DIGITS_STR = "0123456789۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵𝟢𝟣𝟤𝟥𝟦𝟧𝟨𝟩𝟪𝟫𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿⓿➊➋➌➍➎➏➐➑➒⓪①②③④⑤⑥⑦⑧⑨🄋➀➁➂➃➄➅➆➇➈⒪⑴⑵⑶⑷⑸⑹⑺⑻⑼🄀⒈⒉⒊⒋⒌⒍⒎⒏⒐🄌➊➋➌➍➎➏➐➑➒０１２３４۵۶۷۸۹🯰🯱🯲𝯳𝯴𝯵𝯶𝯷𝯸𝯹ⅠⅡⅢⅣⅤⅥⅦⅧⅨ❶❷❸❹❺❻❼❽❾⠚⠁⠃⠉⠙⠑⠋⠛⠓⠊०१२३४५६७८९০১২৩৪৫۶৭৮৯๐๑๒๓๔๕۶๗๘๙༠༡༢༣༤༥༦༧༨༩០១២៣៤៥៦៧៨៩၀၁၂၃၄၅၆၇၈၉੦੧੨੩੪੫੬੭੮੯೦೧೨೩೪೫೬೭೮೯൦൧൨൩൪൫൬൭൮൯௦௧௨௩௪௫௬௭௮௯౦౧౨౩౪౫౬౭౮౯૦૧૨૩૪૫૬૭૮૯୦୧୨୩୪୫୬୭୮୯෦෧෨෩෪෫෬෭෮෯໐໑໒໓໔໕໖໗໘໙"
+ALL_DIGITS_STR = "0123456789۰۱۲۳۴۵۶۷۸۹٠١٢٣٤٥٦٧٨٩𝟘𝟙𝟚𝟛𝟜𝟝𝟞𝟟𝟠𝟡⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉𝟎𝟏𝟐𝟑𝟒𝟓𝟔𝟕𝟖𝟗𝟬𝟭𝟮𝟯𝟰𝟱𝟲𝟳𝟴𝟵𝟢𝟣𝟤𝟥𝟦𝟧𝟨𝟩𝟪𝟫𝟷𝟸𝟹𝟺𝟻𝟼𝟽𝟾𝟿⓿➊➋➌➍➎➏➐➑➒⓪①②③④⑤⑥⑦⑧⑨🄋➀➁➂➃➄➅➆➇➈⒪⑴⑵⑶⑷⑸⑹⑺⑻⑼🄀⒈⒉⒊⒋⒌⒍⒎⒏⒐🄌➊➋➌➍➎➏➐➑➒０１２３۴۵۶۷۸۹🯰🯱🯲𝯳𝯴𝯵𝯶𝯷𝯸𝯹ⅠⅡⅢⅣⅤⅥⅦⅧⅨ❶❷❸❹❺❻❼❽❾⠚⠁⠃⠉⠙⠑⠋⠛⠓⠊०१२३४५६७८९০১২৩৪৫৬৭৮৯๐๑๒๓๔๕๖๗๘๙༠༡༢༣༤༥༦༧༨༩០១២៣៤۵۶۷۸۹၀၁၂၃၄၅၆၇၈၉੦੧੨੩੪੫੬੭੮੯೦೧೨೩೪೫೬೭೮೯൦൧൨൩൪൫൬൭൮൯௦௧௨௩௪௫௬௭௮௯౦౧౨౩౪౫౬౭౮౯૦૧૨૩૪૫૬૭૮૯୦୧୨୩୪୫୬୭୮୯෦෧෨෩෪෫෬෭෮෯໐໑໒໓໔໕໖໗໘໙"
 BRACKET_SYMBOLS = r"﹝﹞❲❳‹›「」【】〖〗⟦⟧⦅⦆﹤﹥⟮⟯⟬⟭❨❩❮❯«»𓆩𓆪⸢⸥⌜⌟☽☾✦✧⌁亗༒⊶⊷༺༻⧉⟡|•\(\)\[\]"
 
 def clean_time_from_string(text: str) -> str:
@@ -140,7 +134,7 @@ async def init_db():
             "card_number": "6037-9900-0000-0000", "card_holder": "نام صاحب حساب",
             "bot_status": "active",
             "welcome_text": "سلام {name} عزیز، به ربات خوش آمدید!\n\nاز منوی زیر استفاده کنید:",
-            "kyc_guide_text": "🪪 <b>بخش احراز هویت</b>\n\n✔️ <b>برای استفاده از این روش پرداخت، یک بار باید هویتتان توسط ادمین تأیید شود.</b>\n\n⁉️ <b>چه باید بفرستید:</b>\n\n• عکس کارت بانکی به نام خودتان (CVV2 و تاریخ انقضا را بپوشانید)\n• عکس کارت در کنار دست‌نوشته:\n<i>«جهت خرید خدمات از این ربات از کارت [شماره کارت] احراز هویت انجام می‌شود.»</i>\n\n💡 <i>این فرآیند فقط یک‌بار انجام می‌شود.</i>",
+            "kyc_guide_text": "🪪 <b>بخش احراز هویت</b>\n\n✔️ <b>برای استفاده از این روش پرداخت، یک بار باید هویتتان توسط ادمین تأیید شود.</b>\n\n⁉️ <b>مدارک مورد نیاز:</b>\n\n• عکس کارت بانکی به نام خودتان (CVV2 و تاریخ انقضا را بپوشانید)\n• عکس کارت در کنار دست‌نوشته:\n<i>«جهت خرید خدمات از این ربات از کارت [شماره کارت] احراز هویت انجام می‌شود.»</i>\n\n💡 <i>این فرآیند فقط یک‌بار انجام می‌شود.</i>",
             "guide_text": "📚 <b>راهنمای جامع بخش‌های ربات:</b>\n\n⭐️ <b>۱. فروشگاه خدمات:</b>\nخرید استارز، پرمیوم، تون و گیفت‌ها با شارژ کیف پول.\n\n🚀 <b>۲. سلف‌بات ابری PuLaSeLf:</b>\nفعال‌سازی سلف اختصاصی روی اکانت شما.\n\n👥 <b>۳. کسب درآمد و زیرمجموعه‌گیری:</b>\nبا لینک دعوت خود، به ازای هر ورود پاداش نقدی بگیرید.",
             "welcome_bonus": "10000", "referral_bonus": "5000", "min_deposit": "100000", "max_deposit": "5000000",
             "required_channel": "", "channel_link": "", "emoji_msg_cost": "0", "btn_stars": "⭐️ خرید استارز",
@@ -161,13 +155,16 @@ async def init_db():
         ]
         for n, cid in default_emojis: await db.execute("INSERT OR IGNORE INTO emoji_mappings (normal_emoji, custom_emoji_id) VALUES (?, ?)", (n, cid))
 
-        if (await (await db.execute("SELECT COUNT(*) FROM custom_gifts")).fetchone())[0] == 0:
+        # ایجاد فقط یکبار در اولین ساخت دیتابیس (تا اگر ادمین پاک کرد دوباره برنگردد!)
+        is_seeded = await (await db.execute("SELECT value FROM settings WHERE key = 'db_init_seeded'")).fetchone()
+        if not is_seeded:
             for g_name, g_stars, g_price in [("خرس تدی 🧸", 100, 150000), ("قلب سرخ ❤️", 50, 100000), ("الماس درخشان 💎", 250, 250000)]:
                 await db.execute("INSERT INTO custom_gifts (name, stars_cost, price) VALUES (?, ?, ?)", (g_name, g_stars, g_price))
 
-        if (await (await db.execute("SELECT COUNT(*) FROM stars_packages")).fetchone())[0] == 0:
             for title, amt, prc in [("⭐️ ۵۰ استارز", 50, 75000), ("⭐️ ۱۰۰ استارز", 100, 145000), ("⭐️ ۲۵۰ استارز", 250, 355000), ("⭐️ ۵۰۰ استارز", 500, 695000), ("⭐️ ۱۰۰۰ استارز", 1000, 1380000)]:
                 await db.execute("INSERT INTO stars_packages (btn_title, stars_amount, price) VALUES (?, ?, ?)", (title, amt, prc))
+            
+            await db.execute("INSERT INTO settings (key, value) VALUES ('db_init_seeded', '1')")
 
         await db.commit()
     await load_emoji_cache()
@@ -304,6 +301,12 @@ async def set_user_kyc(uid, status: int, card=None):
         is_v = 1 if status == 2 else 0
         if card: await db.execute("UPDATE users SET kyc_status = ?, is_verified = ?, verified_card = ? WHERE user_id = ?", (status, is_v, str(card).strip(), uid))
         else: await db.execute("UPDATE users SET kyc_status = ?, is_verified = ? WHERE user_id = ?", (status, is_v, uid))
+        await db.commit()
+
+# باطل کردن و پروندن احراز هویت کاربر
+async def revoke_user_kyc(uid: int):
+    async with aiosqlite.connect(config.DB_NAME) as db:
+        await db.execute("UPDATE users SET kyc_status = 0, is_verified = 0, verified_card = NULL WHERE user_id = ?", (uid,))
         await db.commit()
 
 async def update_balance(uid, amt):
@@ -545,419 +548,6 @@ async def get_stats():
         return {"total_users": t_users, "verified_users": v_users, "kyc_users": k_users, "total_orders": t_orders, "total_balance": res_b or 0}
 EOF
 
-cat << 'EOF' > handlers/auth.py
-import re
-from aiogram import Router, types, F
-from aiogram.filters import CommandStart, CommandObject, BaseFilter
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
-from config import config
-import database as db
-
-router = Router()
-
-class SupportState(StatesGroup):
-    waiting_for_msg = State()
-
-class GuideSupportFilter(BaseFilter):
-    async def __call__(self, message: types.Message) -> bool:
-        if not message.text:
-            return False
-        t = message.text.strip()
-        return any(k in t for k in ["راهنما", "پشتیبانی"])
-
-async def check_all_channels(bot, user_id: int):
-    channels = await db.get_all_required_channels()
-    if not channels:
-        return True, []
-    not_joined = []
-    for ch in channels:
-        try:
-            member = await bot.get_chat_member(chat_id=ch["channel_id"], user_id=user_id)
-            if member.status in ["left", "kicked"]:
-                not_joined.append(ch)
-        except Exception:
-            pass
-    return (len(not_joined) == 0), not_joined
-
-async def get_main_keyboard():
-    b_stars = await db.get_setting("btn_stars", "⭐️ خرید استارز")
-    b_prem = await db.get_setting("btn_premium", "💎 خرید پرمیوم")
-    b_ton = await db.get_setting("btn_ton", "🪙 خرید تون")
-    b_gifts = await db.get_setting("btn_gifts", "🎁 گیفتهای تلگرام")
-    b_self = await db.get_setting("btn_self", "🚀 مدیریت سلف")
-    b_wallet = await db.get_setting("btn_wallet", "💰 کیف پول")
-    b_ref = await db.get_setting("btn_ref", "👥 زیرمجموعهگیری")
-    b_guide = await db.get_setting("btn_guide", "📖 راهنما")
-    b_support = await db.get_setting("btn_support", "📞 پشتیبانی")
-
-    clean = lambda t: re.sub(r'<[^>]+>', '', t).strip()
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text=clean(b_stars)), KeyboardButton(text=clean(b_prem))],
-            [KeyboardButton(text=clean(b_ton)), KeyboardButton(text=clean(b_gifts))],
-            [KeyboardButton(text=clean(b_self))],
-            [KeyboardButton(text=clean(b_wallet)), KeyboardButton(text=clean(b_ref))],
-            [KeyboardButton(text=clean(b_guide)), KeyboardButton(text=clean(b_support))]
-        ],
-        resize_keyboard=True
-    )
-
-@router.message(CommandStart())
-@router.message(F.text == "❌ انصراف و بازگشت")
-async def start_handler(message: types.Message, state: FSMContext, command: CommandObject = None):
-    await state.clear()
-    uid = message.from_user.id
-    uname = message.from_user.username
-    fname = message.from_user.full_name or "کاربر"
-
-    # بررسی وضعیت خاموش/روشن بودن ربات (حالت تعمیرات)
-    bot_status = await db.get_setting("bot_status", "active")
-    is_adm = await db.is_admin(uid)
-    if bot_status == "off" and not is_adm:
-        await message.reply("🛠 <b>ربات موقتاً جهت بهینه‌سازی و ارتقا خاموش است.</b>\nلطفاً دقایقی دیگر مراجعه فرمایید.")
-        return
-
-    ref_id = None
-    if command and command.args:
-        if command.args.startswith("ref_") and command.args[4:].isdigit():
-            ref_id = int(command.args[4:])
-        elif command.args.isdigit():
-            ref_id = int(command.args)
-
-    # ۱. ثبت حتمی و آنی کاربر در دیتابیس در بدو ورود (حتی قبل از جوین کانال)
-    user = await db.get_or_create_user(uid, uname, fname, ref_id)
-
-    # ۲. بررسی عضویت در کانال‌های اجباری
-    joined, not_joined = await check_all_channels(message.bot, uid)
-    if not joined:
-        buttons = [[InlineKeyboardButton(text=f"📢 عضویت در {ch['channel_title']}", url=ch["channel_link"])] for ch in not_joined]
-        buttons.append([InlineKeyboardButton(text="🔵 🔄 بررسی عضویت", callback_data="check_join_channel")])
-        await message.reply("⚠️ جهت استفاده از ربات، ابتدا باید در کانالهای زیر عضو شوید:", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
-        return
-
-    # ۳. تایید کاربر و اعطای پاداش ورود و دعوت
-    wb = await db.get_int_setting("welcome_bonus", 10000)
-    rb = await db.get_int_setting("referral_bonus", 5000)
-
-    if not user.get("is_verified", 0):
-        await db.set_user_verified(uid, True)
-        if wb > 0:
-            await db.update_balance(uid, wb)
-        if user.get("referrer_id"):
-            r_id = user["referrer_id"]
-            await db.update_balance(r_id, rb)
-            try:
-                await message.bot.send_message(chat_id=r_id, text=f"🎉 کاربری با لینک شما عضو شد و <b>{rb:,} تومان</b> هدیه گرفتید!")
-            except Exception:
-                pass
-
-    await db.send_bot_sticker(message.bot, message.chat.id, "sticker_welcome")
-    wt = await db.get_setting("welcome_text", "سلام {name} عزیز، به ربات خوش آمدید!\n\nاز منوی زیر استفاده کنید:")
-    formatted_welcome = wt.replace("{name}", message.from_user.first_name)
-    await message.reply(formatted_welcome, reply_markup=await get_main_keyboard())
-
-@router.callback_query(F.data == "check_join_channel")
-async def check_join_callback(callback: types.CallbackQuery, state: FSMContext):
-    await state.clear()
-    uid = callback.from_user.id
-    uname = callback.from_user.username
-    fname = callback.from_user.full_name or "کاربر"
-
-    joined, not_joined = await check_all_channels(callback.bot, uid)
-    if joined:
-        try: await callback.message.delete()
-        except Exception: pass
-
-        user = await db.get_or_create_user(uid, uname, fname)
-        wb = await db.get_int_setting("welcome_bonus", 10000)
-        rb = await db.get_int_setting("referral_bonus", 5000)
-
-        if not user.get("is_verified", 0):
-            await db.set_user_verified(uid, True)
-            if wb > 0:
-                await db.update_balance(uid, wb)
-            if user.get("referrer_id"):
-                r_id = user["referrer_id"]
-                await db.update_balance(r_id, rb)
-                try:
-                    await callback.bot.send_message(chat_id=r_id, text=f"🎉 کاربری با لینک شما عضو شد و <b>{rb:,} تومان</b> هدیه گرفتید!")
-                except Exception:
-                    pass
-
-        await db.send_bot_sticker(callback.bot, callback.message.chat.id, "sticker_welcome")
-        wt = await db.get_setting("welcome_text", "سلام {name} عزیز، به ربات خوش آمدید!\n\nاز منوی زیر استفاده کنید:")
-        await callback.message.answer(wt.replace("{name}", callback.from_user.first_name), reply_markup=await get_main_keyboard())
-        await callback.answer("عضویت در تمام کانالها تایید شد!")
-    else:
-        await callback.answer("❌ هنوز در تمام کانالها عضو نشدهاید!", show_alert=True)
-
-@router.message(GuideSupportFilter())
-async def guide_and_support_handler(message: types.Message, state: FSMContext):
-    text = message.text.strip()
-    if "راهنما" in text:
-        custom_guide = await db.get_setting("guide_text", "")
-        if custom_guide:
-            await message.reply(custom_guide)
-        else:
-            bot_info = await message.bot.get_me()
-            rb = await db.get_int_setting("referral_bonus", 5000)
-            guide_text = f"📚 <b>راهنمای جامع بخشهای ربات:</b>\n\n⭐️ <b>۱. فروشگاه خدمات:</b>\nخرید استارز، پرمیوم، تون و گیفت‌ها با شارژ کیف پول.\n\n🚀 <b>۲. سلف‌بات ابری PuLaSeLf:</b>\nفعال‌سازی سلف اختصاصی روی اکانت شما.\n\n👥 <b>۳. کسب درآمد:</b>\nبا هر دعوت <b>{rb:,} تومان</b> پاداش بگیرید."
-            await message.reply(guide_text)
-    elif "پشتیبانی" in text:
-        kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", callback_data="cancel_support")]])
-        await message.reply("📞 <b>ارتباط با پشتیبانی:</b>\n\nپیام خود را بنویسید و ارسال کنید:", reply_markup=kb)
-        await state.set_state(SupportState.waiting_for_msg)
-
-@router.callback_query(F.data == "cancel_support")
-async def cancel_support_handler(callback: types.CallbackQuery, state: FSMContext):
-    await state.clear()
-    await callback.message.edit_text("❌ لغو شد.")
-    await callback.answer()
-
-@router.message(SupportState.waiting_for_msg)
-async def process_support_msg(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        await message.reply("❌ لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    uid, fname, uname = message.from_user.id, message.from_user.full_name, message.from_user.username
-    msg_text = message.text or message.caption or "ارسال رسانه"
-    ticket_id = await db.create_support_ticket(uid, msg_text)
-
-    mention = f'<a href="tg://user?id={uid}">{fname}</a> (@{uname})' if uname else f'<a href="tg://user?id={uid}">{fname}</a>'
-    admin_caption = (
-        f"📩 <b>پیام پشتیبانی جدید #{ticket_id}:</b>\n\n"
-        f"👤 فرستنده: {mention}\n"
-        f"🆔 آیدی عددی: <code>{uid}</code>\n\n"
-        f"📝 متن پیام:\n<i>{msg_text}</i>"
-    )
-
-    kb = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text="✍️ پاسخ به این پیام", callback_data=f"ans_sup_{ticket_id}_{uid}")
-    ]])
-
-    for a in await db.get_all_admins():
-        try:
-            await message.bot.send_message(chat_id=a, text=admin_caption, reply_markup=kb)
-            if not message.text:
-                await message.copy_to(chat_id=a)
-        except Exception:
-            pass
-
-    await message.reply("✅ پیام شما برای پشتیبانی ارسال شد. به زودی پاسخ برای شما ارسال میشود.")
-    await state.clear()
-EOF
-
-cat << 'EOF' > handlers/wallet.py
-from aiogram import Router, types, F
-from aiogram.filters import BaseFilter
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from config import config
-import database as db
-
-router = Router()
-
-class WalletButtonFilter(BaseFilter):
-    async def __call__(self, message: types.Message) -> bool:
-        return bool(message.text and "کیف پول" in message.text.strip())
-
-class KYCState(StatesGroup):
-    waiting_for_card_photo = State()
-    waiting_for_card_number = State()
-
-class DepositState(StatesGroup):
-    waiting_for_amount = State()
-    waiting_for_receipt = State()
-
-async def check_channel_member(bot, user_id: int) -> bool:
-    req_ch = await db.get_setting("required_channel", "")
-    if not req_ch: return True
-    try:
-        member = await bot.get_chat_member(chat_id=req_ch, user_id=user_id)
-        return member.status not in ["left", "kicked"]
-    except Exception: return True
-
-@router.message(WalletButtonFilter())
-async def wallet_entry_handler(message: types.Message):
-    user = await db.get_or_create_user(message.from_user.id, message.from_user.username, message.from_user.full_name)
-    balance = user.get("balance", 0)
-    min_d = await db.get_int_setting("min_deposit", 100000)
-    max_d = await db.get_int_setting("max_deposit", 5000000)
-    kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="💳 افزایش موجودی (کارت به کارت)", style="success", callback_data="charge_wallet")]])
-    
-    text = (
-        f"💼 <b>کیف پول کاربری شما</b>\n\n"
-        f"💳 موجودی فعلی: <b>{balance:,} تومان</b>\n\n"
-        f"🔹 حداقل شارژ: <code>{min_d:,}</code> ت\n"
-        f"🔹 حداکثر شارژ: <code>{max_d:,}</code> ت\n\n"
-        "جهت افزایش موجودی، دکمه زیر را بزنید:"
-    )
-    await message.reply(text, reply_markup=kb)
-
-@router.callback_query(F.data == "charge_wallet")
-async def start_charge(callback: types.CallbackQuery, state: FSMContext):
-    user = await db.get_or_create_user(callback.from_user.id, callback.from_user.username, callback.from_user.full_name)
-    kyc = int(user.get("kyc_status", 0) or 0)
-
-    # ۱. در صف بررسی
-    if kyc == 1:
-        await callback.message.answer("⏳ <b>مدارک احراز هویت شما ارسال شده و در صف بررسی ادمین است.</b>\nبه محض تایید، نتیجه به شما اعلام می‌گردد.")
-        await callback.answer()
-        return
-
-    # ۲. نیاز به احراز هویت
-    if kyc != 2:
-        kyc_guide = await db.get_setting("kyc_guide_text", "")
-        if not kyc_guide:
-            kyc_guide = (
-                "🪪 <b>بخش احراز هویت</b>\n\n"
-                "✔️ <b>برای استفاده از این روش پرداخت، یک بار باید هویتتان توسط ادمین تأیید شود.</b>\n\n"
-                "⁉️ <b>مدارک مورد نیاز:</b>\n"
-                "• عکس کارت بانکی به نام خودتان (CVV2 و تاریخ انقضا را بپوشانید)\n"
-                "• عکس کارت در کنار دست‌نوشته:\n"
-                "<i>«جهت خرید خدمات از این ربات از کارت [شماره کارت] احراز هویت انجام می‌شود.»</i>\n\n"
-                "💡 <i>این فرآیند فقط یک‌بار لازم است.</i>"
-            )
-        kb = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="📸 ارسال عکس مدارک همینجا", style="success", callback_data="start_kyc_upload")],
-            [InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="cancel_deposit")]
-        ])
-        await callback.message.answer(kyc_guide, reply_markup=kb)
-        await callback.answer()
-        return
-
-    # ۳. کاربر احراز هویت شده و آماده واریز
-    min_d = await db.get_int_setting("min_deposit", 100000)
-    max_d = await db.get_int_setting("max_deposit", 5000000)
-    kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="cancel_deposit")]])
-    await callback.message.answer(f"💵 مبلغ مورد نظر برای شارژ را به <b>تومان</b> وارد کنید:\n\n🔻 حداقل: <b>{min_d:,} ت</b> | 🔺 حداکثر: <b>{max_d:,} ت</b>", reply_markup=kb)
-    await state.set_state(DepositState.waiting_for_amount)
-    await callback.answer()
-
-@router.callback_query(F.data == "start_kyc_upload")
-async def start_kyc_upload(callback: types.CallbackQuery, state: FSMContext):
-    await callback.message.answer("📸 لطفاً <b>عکس کارت بانکی در کنار دستنوشته</b> را همینجا در چت ارسال فرمایید:")
-    await state.set_state(KYCState.waiting_for_card_photo)
-    await callback.answer()
-
-@router.message(KYCState.waiting_for_card_photo, F.photo)
-async def process_kyc_photo(message: types.Message, state: FSMContext):
-    await state.update_data(kyc_photo=message.photo[-1].file_id)
-    await message.reply("💳 لطفاً <b>شماره ۱۶ رقمی کارت بانکی</b> خود را وارد کنید:")
-    await state.set_state(KYCState.waiting_for_card_number)
-
-@router.message(KYCState.waiting_for_card_number)
-async def process_kyc_card_num(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.reply("❌ لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    num = message.text.strip().replace("-", "").replace(" ", "")
-    if not num.isdigit() or len(num) != 16:
-        await message.reply("⚠️ شماره کارت باید ۱۶ رقم باشد. مجدداً وارد کنید:")
-        return
-
-    data = await state.get_data()
-    uid, fname, uname = message.from_user.id, message.from_user.full_name, message.from_user.username
-    await db.set_user_kyc(uid, 1, num)
-    sub_id = await db.create_kyc_sub(uid, num, data["kyc_photo"])
-    mention = f'<a href="tg://user?id={uid}">{fname}</a> (@{uname})' if uname else f'<a href="tg://user?id={uid}">{fname}</a>'
-    
-    kb = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text="🟢 ✅ تایید احراز هویت", style="success", callback_data=f"app_kyc_{sub_id}"),
-        InlineKeyboardButton(text="🔴 ❌ رد احراز هویت", style="danger", callback_data=f"rej_kyc_{sub_id}")
-    ]])
-    
-    cap = (
-        f"🪪 <b>درخواست احراز هویت جدید #{sub_id}:</b>\n\n"
-        f"👤 کاربر: {mention}\n"
-        f"🆔 آیدی عددی: <code>{uid}</code>\n"
-        f"💳 شماره کارت: <code>{num}</code>"
-    )
-
-    for a in await db.get_all_admins():
-        try:
-            await message.bot.send_photo(chat_id=a, photo=data["kyc_photo"], caption=cap, reply_markup=kb)
-        except Exception:
-            pass
-
-    await db.send_bot_sticker(message.bot, message.chat.id, "sticker_kyc")
-    await message.reply("✅ <b>مدارک شما با موفقیت برای مدیریت ارسال شد.</b>\nبه زودی بررسی و نتیجه اعلام خواهد شد.")
-    await state.clear()
-
-@router.callback_query(F.data == "cancel_deposit")
-async def cancel_deposit(callback: types.CallbackQuery, state: FSMContext):
-    await state.clear()
-    await callback.message.edit_text("❌ عملیات لغو شد.")
-    await callback.answer()
-
-@router.message(DepositState.waiting_for_amount)
-async def process_amount(message: types.Message, state: FSMContext):
-    if db.is_cancel_message(message.text):
-        await state.clear()
-        from handlers.auth import get_main_keyboard
-        await message.reply("❌ لغو شد.", reply_markup=await get_main_keyboard())
-        return
-
-    amt = db.clean_number(message.text)
-    mi, ma = await db.get_int_setting("min_deposit", 100000), await db.get_int_setting("max_deposit", 5000000)
-    if amt < mi or amt > ma:
-        await message.reply(f"⚠️ مبلغ باید بین {mi:,} تا {ma:,} ت باشد:")
-        return
-
-    await state.update_data(amount=amt)
-    c, h = await db.get_setting("card_number"), await db.get_setting("card_holder")
-    
-    info_text = (
-        f"💳 <b>اطلاعات حساب جهت واریز:</b>\n\n"
-        f"🔹 شماره کارت: <code>{c}</code>\n"
-        f"🔹 به نام: <b>{h}</b>\n"
-        f"🔹 مبلغ: <b>{amt:,} تومان</b>\n\n"
-        "📸 لطفاً پس از واریز، <b>عکس رسید/فیش واریزی</b> را ارسال فرمایید:"
-    )
-    await message.reply(info_text)
-    await state.set_state(DepositState.waiting_for_receipt)
-
-@router.message(DepositState.waiting_for_receipt, F.photo)
-async def process_receipt(message: types.Message, state: FSMContext):
-    data = await state.get_data()
-    amt, uid = data.get("amount", 0), message.from_user.id
-    u = await db.get_user(uid)
-    photo_id = message.photo[-1].file_id
-    dep_id = await db.create_deposit_rec(uid, amt, photo_id)
-    mention = f'<a href="tg://user?id={uid}">{message.from_user.full_name}</a>'
-    
-    kb = InlineKeyboardMarkup(inline_keyboard=[[
-        InlineKeyboardButton(text=f"🟢 ✅ تایید ({amt:,} ت)", style="success", callback_data=f"app_dep_{dep_id}"),
-        InlineKeyboardButton(text="🔴 ❌ رد رسید", style="danger", callback_data=f"rej_dep_{dep_id}")
-    ]])
-    
-    cap = (
-        f"📥 <b>رسید واریز جدید #{dep_id}:</b>\n\n"
-        f"👤 کاربر: {mention}\n"
-        f"🆔 آیدی: <code>{uid}</code>\n"
-        f"💳 کارت تایید شده: <code>{u.get('verified_card','نامشخص')}</code>\n"
-        f"💰 مبلغ: <b>{amt:,} تومان</b>"
-    )
-
-    for a in await db.get_all_admins():
-        try:
-            await message.bot.send_photo(chat_id=a, photo=photo_id, caption=cap, reply_markup=kb)
-        except Exception:
-            pass
-
-    await db.send_bot_sticker(message.bot, message.chat.id, "sticker_wallet")
-    await message.reply("✅ رسید شما با موفقیت برای مدیریت ارسال شد.")
-    await state.clear()
-EOF
-
 cat << 'EOF' > handlers/admin.py
 import asyncio, shutil, os, sys, zipfile
 from aiogram import Router, types, F
@@ -1012,21 +602,22 @@ class AdminState(StatesGroup):
     waiting_for_balance_user = State()
     waiting_for_balance_amount = State()
     waiting_for_bulk_gifts_price = State()
+    waiting_for_revoke_kyc_user = State()
 
 async def get_admin_keyboard():
     status = await db.get_setting("bot_status", "active")
-    status_btn = "⚡️ وضعیت ربات: روشن 🟢" if status == "active" else "⚡️ وضعیت ربات: خاموش 🔴"
+    status_btn = "🟢 وضعیت: روشن (فعال)" if status == "active" else "🔴 وضعیت: خاموش (تعمیرات)"
     
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="📊 آمار زنده ربات", style="primary", callback_data="admin_stats"), InlineKeyboardButton(text="📢 ارسال همگانی", style="primary", callback_data="admin_broadcast")],
-        [InlineKeyboardButton(text="💰 تغییر موجودی کاربر", style="success", callback_data="admin_manage_balance"), InlineKeyboardButton(text="📝 ویرایش متن‌های ربات", style="primary", callback_data="adm_edit_texts")],
-        [InlineKeyboardButton(text="⭐️ مدیریت پیشرفته استارز", style="primary", callback_data="admin_stars_hub"), InlineKeyboardButton(text="🎁 مدیریت گیفت‌ها", style="primary", callback_data="adm_gifts_list")],
-        [InlineKeyboardButton(text="🚀 مدیریت سلف‌بات‌ها", style="primary", callback_data="adm_self_hub"), InlineKeyboardButton(text="✨ تنظیم ایموجی پرمیوم", style="primary", callback_data="adm_menu_emojis")],
-        [InlineKeyboardButton(text="🪙 قیمت واحد هر TON", style="primary", callback_data="admin_set_ton"), InlineKeyboardButton(text="💎 قیمت پرمیوم", style="primary", callback_data="admin_set_prem")],
-        [InlineKeyboardButton(text="⭐️ قیمت بسته‌های استارز", style="primary", callback_data="admin_set_stars"), InlineKeyboardButton(text="💳 تنظیم شماره کارت", style="primary", callback_data="admin_set_card")],
-        [InlineKeyboardButton(text="🎟 مدیریت کوپن‌ها", style="primary", callback_data="admin_coupons_menu"), InlineKeyboardButton(text="👥 مدیریت ادمین‌ها", style="primary", callback_data="admin_manage_admins")],
-        [InlineKeyboardButton(text="✏️ ویرایش دکمه‌های منو", style="primary", callback_data="admin_menu_buttons"), InlineKeyboardButton(text="🎭 تنظیم استیکرها", style="primary", callback_data="admin_menu_stickers")],
-        [InlineKeyboardButton(text="👥 لیست کاربران و تاریخ عضویت", style="primary", callback_data="adm_users_1")],
+        [InlineKeyboardButton(text="💰 تغییر موجودی کاربر", style="success", callback_data="admin_manage_balance"), InlineKeyboardButton(text="🪪 لغو / ابطال KYC کاربر", style="danger", callback_data="adm_revoke_kyc_start")],
+        [InlineKeyboardButton(text="📝 ویرایش متن‌های ربات", style="primary", callback_data="adm_edit_texts"), InlineKeyboardButton(text="⭐️ مدیریت پیشرفته استارز", style="primary", callback_data="admin_stars_hub")],
+        [InlineKeyboardButton(text="🎁 مدیریت گیفت‌ها", style="primary", callback_data="adm_gifts_list"), InlineKeyboardButton(text="🚀 مدیریت سلف‌بات‌ها", style="primary", callback_data="adm_self_hub")],
+        [InlineKeyboardButton(text="✨ تنظیم ایموجی پرمیوم", style="primary", callback_data="adm_menu_emojis"), InlineKeyboardButton(text="🪙 قیمت واحد هر TON", style="primary", callback_data="admin_set_ton")],
+        [InlineKeyboardButton(text="💎 قیمت پرمیوم", style="primary", callback_data="admin_set_prem"), InlineKeyboardButton(text="⭐️ قیمت بسته‌های استارز", style="primary", callback_data="admin_set_stars")],
+        [InlineKeyboardButton(text="💳 تنظیم شماره کارت", style="primary", callback_data="admin_set_card"), InlineKeyboardButton(text="🎟 مدیریت کوپن‌ها", style="primary", callback_data="admin_coupons_menu")],
+        [InlineKeyboardButton(text="👥 مدیریت ادمین‌ها", style="primary", callback_data="admin_manage_admins"), InlineKeyboardButton(text="✏️ ویرایش دکمه‌های منو", style="primary", callback_data="admin_menu_buttons")],
+        [InlineKeyboardButton(text="🎭 تنظیم استیکرها", style="primary", callback_data="admin_menu_stickers"), InlineKeyboardButton(text="👥 لیست کاربران و تاریخ عضویت", style="primary", callback_data="adm_users_1")],
         [InlineKeyboardButton(text="🎁 تنظیم پاداش‌ها", style="primary", callback_data="admin_set_bonuses"), InlineKeyboardButton(text="💰 سقف و کف شارژ", style="primary", callback_data="admin_set_limits")],
         [InlineKeyboardButton(text="📢 مدیریت کانال‌های جوین اجباری", style="primary", callback_data="admin_set_channel")],
         [InlineKeyboardButton(text=status_btn, style="primary", callback_data="adm_toggle_bot_power"), InlineKeyboardButton(text="🔄 ری‌استارت ربات", style="danger", callback_data="adm_restart_bot")],
@@ -1037,6 +628,60 @@ async def get_admin_keyboard():
 async def admin_panel(message: types.Message, state: FSMContext = None):
     if state: await state.clear()
     await message.reply("👑 <b>پنل مدیریت جامع ربات</b>\nتمامی بخش‌ها از دکمه‌های زیر قابل کنترل هستند:", reply_markup=await get_admin_keyboard())
+
+# --- ابطال و لغو KYC کاربر ---
+@router.callback_query(F.data == "adm_revoke_kyc_start", AdminFilter())
+async def revoke_kyc_start(callback: types.CallbackQuery, state: FSMContext):
+    await state.set_state(AdminState.waiting_for_revoke_kyc_user)
+    text = (
+        "🪪 <b>لغو و ابطال احراز هویت (KYC) کاربر:</b>\n\n"
+        "لطفاً <b>آیدی عددی</b> یا <b>یوزرنیم کاربر</b> را ارسال فرمایید تا مدارک و احراز هویت او باطل شود:"
+    )
+    kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="admin_back")]])
+    await callback.message.edit_text(text, reply_markup=kb)
+    await callback.answer()
+
+@router.message(AdminState.waiting_for_revoke_kyc_user, AdminFilter())
+async def revoke_kyc_user_apply(message: types.Message, state: FSMContext):
+    if db.is_cancel_message(message.text):
+        await state.clear()
+        await message.reply("❌ عملیات لغو شد.", reply_markup=await get_admin_keyboard())
+        return
+
+    target_input = message.text.strip()
+    user = await db.find_user(target_input)
+
+    if not user:
+        await message.reply(f"❌ کاربر «<code>{target_input}</code>» یافت نشد! مجدداً ارسال کنید:")
+        return
+
+    uid = user["user_id"]
+    fname = user.get("full_name") or "کاربر"
+    uname = f"@{user['username']}" if user.get("username") else "ندارد"
+
+    # باطل کردن در دیتابیس
+    await db.revoke_user_kyc(uid)
+
+    admin_rep = (
+        "✅ <b>احراز هویت کاربر با موفقیت باطل و لغو شد!</b>\n\n"
+        f"👤 کاربر: <b>{fname}</b>\n"
+        f"🆔 آیدی: <code>{uid}</code>\n"
+        f"🏷 یوزرنیم: {uname}\n\n"
+        "💡 <i>از این لحظه کاربر جهت خرید یا واریزی مجدداً باید احراز هویت انجام دهد.</i>"
+    )
+    await message.reply(admin_rep, reply_markup=await get_admin_keyboard())
+
+    # ارسال اعلان به کاربر
+    try:
+        user_msg = (
+            "⚠️ <b>وضعیت احراز هویت (KYC) شما توسط مدیریت لغو و باطل گردید.</b>\n"
+            "جهت استفاده از خدمات و واریز وجه، لطفاً مجدداً از بخش کیف پول احراز هویت فرمایید."
+        )
+        await message.bot.send_message(chat_id=uid, text=user_msg, parse_mode="HTML")
+    except Exception:
+        pass
+
+    await state.clear()
 
 # --- روشن/خاموش کردن وضعیت ربات ---
 @router.callback_query(F.data == "adm_toggle_bot_power", AdminFilter())
@@ -1060,10 +705,10 @@ async def restart_bot_cmd(callback: types.CallbackQuery):
 async def edit_texts_menu(callback: types.CallbackQuery, state: FSMContext = None):
     if state: await state.clear()
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="💬 متن خوشامدگویی (/start)", callback_data="adm_set_welcome_txt")],
-        [InlineKeyboardButton(text="🪪 متن آموزش احراز هویت (KYC)", callback_data="adm_set_kyc_txt")],
-        [InlineKeyboardButton(text="📖 متن دکمه راهنما", callback_data="adm_set_guide_txt")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل اصلی", callback_data="admin_back")]
+        [InlineKeyboardButton(text="💬 متن خوشامدگویی (/start)", style="primary", callback_data="adm_set_welcome_txt")],
+        [InlineKeyboardButton(text="🪪 متن آموزش احراز هویت (KYC)", style="primary", callback_data="adm_set_kyc_txt")],
+        [InlineKeyboardButton(text="📖 متن دکمه راهنما", style="primary", callback_data="adm_set_guide_txt")],
+        [InlineKeyboardButton(text="🔙 بازگشت به پنل اصلی", style="primary", callback_data="admin_back")]
     ])
     await callback.message.edit_text("📝 <b>ویرایش متون مختلف ربات:</b>\nجهت تغییر هر متن روی دکمه آن کلیک کنید:", reply_markup=kb)
     await callback.answer()
@@ -1112,7 +757,7 @@ async def set_guide_txt_save(message: types.Message, state: FSMContext):
 async def admin_manage_balance_start(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(AdminState.waiting_for_balance_user)
     text = "💰 <b>تغییر موجودی کاربر:</b>\n\nلطفاً <b>آیدی عددی</b> یا <b>یوزرنیم کاربر</b> را ارسال فرمایید:"
-    kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", callback_data="admin_back")]])
+    kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="admin_back")]])
     await callback.message.edit_text(text, reply_markup=kb)
     await callback.answer()
 
@@ -1199,9 +844,9 @@ async def admin_self_hub_menu(callback: types.CallbackQuery, state: FSMContext =
         f"👥 <b>سلف‌های فعال در حال کار:</b> <b>{len(active_bots):,} نفر</b>"
     )
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="💰 تغییر تعرفه ساعتی سلف", callback_data="adm_set_self_price")],
-        [InlineKeyboardButton(text="👥 مشاهده سلف‌های فعال", callback_data="adm_list_active_selfs")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل اصلی", callback_data="admin_back")]
+        [InlineKeyboardButton(text="💰 تغییر تعرفه ساعتی سلف", style="primary", callback_data="adm_set_self_price")],
+        [InlineKeyboardButton(text="👥 مشاهده سلف‌های فعال", style="primary", callback_data="adm_list_active_selfs")],
+        [InlineKeyboardButton(text="🔙 بازگشت به پنل اصلی", style="primary", callback_data="admin_back")]
     ])
     await callback.message.edit_text(text, reply_markup=kb)
     await callback.answer()
@@ -1242,10 +887,10 @@ async def stars_hub_menu(callback: types.CallbackQuery, state: FSMContext = None
 
     text = f"⭐️ <b>تنظیمات استارز:</b>\n\n💰 قیمت ۵۰ استارز: <code>{base_50:,}</code> ت\n🔻 حداقل: <code>{min_st:,}</code> | 🔺 حداکثر: <code>{max_st:,}</code>"
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="💰 تنظیم قیمت ۵۰ استارز (پایه)", callback_data="adm_set_stars_50_base")],
-        [InlineKeyboardButton(text="🔻 تنظیم حداقل خرید", callback_data="adm_set_stars_min"), InlineKeyboardButton(text="🔺 تنظیم حداکثر خرید", callback_data="adm_set_stars_max")],
-        [InlineKeyboardButton(text="📦 لیست و افزودن بسته‌های استارز", callback_data="adm_stars_list")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل اصلی", callback_data="admin_back")]
+        [InlineKeyboardButton(text="💰 تنظیم قیمت ۵۰ استارز (پایه)", style="primary", callback_data="adm_set_stars_50_base")],
+        [InlineKeyboardButton(text="🔻 تنظیم حداقل خرید", style="primary", callback_data="adm_set_stars_min"), InlineKeyboardButton(text="🔺 تنظیم حداکثر خرید", style="primary", callback_data="adm_set_stars_max")],
+        [InlineKeyboardButton(text="📦 لیست و افزودن بسته‌های استارز", style="primary", callback_data="adm_stars_list")],
+        [InlineKeyboardButton(text="🔙 بازگشت به پنل اصلی", style="primary", callback_data="admin_back")]
     ])
     await callback.message.edit_text(text, reply_markup=kb); await callback.answer()
 
@@ -1299,9 +944,9 @@ async def set_stars_max_save(message: types.Message, state: FSMContext):
 async def show_stars_list(callback: types.CallbackQuery, state: FSMContext = None):
     if state: await state.clear()
     packages = await db.get_all_stars_packages()
-    buttons = [[InlineKeyboardButton(text=f"⭐️ {pkg['btn_title']} ── {pkg['price']:,} ت", callback_data=f"adm_stview_{pkg['id']}")] for pkg in packages]
-    buttons.append([InlineKeyboardButton(text="➕ افزودن بسته استارز جدید", callback_data="adm_add_stars_pkg")])
-    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به تنظیمات استارز", callback_data="admin_stars_hub")])
+    buttons = [[InlineKeyboardButton(text=f"⭐️ {pkg['btn_title']} ── {pkg['price']:,} ت", style="primary", callback_data=f"adm_stview_{pkg['id']}")] for pkg in packages]
+    buttons.append([InlineKeyboardButton(text="➕ افزودن بسته استارز جدید", style="success", callback_data="adm_add_stars_pkg")])
+    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به تنظیمات استارز", style="primary", callback_data="admin_stars_hub")])
     await callback.message.edit_text("⭐️ <b>لیست بسته‌های استارز:</b>", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
     await callback.answer()
 
@@ -1313,9 +958,9 @@ async def view_stars_pkg(callback: types.CallbackQuery, state: FSMContext = None
     if not pkg: await callback.answer("❌ بسته یافت نشد!", show_alert=True); return
     text = f"⭐️ <b>بسته: {pkg['btn_title']}</b>\n\n⭐ تعداد: <b>{pkg['stars_amount']:,} استارز</b>\n💰 قیمت: <b>{pkg['price']:,} تومان</b>"
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✏️ تغییر قیمت", callback_data=f"adm_stchp_{pkg_id}"), InlineKeyboardButton(text="⭐ تغییر تعداد", callback_data=f"adm_stcha_{pkg_id}")],
-        [InlineKeyboardButton(text="🗑️ حذف بسته", callback_data=f"adm_stdel_{pkg_id}")],
-        [InlineKeyboardButton(text="🔙 بازگشت", callback_data="adm_stars_list")]
+        [InlineKeyboardButton(text="✏️ تغییر قیمت", style="primary", callback_data=f"adm_stchp_{pkg_id}"), InlineKeyboardButton(text="⭐ تغییر تعداد", style="primary", callback_data=f"adm_stcha_{pkg_id}")],
+        [InlineKeyboardButton(text="🗑️ حذف بسته", style="danger", callback_data=f"adm_stdel_{pkg_id}")],
+        [InlineKeyboardButton(text="🔙 بازگشت", style="primary", callback_data="adm_stars_list")]
     ])
     await callback.message.edit_text(text, reply_markup=kb); await callback.answer()
 
@@ -1392,11 +1037,11 @@ async def show_gifts_list(callback: types.CallbackQuery, state: FSMContext = Non
     buttons = []
     for g in gifts:
         st_txt = f" ({g['stars_cost']} ⭐)" if g.get('stars_cost') else ""
-        buttons.append([InlineKeyboardButton(text=f"🎁 {g['name']}{st_txt} ── {g['price']:,} ت", callback_data=f"adm_gview_{g['id']}")])
+        buttons.append([InlineKeyboardButton(text=f"🎁 {g['name']}{st_txt} ── {g['price']:,} ت", style="primary", callback_data=f"adm_gview_{g['id']}")])
     
-    buttons.append([InlineKeyboardButton(text="⚡️ تغییر دسته‌جمعی قیمت همه گیفت‌ها", callback_data="adm_bulk_gifts_price")])
-    buttons.append([InlineKeyboardButton(text="➕ افزودن گیفت جدید", callback_data="adm_add_gift")])
-    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")])
+    buttons.append([InlineKeyboardButton(text="⚡️ تغییر دسته‌جمعی قیمت همه گیفت‌ها", style="success", callback_data="adm_bulk_gifts_price")])
+    buttons.append([InlineKeyboardButton(text="➕ افزودن گیفت جدید", style="primary", callback_data="adm_add_gift")])
+    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", style="primary", callback_data="admin_back")])
     await callback.message.edit_text("🎁 <b>مدیریت گیفت‌های تلگرام:</b>", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
     await callback.answer()
 
@@ -1404,7 +1049,7 @@ async def show_gifts_list(callback: types.CallbackQuery, state: FSMContext = Non
 async def bulk_gifts_price_start(callback: types.CallbackQuery, state: FSMContext):
     await state.set_state(AdminState.waiting_for_bulk_gifts_price)
     text = "⚡️ مبلغ مورد نظر برای افزایش یا کاهش قیمت <b>تمام گیفت‌ها</b> را به تومان وارد کنید (مثال: <code>5000</code> یا <code>-5000</code>):"
-    kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", callback_data="adm_gifts_list")]])
+    kb = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="❌ انصراف", style="danger", callback_data="adm_gifts_list")]])
     await callback.message.edit_text(text, reply_markup=kb); await callback.answer()
 
 @router.message(AdminState.waiting_for_bulk_gifts_price, AdminFilter())
@@ -1432,9 +1077,9 @@ async def view_gift_details(callback: types.CallbackQuery, state: FSMContext = N
     if not g: await callback.answer("❌ گیفت یافت نشد!", show_alert=True); return
     text = f"🎁 <b>گیفت: {g['name']}</b>\n\n⭐ استارز: <b>{g['stars_cost']} ⭐</b>\n💰 قیمت: <b>{g['price']:,} تومان</b>"
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="✏️ تغییر قیمت", callback_data=f"adm_gchp_{gid}"), InlineKeyboardButton(text="⭐ تغییر استارز", callback_data=f"adm_gchs_{gid}")],
-        [InlineKeyboardButton(text="🗑️ حذف این گیفت", callback_data=f"adm_gdel_{gid}")],
-        [InlineKeyboardButton(text="🔙 بازگشت به لیست", callback_data="adm_gifts_list")]
+        [InlineKeyboardButton(text="✏️ تغییر قیمت", style="primary", callback_data=f"adm_gchp_{gid}"), InlineKeyboardButton(text="⭐ تغییر استارز", style="primary", callback_data=f"adm_gchs_{gid}")],
+        [InlineKeyboardButton(text="🗑️ حذف این گیفت", style="danger", callback_data=f"adm_gdel_{gid}")],
+        [InlineKeyboardButton(text="🔙 بازگشت به لیست", style="primary", callback_data="adm_gifts_list")]
     ])
     await callback.message.edit_text(text, reply_markup=kb); await callback.answer()
 
@@ -1531,9 +1176,9 @@ async def send_broadcast(message: types.Message, state: FSMContext):
 async def list_emojis_menu(callback: types.CallbackQuery, state: FSMContext = None):
     if state: await state.clear()
     emojis = await db.get_emoji_map()
-    buttons = [[InlineKeyboardButton(text=f"🗑️ حذف {norm} ➔ {cid}", callback_data=f"adm_emodel_{norm}")] for norm, cid in emojis.items()]
-    buttons.append([InlineKeyboardButton(text="➕ افزودن / جایگزینی ایموجی", callback_data="adm_emo_add")])
-    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")])
+    buttons = [[InlineKeyboardButton(text=f"🗑️ حذف {norm} ➔ {cid}", style="danger", callback_data=f"adm_emodel_{norm}")] for norm, cid in emojis.items()]
+    buttons.append([InlineKeyboardButton(text="➕ افزودن / جایگزینی ایموجی", style="success", callback_data="adm_emo_add")])
+    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", style="primary", callback_data="admin_back")])
     await callback.message.edit_text("✨ <b>لیست ایموجی‌های فعال:</b>", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons)); await callback.answer()
 
 @router.callback_query(F.data == "adm_emo_add", AdminFilter())
@@ -1631,9 +1276,9 @@ async def set_card_save(message: types.Message, state: FSMContext):
 async def coupons_menu(callback: types.CallbackQuery, state: FSMContext = None):
     if state: await state.clear()
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="➕ ساخت کوپن", callback_data="admin_add_coupon")],
-        [InlineKeyboardButton(text="📋 لیست و حذف کوپن‌ها", callback_data="admin_list_coupons")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")]
+        [InlineKeyboardButton(text="➕ ساخت کوپن", style="primary", callback_data="admin_add_coupon")],
+        [InlineKeyboardButton(text="📋 لیست و حذف کوپن‌ها", style="primary", callback_data="admin_list_coupons")],
+        [InlineKeyboardButton(text="🔙 بازگشت به پنل", style="primary", callback_data="admin_back")]
     ])
     await callback.message.edit_text("🎟 <b>مدیریت کوپن‌های تخفیف:</b>", reply_markup=kb); await callback.answer()
 
@@ -1654,8 +1299,8 @@ async def add_coupon_save(message: types.Message, state: FSMContext):
 async def list_coupons(callback: types.CallbackQuery, state: FSMContext = None):
     if state: await state.clear()
     coupons = await db.get_all_coupons()
-    buttons = [[InlineKeyboardButton(text=f"🗑 حذف {c['code']}", callback_data=f"del_cp_{c['code']}")] for c in coupons]
-    buttons.append([InlineKeyboardButton(text="🔙 بازگشت", callback_data="admin_coupons_menu")])
+    buttons = [[InlineKeyboardButton(text=f"🗑 حذف {c['code']}", style="danger", callback_data=f"del_cp_{c['code']}")] for c in coupons]
+    buttons.append([InlineKeyboardButton(text="🔙 بازگشت", style="primary", callback_data="admin_coupons_menu")])
     await callback.message.edit_text("📋 <b>لیست کوپن‌ها:</b>", reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons)); await callback.answer()
 
 @router.callback_query(F.data.startswith("del_cp_"), AdminFilter())
@@ -1670,8 +1315,8 @@ async def manage_admins_menu(callback: types.CallbackQuery, state: FSMContext = 
     admins = await db.get_all_admins()
     text = "👥 <b>لیست ادمین‌ها:</b>\n\n" + "\n".join([f"• <code>{a}</code>" for a in admins])
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="➕ افزودن ادمین", callback_data="admin_add_new"), InlineKeyboardButton(text="🗑 حذف ادمین", callback_data="admin_del_exist")],
-        [InlineKeyboardButton(text="🔙 بازگشت", callback_data="admin_back")]
+        [InlineKeyboardButton(text="➕ افزودن ادمین", style="primary", callback_data="admin_add_new"), InlineKeyboardButton(text="🗑 حذف ادمین", style="danger", callback_data="admin_del_exist")],
+        [InlineKeyboardButton(text="🔙 بازگشت", style="primary", callback_data="admin_back")]
     ])
     await callback.message.edit_text(text, reply_markup=kb); await callback.answer()
 
@@ -1704,11 +1349,11 @@ async def del_admin_save(message: types.Message, state: FSMContext):
 async def list_buttons_edit(callback: types.CallbackQuery, state: FSMContext = None):
     if state: await state.clear()
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="ویرایش استارز", callback_data="edit_btn_stars"), InlineKeyboardButton(text="ویرایش پرمیوم", callback_data="edit_btn_premium")],
-        [InlineKeyboardButton(text="ویرایش تون", callback_data="edit_btn_ton"), InlineKeyboardButton(text="ویرایش گیفت‌ها", callback_data="edit_btn_gifts")],
-        [InlineKeyboardButton(text="ویرایش کیف پول", callback_data="edit_btn_wallet"), InlineKeyboardButton(text="ویرایش زیرمجموعه‌گیری", callback_data="edit_btn_ref")],
-        [InlineKeyboardButton(text="ویرایش راهنما", callback_data="edit_btn_guide"), InlineKeyboardButton(text="ویرایش پشتیبانی", callback_data="edit_btn_support")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")]
+        [InlineKeyboardButton(text="ویرایش استارز", style="primary", callback_data="edit_btn_stars"), InlineKeyboardButton(text="ویرایش پرمیوم", style="primary", callback_data="edit_btn_premium")],
+        [InlineKeyboardButton(text="ویرایش تون", style="primary", callback_data="edit_btn_ton"), InlineKeyboardButton(text="ویرایش گیفت‌ها", style="primary", callback_data="edit_btn_gifts")],
+        [InlineKeyboardButton(text="ویرایش کیف پول", style="primary", callback_data="edit_btn_wallet"), InlineKeyboardButton(text="ویرایش زیرمجموعه‌گیری", style="primary", callback_data="edit_btn_ref")],
+        [InlineKeyboardButton(text="ویرایش راهنما", style="primary", callback_data="edit_btn_guide"), InlineKeyboardButton(text="ویرایش پشتیبانی", style="primary", callback_data="edit_btn_support")],
+        [InlineKeyboardButton(text="🔙 بازگشت به پنل", style="primary", callback_data="admin_back")]
     ])
     await callback.message.edit_text("✏️ <b>دکمه مورد نظر برای تغییر را انتخاب کنید:</b>", reply_markup=kb); await callback.answer()
 
@@ -1730,9 +1375,9 @@ async def save_btn_edit(message: types.Message, state: FSMContext):
 async def list_stickers_edit(callback: types.CallbackQuery, state: FSMContext = None):
     if state: await state.clear()
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="استیکر خوشامدگویی", callback_data="setstk_sticker_welcome"), InlineKeyboardButton(text="استیکر موفقیت", callback_data="setstk_sticker_success")],
-        [InlineKeyboardButton(text="استیکر احراز هویت", callback_data="setstk_sticker_kyc"), InlineKeyboardButton(text="استیکر کیف پول", callback_data="setstk_sticker_wallet")],
-        [InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")]
+        [InlineKeyboardButton(text="استیکر خوشامدگویی", style="primary", callback_data="setstk_sticker_welcome"), InlineKeyboardButton(text="استیکر موفقیت", style="primary", callback_data="setstk_sticker_success")],
+        [InlineKeyboardButton(text="استیکر احراز هویت", style="primary", callback_data="setstk_sticker_kyc"), InlineKeyboardButton(text="استیکر کیف پول", style="primary", callback_data="setstk_sticker_wallet")],
+        [InlineKeyboardButton(text="🔙 بازگشت به پنل", style="primary", callback_data="admin_back")]
     ])
     await callback.message.edit_text("🎭 <b>تنظیم استیکرها:</b>", reply_markup=kb); await callback.answer()
 
@@ -1765,11 +1410,11 @@ async def show_users_list(callback: types.CallbackQuery, state: FSMContext = Non
         text += f"{idx}. {u['full_name']} ({uname})\n   🆔 <code>{u['user_id']}</code> | 💰 {u['balance']:,} ت\n   📅 تاریخ: <code>{join_date}</code>\n\n"
 
     nav_buttons = []
-    if page > 1: nav_buttons.append(InlineKeyboardButton(text="⬅️ قبلی", callback_data=f"adm_users_{page - 1}"))
-    if page < total_pages: nav_buttons.append(InlineKeyboardButton(text="بعدی ➡️", callback_data=f"adm_users_{page + 1}"))
+    if page > 1: nav_buttons.append(InlineKeyboardButton(text="⬅️ قبلی", style="primary", callback_data=f"adm_users_{page - 1}"))
+    if page < total_pages: nav_buttons.append(InlineKeyboardButton(text="بعدی ➡️", style="primary", callback_data=f"adm_users_{page + 1}"))
     kb_rows = []
     if nav_buttons: kb_rows.append(nav_buttons)
-    kb_rows.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")])
+    kb_rows.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", style="primary", callback_data="admin_back")])
     await callback.message.edit_text(text, reply_markup=InlineKeyboardMarkup(inline_keyboard=kb_rows)); await callback.answer()
 
 # --- پاداش‌ها ---
@@ -1812,12 +1457,12 @@ async def manage_channels_menu(callback: types.CallbackQuery, state: FSMContext 
     if channels:
         for idx, ch in enumerate(channels, 1):
             text += f"{idx}. <b>{ch['channel_title']}</b> (<code>{ch['channel_id']}</code>)\n🔗 {ch['channel_link']}\n\n"
-            buttons.append([InlineKeyboardButton(text=f"🗑 حذف {ch['channel_title']}", callback_data=f"del_reqch_{ch['id']}")])
+            buttons.append([InlineKeyboardButton(text=f"🗑 حذف {ch['channel_title']}", style="danger", callback_data=f"del_reqch_{ch['id']}")])
     else:
         text += "<i>هیچ کانال جوین اجباری فعالی وجود ندارد.</i>\n"
 
-    buttons.append([InlineKeyboardButton(text="➕ افزودن کانال جدید", callback_data="add_reqch_start")])
-    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", callback_data="admin_back")])
+    buttons.append([InlineKeyboardButton(text="➕ افزودن کانال جدید", style="success", callback_data="add_reqch_start")])
+    buttons.append([InlineKeyboardButton(text="🔙 بازگشت به پنل", style="primary", callback_data="admin_back")])
     await callback.message.edit_text(text, reply_markup=InlineKeyboardMarkup(inline_keyboard=buttons))
     await callback.answer()
 
@@ -2035,6 +1680,9 @@ EOF
 
 ---
 
-این دستور رو اجرا کن و بات رو ری‌استارت کن. 
+دستور بالا رو اجرا و ری‌استارت کن. الان:
+1. اگر بسته‌های استارز رو حذف کنی، بعد از ری‌استارت دیگه هرگز برنمی‌گردن!
+2. تمام دکمه‌های ادمین رنگی (`style="..."`) هستند.
+3. دکمه قرمز رنگ **`🪪 لغو / ابطال KYC کاربر`** به پنل ادمین اضافه شده و آماده تسته!
 
-حالا **پیام بعدی** و بقیه تغییراتت رو بفرست تا اون‌ها رو هم مرحله‌به‌مرحله با هم تموم کنیم!
+تغییر بعدی رو بفرست تا ادامه بدیم!
